@@ -10,7 +10,10 @@
 #include "XenonGasProperties.h"
 #include "XenonLiquidProperties.h"
 #include "SellmeierEquation.h"
+
 #include <G4MaterialPropertiesTable.hh>
+
+#include <cassert>
 
 using namespace nexus;
 using namespace CLHEP;
@@ -20,16 +23,19 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  const G4int entries = 2;
-  G4double energy[entries] = {0.01*eV, 100.*eV};
+  std::vector<G4double> energy = {optPhotMinE_, optPhotMaxE_};
 
   // REFRACTIVE INDEX
-  G4double rindex[entries] = {1., 1.};
-  mpt->AddProperty("RINDEX", energy, rindex, entries);
+  std::vector<G4double> ri_index = {1., 1.};
+
+  assert(energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", energy.data(), ri_index.data(), energy.size());
 
   // ABSORPTION LENGTH
-  G4double abslen[entries] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, entries);
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
+
+  assert(energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", energy.data(), abs_length.data(), energy.size());
 
   return mpt;
 }
@@ -42,99 +48,79 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  G4double energy[2] =
-    {1*eV, 10.751*eV};
-  G4double rindex[2] =
-    {1.54, 1.54};
+  std::vector<G4double> ri_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> ri_index = {1.54, 1.54};
 
-  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  const G4int abs_entries = 17;
-
-  G4double abs_energy[abs_entries]=
-    {1.*eV, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV,
+  // ABSORPTION LENGTH
+  std::vector<G4double> abs_energy =
+    {optPhotMinE_, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV,
      3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV,
-     3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV,
-     5.018*eV, 8.*eV};
-  G4double abslength[abs_entries] =
+     3.973*eV, 4.120*eV, optPhotMaxE_};
+  std::vector<G4double> abs_length =
     {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm,
      31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm,
-     2.69*mm, 1.94*mm, 1.94*mm, 1.94*mm, 1.94*mm,
-     1.94*mm, 1.94*mm};
+     2.69*mm, 1.94*mm, 1.94*mm};
 
-  mpt->AddProperty("RINDEX", energy, rindex, 2);
-  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
 }
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyFixedRefr(G4double n)
 {
-  // Optical properties adjusted in order not to modify the trajectories of photons and
-  // not to absorb them before they meet the photocathode. To be set to real properties when available
+  // Costum refractive index.
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  XenonLiquidProperties LXe_prop;
+  std::vector<G4double> ri_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> ri_index  = {n, n};
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  G4double ri_index[ri_entries];
+  // ABSORPTION LENGTH
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
 
-  for (G4int i=0; i<ri_entries; i++) {
-    ri_index[i] = n;
-    // ri_index[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-  }
-
-  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
-
-  const G4int abs_entries = 2;
-
-  G4double abs_energy[abs_entries]=
-    {1.*eV, 10.*eV};
-  G4double abslength[abs_entries] =
-    {1.e8*m, 1.e8*m};
-
-  mpt->AddProperty("RINDEX", ri_energy, ri_index, ri_entries);
-  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
 }
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyLXeRefr()
 {
-  // Optical properties adjusted in order not to modify the trajectories of photons and
-  // not to absorb them before they meet the photocathode. To be set to real properties when available
-
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   XenonLiquidProperties LXe_prop;
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  G4double ri_index[ri_entries];
-
-  for (G4int i=0; i<ri_entries; i++) {
-    ri_index[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
+  std::vector<G4double> ri_energy;
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy.push_back(optPhotMinE_ + i*eWidth);
   }
 
-  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+  std::vector<G4double> ri_index;
+  for (G4int i=0; i<ri_entries; i++) {
+    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
+  }
 
-  const G4int abs_entries = 2;
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  G4double abs_energy[abs_entries]=
-    {1.*eV, 10.*eV};
-  G4double abslength[abs_entries] =
-    {1.e8*m, 1.e8*m};
+  // ABSORPTION LENGTH
 
-  mpt->AddProperty("RINDEX", ri_energy, ri_index, ri_entries);
-  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
+
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
 }
@@ -142,19 +128,20 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyLXeRefr()
 G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
 {
   // Optical properties of Suprasil 311/312(c) synthetic fused silica.
-  // Obtained from http://heraeus-quarzglas.com
+  // Obtained from http://heraeus-quarzglas.com.
+  // It has  transmission in the deep ultraviolet down to 160 nm.
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX //////////////////////////////////////////////////////////
   // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
   // for fused silica is valid only in that range
-
   const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back(optPhotMinE_ + i*eWidth);
   }
 
   // The following values for the refractive index have been calculated
@@ -173,29 +160,27 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   G4double C_2 = 4.13e-3;
   G4double C_3 = 9.88e+1;
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
     G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1)
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
-    rindex[i] = sqrt(n2);
+    ri_index.push_back(sqrt(n2));
   }
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   // ABSORPTION LENGTH /////////////////////////////////////////////////////////
-
-  const G4int abs_entries = 30;
-
-  G4double abs_energy[abs_entries]=
-    {1.*eV, 6.46499*eV, 6.54*eV, 6.59490*eV, 6.64*eV,
+  std::vector<G4double> abs_energy =
+    {optPhotMinE_, 6.46499*eV, 6.54*eV, 6.59490*eV, 6.64*eV,
      6.72714*eV, 6.73828*eV, 6.75*eV, 6.82104*eV, 6.86*eV,
      6.88*eV, 6.89*eV, 7.*eV, 7.01*eV, 7.01797*eV,
      7.05*eV, 7.08*eV, 7.08482*eV, 7.30*eV, 7.36*eV,
      7.4*eV, 7.48*eV, 7.52*eV, 7.58*eV, 7.67440*eV,
-     7.76*eV, 7.89*eV, 7.93*eV, 8.*eV, 10.7*eV};
-  G4double abslength[abs_entries] =
+     7.76*eV, 7.89*eV, 7.93*eV, 8.*eV, optPhotMaxE_};
+  std::vector<G4double> abs_length =
     {1500.*cm, 1500.*cm, 200.*cm, 200.*cm, 90.*cm,
      45.*cm, 45*cm, 30*cm, 24*cm, 21*cm,
      20*cm , 19*cm, 16*cm, 14.*cm, 13.*cm,
@@ -203,7 +188,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
      1.*cm, .65*cm, .4*cm, .37*cm, .32*cm,
      .28*cm, .220*cm, .215*cm, .00005*cm, .00005*cm};
 
-  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
 }
@@ -219,10 +205,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   // The range must be the same as fused silica
 
   const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back(optPhotMinE_ + i * eWidth);
   }
 
   // The following values for the refractive index have been calculated
@@ -241,26 +228,26 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   G4double C_2 = 4.13e-3;
   G4double C_3 = 9.88e+1;
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
     G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1)
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
-    rindex[i] = sqrt(n2);
+    ri_index.push_back(sqrt(n2));
   }
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
-  // It matches the transparency
+  // ABSORPTION LENGTH
 
-  G4double abs_length = -thickness/log(transparency);
-  const G4int NUMENTRIES  = 2;
-  G4double abs_energy[NUMENTRIES] = { .1*eV, 100.*eV };
-  G4double ABSL[NUMENTRIES]  = {abs_length, abs_length};
+  G4double abs_cnst = -thickness/log(transparency);
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {abs_cnst, abs_cnst};
 
-  mpt->AddProperty("ABSLENGTH", abs_energy, ABSL, NUMENTRIES);
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
 }
@@ -270,27 +257,19 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4doub
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  // REFRACTIVE INDEX //////////////////////////////////////////////////////////
-  // Liquid xenon refractive index
+  std::vector<G4double> energy = {optPhotMinE_, optPhotMaxE_};
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  // REFRACTIVE INDEX
+  std::vector<G4double> ri_index = {quartz_rindex, quartz_rindex};
 
-  XenonLiquidProperties LXe_prop;
-  G4double rindex[ri_entries];
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = quartz_rindex;
-  }
+  assert(energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", energy.data(), ri_index.data(), energy.size());
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+  // Absorption length
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
 
-
-  // Absorption length:
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  assert(energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", energy.data(), abs_length.data(), energy.size());
 
   return mpt;
 }
@@ -298,236 +277,87 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4doub
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 {
-  // Optical properties of Optorez 1330 glass epoxy.
-  // Obtained from http://refractiveindex.info and http://www.zeonex.com/applications_optical.asp
+ // WARNING: This is a deprecated optical property, it is kept for code consistency, but it
+ // will be removed in the future.
+ // Optical properties of Optorez 1330 glass epoxy.
+ // Obtained from http://refractiveindex.info and http://www.zeonex.com/applications_optical.asp
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  // REFRACTIVE INDEX //////////////////////////////////////////////////////////
-
+  // REFRACTIVE INDEX
   const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back(optPhotMinE_ + i * eWidth);
   }
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
     G4double n2 = 2.291142 - 3.311944E-2*pow(lambda,2) - 1.630099E-2*pow(lambda,-2) +
       7.265983E-3*pow(lambda,-4) - 6.806145E-4*pow(lambda,-6) + 1.960732E-5*pow(lambda,-8);
-    rindex[i] = sqrt(n2);
+    ri_index.push_back(sqrt(n2));
   }
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
-
-  const G4int abs_entries = 16;
-
-  G4double abs_energy[abs_entries]=
-    {1.*eV, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV,
+  // ABSORPTION LENGTH
+  std::vector<G4double> abs_energy =
+    {optPhotMinE_, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV,
      3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV,
      3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV,
-     5.018*eV};
-  G4double abslength[abs_entries] =
+     5.018*eV, optPhotMaxE_};
+  std::vector<G4double> abs_length =
     {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm,
      31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm,
      2.69*mm, 1.94*mm, 1.33*mm, 0.73*mm, 0.32*mm,
-     0.10*mm};
+     0.10*mm, 0.10*mm};
 
-  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
-
-  return mpt;
-}
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::Glass()
-{
-  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-
-  // REFRACTIVE INDEX ////////////////////////////////////////////////
-
-  const G4int entries = 10;
-
-  G4double energy[entries] = {
-    2.58300893*eV, 2.60198171*eV, 2.62289885*eV, 2.66175244*eV, 2.70767479*eV,
-    2.80761840*eV, 2.84498460*eV, 3.06361326*eV, 3.40803817*eV, 3.53131384*eV
-  };
-
-  G4double rindex[entries] =
-    {1.52283, 1.52309, 1.52339, 1.52395, 1.52461,
-     1.52611, 1.52668, 1.53024, 1.53649, 1.53894};
-
-  mpt->AddProperty("RINDEX", energy, rindex, entries);
-
-  // ABSORPTION LENGTH ///////////////////////////////////////////////
-
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
-}
-
-
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
-{
-  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-
-  // REFRACTIVE INDEX ////////////////////////////////////////////////
-
-  G4double um2 = micrometer*micrometer;
-
-  G4double B[3] = {1.4313493, 0.65054713, 5.3414021};
-  G4double C[3] = {0.0052799261*um2, 0.0142382647*um2, 325.017834*um2};
-  SellmeierEquation seq(B, C);
-
-  const G4double wlmin =  150. * nm;
-  const G4double wlmax = 1000. * nm;
-  const G4double step  =   10. * nm;
-
-  const G4int entries = G4int((wlmax-wlmin)/step);
-
-  G4double energy[entries];
-  G4double rindex[entries];
-  for (G4int i=0; i<entries; i++) {
-
-    G4double wl = wlmin + i*step;
-    energy[i] = h_Planck*c_light/wl;
-    rindex[i] = seq.RefractiveIndex(wl);
-  }
-
-  /*const G4int ABS_NUMENTRIES = 18;
-  G4double Energies[ABS_NUMENTRIES] = {1.000*eV, 1.231*eV, 1.696*eV, 2.045*eV, 2.838*eV, 3.687*eV,
-				       4.276*eV, 4.922*eV, 5.577*eV, 6.150*eV, 6.755*eV, 7.277*eV,
-				       7.687*eV, 7.872*eV, 7.993*eV, 8.186*eV, 8.406*eV, 8.915*eV};
-  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {577.50*mm, 577.50*mm, 201.52*mm, 99.51*mm, 59.47*mm, 54.42*mm,
-					    45.89*mm, 22.25*mm, 11.97*mm, 7.711*mm, 5.027*mm, 3.689*mm,
-					    2.847*mm, 1.991*mm, 1.230*mm, 0.923*mm, 0.763*mm, 0.664*mm};*/
-
-  const G4int ABS_NUMENTRIES = 19;
-  G4double Energies[ABS_NUMENTRIES] = {1.000*eV, 1.296*eV, 1.683*eV, 2.075*eV,
-                                       2.585*eV, 3.088*eV, 3.709*eV, 4.385*eV,
-                                       4.972*eV, 5.608*eV, 6.066*eV, 6.426*eV,
-				                               6.806*eV, 7.135*eV, 7.401*eV, 7.637*eV,
-                                       7.880*eV, 8.217*eV};
-  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {3455.0*mm, 3455.0*mm, 3455.0*mm, 3455.0*mm,
-                                            3455.0*mm, 3140.98*mm, 2283.30*mm, 1742.11*mm,
-                                            437.06*mm, 219.24*mm, 117.773*mm, 80.560*mm,
-					                                  48.071*mm, 28.805*mm, 17.880*mm, 11.567*mm,
-                                            7.718*mm, 4.995*mm};
-
-    /*const G4int ABS_NUMENTRIES = 2;
-  G4double Energies[ABS_NUMENTRIES] = {1*eV, 8.217*eV};
-  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {150000.*mm, 150000*mm};*/
-
-  mpt->AddProperty("RINDEX", energy, rindex, entries);
-  mpt->AddProperty("ABSLENGTH", Energies, SAPPHIRE_ABSL, ABS_NUMENTRIES);
-
-  return mpt;
-}
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
-{
-  //For comparison of optical coupling materials.
-  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-
-  // REFRACTIVE INDEX ////////////////////////////////////////////////
-  //Start with curing gel NyeGel OCK-451. sing quoted formula for now.
-  G4double um2 = micrometer*micrometer;
-  // G4double nm2 = nm*nm;
-
-  // G4double B[3] = {1.4313493, 0.65054713, 5.3414021};
-  // G4double C[3] = {0.0052799261*um2, 0.0142382647*um2, 325.017834*um2};
-  // SellmeierEquation seq(B, C);
-  G4double constTerm = 1.4954;//1.496135;//1.30311;
-  G4double squareTerm = 0.008022*um2;//0.00000000006921989*um2;//0.0304109*um2;
-  G4double quadTerm = 0.;//0.00008070513*um2*um2;//0.000740633*um2*um2;
-  //Ideal coupler (geometric mean).
-  //G4double BS[3] = {1.4313493, 0.65054713, 5.3414021};
-  //G4double CS[3] = {0.0052799261*um2, 0.0142382647*um2, 325.017834*um2};
-  //SellmeierEquation seqS(BS, CS);//Sapphire
-  //G4double BFS[3] = {4.73e-1,6.31e-1,9.06e-1};
-  //G4double CFS[3] = {1.30e-2*um2,4.13e-3*um2,9.88e+1*um2};
-  //SellmeierEquation seqFS(BFS, CFS);//Fused Silica
-
-
-  const G4double wlmin =  150. * nm;
-  const G4double wlmax = 1000. * nm;
-  const G4double step  =   10. * nm;
-
-  const G4int entries = G4int((wlmax-wlmin)/step);
-
-  G4double energy[entries];
-  G4double rindex[entries];
-
-  for (G4int i=0; i<entries; i++) {
-
-    G4double wl = wlmin + i*step;
-    // rindex[i] = seq.RefractiveIndex(wl);
-    energy[i] = h_Planck*c_light/wl;
-    rindex[i] = constTerm + squareTerm/(wl*wl) + quadTerm/pow(wl,4);
-    //rindex[i] = 1.0;//sqrt(seqS.RefractiveIndex(wl)*seqFS.RefractiveIndex(wl));
-
-  }
-
-  //Values estimated from printed plot. Will need to be improved.
-  const G4int ABS_NUMENTRIES = 10;
-  //NyoGel451
-  G4double Energies[ABS_NUMENTRIES] = {1.77*eV, 2.07*eV,2.48*eV,2.76*eV,2.92*eV,
-                                       3.10*eV,3.31*eV,3.54*eV,3.81*eV,4.13*eV};
-  //CargilleOpGel152
-  //G4double Energies[ABS_NUMENTRIES] = {1.89*eV, 1.93*eV, 1.96*eV, 2.11*eV, 2.27*eV, 2.55*eV, 2.59*eV, 3.07*eV, 3.40*eV, 3.88*eV};
-  //Dow
-  //G4double Energies[ABS_NUMENTRIES] = {2.07*eV, 2.16*eV, 2.26*eV, 2.36*eV, 2.48*eV, 2.61*eV, 2.76*eV, 2.92*eV, 3.10*eV, 3.31*eV, 3.55*eV};
-  // G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {100.*cm, 100.*cm};
-  //NyoGel451
-  G4double OPTCOUP_ABSL[ABS_NUMENTRIES] = {1332.8*mm,1332.8*mm,1332.8*mm,666.17*mm,499.5*mm,
-                                           399.5*mm,199.5*mm,132.83*mm,99.5*mm,4.5*mm};
-  //CargilleOpGel152 - estimated from data sheet plot
-  //G4double OPTCOUP_ABSL[ABS_NUMENTRIES] = {3.32*mm, 3.18*mm, 2.92*mm, 2.59*mm, 1.96*mm, 1.40*mm, 1.36*mm, 0.74*mm, 0.49*mm, 0.31*mm};
-  //dow - estimated from paper plot
-  //G4double OPTCOUP_ABSL[ABS_NUMENTRIES] = {3.*cm, 2.67*cm, 2.35*cm, 2.14*cm, 1.89*cm, 1.62*cm, 1.52*cm, 1.32*cm, 1.11*cm, 0.95*cm, 0.8*cm};
-
-  mpt->AddProperty("RINDEX", energy, rindex, entries);
-  // mpt->AddProperty("ABSLENGTH", Energies, SAPPHIRE_ABSL, ABS_NUMENTRIES);
-  mpt->AddProperty("ABSLENGTH", Energies, OPTCOUP_ABSL, ABS_NUMENTRIES);
-
-
-  return mpt;
-
 }
 
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
 {
+  // WARNING: before using GAr properties, check that we know the
+  // properties of the rest of materials at its scintillation wavelengths.
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  // REFRACTIVE INDEX ////////////////////////////////////////////////
-
+  // REFRACTIVE INDEX
   const G4int ri_entries = 200;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back((1 + i*0.049)*eV);
   }
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
 
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
-    rindex[i] = 1 + 0.012055*(0.2075*pow(lambda,2)/(91.012*pow(lambda,2)-1) +
-    0.0415*pow(lambda,2)/(87.892*pow(lambda,2)-1) + 4.3330*pow(lambda,2)/(214.02*pow(lambda,2)-1)); // From refractiveindex.info
+    ri_index.push_back(1 + 0.012055*(0.2075*pow(lambda,2)/(91.012*pow(lambda,2)-1) +
+                                     0.0415*pow(lambda,2)/(87.892*pow(lambda,2)-1) +
+                                     4.3330*pow(lambda,2)/(214.02*pow(lambda,2)-1)));
+    // From refractiveindex.info
     //    std::cout << "rindex = " << rindex[i] << std::endl;
   }
 
-  // EMISSION SPECTRUM ////////////////////////////////////////////////
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
+  // EMISSION SPECTRUM
   // Sampling from ~110 nm to 150 nm <----> from ~11.236 eV to 8.240 eV
   const G4int sc_entries = 380;
-  G4double sc_energy[sc_entries];
-  G4double intensity[sc_entries];
+  std::vector<G4double> sc_energy;
+  std::vector<G4double> intensity;
 
-  G4double Wavelength_peak = 128.*nm;
+  G4double Wavelength_peak  = 128.*nm;
   G4double Wavelength_sigma = 2.929*nm;
 
   G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
@@ -536,26 +366,24 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   //  std::cout << "Energy_peak = " << Energy_peak << std::endl;
 
   for (int j=0;j<sc_entries;j++){
-    sc_energy[j] = 8.240*eV + 0.008*j*eV;
-    intensity[j] = exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+    sc_energy.push_back(8.240*eV + 0.008*j*eV);
+    intensity.push_back(exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.)));
     //    std::cout << "(energy, intensity) = (" << sc_energy[j] << "," << intensity[j] << ")" << std::endl;
   }
 
+  assert(sc_energy.size() == intensity.size());
+  mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("ELSPECTRUM", sc_energy.data(), intensity.data(), sc_energy.size());
 
-
-  // ABSORTION LENGTH ////////////////////////////////////////////////
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  // ABSORTION LENGTH
+  std::vector<G4double> energy = {0.01*eV, 100.*eV};
+  std::vector<G4double> abslen = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy.data(), abslen.data(), energy.size());
 
 //An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("FASTTIMECONSTANT",6.*ns);
   mpt->AddConstProperty("SLOWTIMECONSTANT",37.*ns);
   mpt->AddConstProperty("YIELDRATIO",.52);
@@ -567,20 +395,23 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   return mpt;
 }
 
+
 G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
 {
+ // WARNING: before using LAr properties, check that we know the
+ // properties of the rest of materials at its scintillation wavelengths.
+
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  // REFRACTIVE INDEX ////////////////////////////////////////////////
-
+  // REFRACTIVE INDEX
   const G4int ri_entries = 200;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back((1 + i*0.049)*eV);
   }
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
 
   for (int i=0; i<ri_entries; i++) {
     G4double epsilon;
@@ -601,40 +432,46 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
       else
 	epsilon = (1.0 + 2.0 * epsilon) / (1.0 - epsilon); // solve Clausius-Mossotti
     }
-    rindex[i] = sqrt(epsilon);
+    ri_index.push_back(sqrt(epsilon));
   }
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-
-  // ABSORTION LENGTH ////////////////////////////////////////////////
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   G4double fano = 0.11;// Doke et al, NIM 134 (1976)353
   mpt->AddConstProperty("RESOLUTIONSCALE",fano);
 
 
-  // EMISSION SPECTRUM ////////////////////////////////////////////////
-
+  // EMISSION SPECTRUM
   // Sampling from ~110 nm to 150 nm <----> from ~11.236 eV to 8.240 eV
   const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  G4double intensity[sc_entries];
 
-  G4double Wavelength_peak = 128.*nm;
+  std::vector<G4double> sc_energy;
+  std::vector<G4double> intensity;
+
+  G4double Wavelength_peak  = 128.*nm;
   G4double Wavelength_sigma = 2.929*nm;
 
   G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
   G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
 
+  //  std::cout << "Energy_peak = " << Energy_peak << std::endl;
+
   for (int j=0;j<sc_entries;j++){
-    sc_energy[j] = 8.240*eV + 0.008*j*eV;
-    intensity[j] = exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+    sc_energy.push_back(8.240*eV + 0.008*j*eV);
+    intensity.push_back(exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.)));
+    //    std::cout << "(energy, intensity) = (" << sc_energy[j] << "," << intensity[j] << ")" << std::endl;
   }
 
-  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  assert(sc_energy.size() == intensity.size());
+  mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("ELSPECTRUM", sc_energy.data(), intensity.data(), sc_energy.size());
+
+  // ABSORTION LENGTH
+  std::vector<G4double> energy = {0.01*eV, 100.*eV};
+  std::vector<G4double> abslen = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy.data(), abslen.data(), energy.size());
 
   mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
   mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
@@ -649,37 +486,47 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* GXe_mpt = new G4MaterialPropertiesTable();
 
-  const G4int ri_entries = 9;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 7*eV, 8*eV, 9*eV};
+  const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  // G4int ri_entries = 15;
-  // G4double ri_energy[ri_entries]
-  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV};
-
-  G4double rindex[ri_entries];
-
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    // G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+  std::vector<G4double> ri_energy;
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy.push_back(optPhotMinE_ + i * eWidth);
   }
 
+  std::vector<G4double> ri_index;
+  for (int i=0; i<ri_entries; i++) {
+    ri_index.push_back(GXe_prop.RefractiveIndex(ri_energy[i]));
+    // G4cout << "* GXe rIndex:  " << std::setw(7)
+    //        << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
+  }
 
+  assert(ri_energy.size() == ri_index.size());
+  GXe_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-
-  // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
+  // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
   const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  for (int j=0;j<sc_entries;j++){
-    sc_energy[j] =  6.20625*eV + 0.004*j*eV;
-  }
-  G4double intensity[sc_entries];
-  GXe_prop.Scintillation(sc_entries, sc_energy, intensity);
+  const G4double minE = 6.20625*eV;
+  eWidth = (optPhotMaxE_ - minE) / sc_entries;
 
-  GXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  GXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  GXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
-  GXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  std::vector<G4double> sc_energy;
+  for (int j=0;j<sc_entries;j++){
+    sc_energy.push_back(minE + j * eWidth);
+  }
+  std::vector<G4double> intensity;
+  GXe_prop.Scintillation(sc_energy, intensity);
+
+  assert(sc_energy.size() == intensity.size());
+  GXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  GXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  GXe_mpt->AddProperty("ELSPECTRUM", sc_energy.data(), intensity.data(), sc_energy.size());
+
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
+
+  assert(abs_energy.size() == abs_length.size());
+  GXe_mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+
   GXe_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   GXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   GXe_mpt->AddConstProperty("FASTTIMECONSTANT",4.5*ns);
@@ -687,10 +534,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   //  GXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
   GXe_mpt->AddConstProperty("YIELDRATIO",.1);
   GXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  GXe_mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
 
   return GXe_mpt;
 }
@@ -701,33 +544,43 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_energy;
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy.push_back(optPhotMinE_ + i * eWidth);
+  }
+
+  std::vector<G4double> ri_index;
 
   for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
+    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
   }
+
+  assert(ri_energy.size() == ri_index.size());
+  LXe_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   // for (G4int i=ri_entries-1; i>=0; i--) {
   //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, " << rindex[i] << G4endl;
   // }
 
-  // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
+  // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
   const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  for (int j=0;j<sc_entries;j++){
-    sc_energy[j] =  6.20625*eV + 0.004*j*eV;
-  }
-  G4double intensity[sc_entries];
-  LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
+  const G4double minE = 6.20625*eV;
+  eWidth = (optPhotMaxE_ - minE) / sc_entries;
 
-  LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  std::vector<G4double> sc_energy;
+  for (int j=0; j<sc_entries; j++){
+    sc_energy.push_back(minE + j * eWidth);
+  }
+  std::vector<G4double> intensity;
+  LXe_prop.Scintillation(sc_energy, intensity);
+
+  assert(sc_energy.size() == intensity.size());
+  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
@@ -736,300 +589,94 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   LXe_mpt->AddConstProperty("YIELDRATIO", 0.03);
   LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
 
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  LXe_mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
+
+  assert(abs_energy.size() == abs_length.size());
+  LXe_mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return LXe_mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FakeLXe()
-{
-  XenonLiquidProperties LXe_prop;
-  G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
-
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
-
-  G4double rindex[ri_entries];
-
-  for (G4int i=0; i<ri_entries; i++) {
-    // rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-    rindex[i] = 1.7;
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
-  }
-
-
-
-  LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  //LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
-  //  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  // LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
-  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
-  // check constants with the Aprile
-  //  LXe_mpt->AddConstProperty("FASTTIMECONSTANT",2.2*ns);
-  // LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
-  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  //LXe_mpt->AddConstProperty("YIELDRATIO", .1);
-  LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  LXe_mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
-
-  return LXe_mpt;
-}
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_nconst()
 {
   XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  std::vector<G4double> ri_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> ri_index  = {1.69, 1.69};
 
-  G4double rindex[ri_entries];
+  assert(ri_energy.size() == ri_index.size());
+  LXe_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = 1.7;
-  }
+  // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
+  const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
   const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  for (int j=0;j<sc_entries;j++){
-    sc_energy[j] =  6.20625*eV + 0.004*j*eV;
-  }
-  G4double intensity[sc_entries];
-  LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
+  const G4double minE = 6.20625*eV;
+  eWidth = (optPhotMaxE_ - minE) / sc_entries;
 
-  LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  std::vector<G4double> sc_energy;
+  for (int j=0; j<sc_entries; j++){
+    sc_energy.push_back(minE + j * eWidth);
+  }
+  std::vector<G4double> intensity;
+  LXe_prop.Scintillation(sc_energy, intensity);
+
+  assert(sc_energy.size() == intensity.size());
+  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
+
+  assert(abs_energy.size() == abs_length.size());
+  LXe_mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
-  // check constants with the Aprile
-  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.2*ns);
-  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 27.*ns);
-  //  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
-  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  LXe_mpt->AddConstProperty("YIELDRATIO", 0.065);
+  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.*ns);
+  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 43.5*ns);
+  LXe_mpt->AddConstProperty("YIELDRATIO", 0.03);
   LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  LXe_mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
 
   return LXe_mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_window()
-{
-  XenonLiquidProperties LXe_prop;
-  G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
-
-   const G4int ri_entries = 11;
-   G4double ri_energy[ri_entries]
-     = {4.1328*eV, 4.33944*eV, 4.54608*eV, 4.75272*eV, 4.95936*eV,
-	5.166*eV, 5.37264*eV, 5.57928*eV, 5.78592*eV, 5.99256*eV, 6.1992*eV};
-
-  //  const G4int ri_entries = 38;
-  // G4double ri_energy[ri_entries]
-  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-  //      7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.4*eV, 8.6*eV, 8.8*eV,
-  //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV,
-  //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
-
-  G4double rindex[ri_entries];
-
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-  }
-
-  // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
-  const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  for (int j=0;j<sc_entries;j++){
-    sc_energy[j] =  6.20625*eV + 0.004*j*eV;
-  }
-  G4double intensity[sc_entries];
-  LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
-
-
-  // for (G4int i=0; i<ri_entries; i++) {
-  //   G4cout << ri_energy[i] << ", " << rindex[i] << ", " << int2[i] << G4endl;
-  // }
-
-  LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
-  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
-  // check constants with the Aprile
-  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.2*ns);
-  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 27.*ns);
-  //  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
-  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  LXe_mpt->AddConstProperty("YIELDRATIO", 0.065);
-  LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  LXe_mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
-
-  return LXe_mpt;
-}
-
-G4MaterialPropertiesTable*
-OpticalMaterialProperties::FakeGrid(G4double pressure, G4double temperature,
-				    G4double transparency, G4double thickness,
-				    G4int sc_yield)
-{
-  XenonGasProperties GXe_prop(pressure, temperature);
-  G4MaterialPropertiesTable* FGrid_mpt = new G4MaterialPropertiesTable();
-
-  const G4int ri_entries = 9;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 7*eV, 8*eV, 9*eV};
-  G4double rindex[ri_entries];
-
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-  }
-
-  const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  for (int j=0;j<sc_entries;j++){
-    sc_energy[j] =  6.20625*eV + 0.004*j*eV;
-  }
-  G4double intensity[sc_entries];
-  GXe_prop.Scintillation(sc_entries, sc_energy, intensity);
-
-  G4double abs_length = -thickness/log(transparency);
-  const G4int NUMENTRIES  = 2;
-  G4double abs_energy[NUMENTRIES] = { .1*eV, 100.*eV };
-  G4double ABSL[NUMENTRIES]  = {abs_length, abs_length};
-
-  FGrid_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  FGrid_mpt->AddProperty("ABSLENGTH", abs_energy, ABSL, NUMENTRIES);
-  FGrid_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  FGrid_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  FGrid_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-  FGrid_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
-  FGrid_mpt->AddConstProperty("FASTTIMECONSTANT",4.5*ns);
-  FGrid_mpt->AddConstProperty("SLOWTIMECONSTANT",100.*ns);
-  FGrid_mpt->AddConstProperty("YIELDRATIO",.1);
-  FGrid_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
-
-  return FGrid_mpt;
-}
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
 {
   G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
 
-  const G4int REFL_NUMENTRIES = 2;
+  // REFLECTIVITY
+  std::vector<G4double> refl_energy = {
+    optPhotMinE_,  2.8 * eV,  3.5 * eV,  4. * eV,
+    6. * eV,       7.2 * eV,  optPhotMaxE_};
+  std::vector<G4double> reflectivity = {
+    .98,  .98,  .98,  .98,
+    .72,  .72,  .72};
 
-  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
-  /// This is for non-coated teflon panels
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {.72, .72};
-  G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a
+  assert(refl_energy.size() == reflectivity.size());
+  teflon_mpt->AddProperty("REFLECTIVITY", refl_energy.data(), reflectivity.data(), refl_energy.size());
+
+  std::vector<G4double> ENERGIES = {optPhotMinE_, optPhotMaxE_};
+
+  std::vector<G4double> specularlobe = {0., 0.}; // specular reflection about the normal to a
   //microfacet. Such a vector is chosen according to a gaussian distribution with
   //sigma = SigmaAlhpa (in rad) and centered in the average normal.
-  G4double specularspike[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the average normal
-  G4double backscatter[REFL_NUMENTRIES] = {0., 0.}; //180 degrees reflection
+  std::vector<G4double> specularspike = {0., 0.}; // specular reflection about the average normal
+  std::vector<G4double> backscatter = {0., 0.}; //180 degrees reflection
   // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
 
-  teflon_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES,specularlobe,REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES,specularspike,REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES,backscatter,REFL_NUMENTRIES);
-
-  return teflon_mpt;
-}
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_LXe(G4double reflectivity)
-{
-  G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
-  G4cout << "PTFE with LXe refl = " << reflectivity << G4endl;
-  const G4int REFL_NUMENTRIES = 2;
-
-  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
-  /// This is for non-coated teflon panels
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {reflectivity, reflectivity};
-  G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a
-  //microfacet. Such a vector is chosen according to a gaussian distribution with
-  //sigma = SigmaAlhpa (in rad) and centered in the average normal.
-  G4double specularspike[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the average normal
-  G4double backscatter[REFL_NUMENTRIES] = {0., 0.}; //180 degrees reflection
-  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
-
-  teflon_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES,specularlobe,REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES,specularspike,REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES,backscatter,REFL_NUMENTRIES);
-
-  return teflon_mpt;
-}
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_with_TPB()
-{
-  G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
-
-  const G4int REFL_NUMENTRIES = 6;
-
-  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 2.8*eV, 4.*eV, 6.*eV, 7.2*eV, 30.*eV};
-  /// This is for TPB coated teflon panels
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {.98, .98, .98, .72, .72, .72};
-
-  G4double ENERGIES_2[2] = {1.0*eV, 30.*eV};
-  G4double specularlobe[2] = {0., 0.}; // specular reflection about the normal to a
-  //microfacet. Such a vector is chosen according to a gaussian distribution with
-  //sigma = SigmaAlhpa (in rad) and centered in the average normal.
-  G4double specularspike[2] = {0., 0.}; // specular reflection about the average normal
-  G4double backscatter[2] = {0., 0.}; //180 degrees reflection
-  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
-
-  teflon_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES_2,specularlobe,2);
-  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES_2,specularspike,2);
-  teflon_mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES_2,backscatter,2);
-
-  return teflon_mpt;
-}
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_non_reflectant()
-{
-  G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
-
-  const G4int REFL_NUMENTRIES = 6;
-
-  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 2.8*eV, 4.*eV, 6.*eV, 7.2*eV, 30.*eV};
-  /// This is for TPB coated teflon panels
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {0., 0., 0., 0., 0., 0.};
-
-  G4double ENERGIES_2[2] = {1.0*eV, 30.*eV};
-  G4double specularlobe[2] = {0., 0.}; // specular reflection about the normal to a
-  //microfacet. Such a vector is chosen according to a gaussian distribution with
-  //sigma = SigmaAlhpa (in rad) and centered in the average normal.
-  G4double specularspike[2] = {0., 0.}; // specular reflection about the average normal
-  G4double backscatter[2] = {0., 0.}; //180 degrees reflection
-  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
-
-  teflon_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
-  teflon_mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES_2,specularlobe,2);
-  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES_2,specularspike,2);
-  teflon_mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES_2,backscatter,2);
+  assert(ENERGIES.size() == specularlobe.size());
+  assert(ENERGIES.size() == specularspike.size());
+  assert(ENERGIES.size() == backscatter.size());
+  teflon_mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES.data(), specularlobe.data(), ENERGIES.size());
+  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT", ENERGIES.data(), specularspike.data(), ENERGIES.size());
+  teflon_mpt->AddProperty("BACKSCATTERCONSTANT", ENERGIES.data(), backscatter.data(), ENERGIES.size());
 
   return teflon_mpt;
 }
@@ -1042,30 +689,35 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
   // Refractive index and absorption lenth taken from:
   // http://www.vidrasa.com/esp/productos/borofloat/borofloat_pf.html
 
-  const G4int ri_entries = 20;
-  G4double ri_energy[ri_entries] = {0.9263*eV, 2.2542*eV, 2.6338*eV, 3.2370*eV, 3.4768*eV,
-                                    3.6304*eV, 3.7125*eV, 3.7549*eV, 3.8204*eV, 3.8882*eV,
-                                    3.9114*eV, 3.9585*eV, 4.0562*eV, 4.3003*eV, 4.3198*eV,
-                                    4.3394*eV, 4.3792*eV, 4.4403*eV, 4.5678*eV, 6.1992*eV};
+  std::vector<G4double> ri_energy = {optPhotMinE_, 2.2542*eV, 2.6338*eV, 3.2370*eV, 3.4768*eV,
+                                     3.6304*eV, 3.7125*eV, 3.7549*eV, 3.8204*eV, 3.8882*eV,
+                                     3.9114*eV, 3.9585*eV, 4.0562*eV, 4.3003*eV, 4.3198*eV,
+                                     4.3394*eV, 4.3792*eV, 4.4403*eV, 4.5678*eV, 6.1992*eV,
+                                     optPhotMaxE_};
 
-  G4double abs_length[ri_entries] = {99.800*mm, 99.999*mm, 95.000*mm, 70.000*mm,
-                                     48.500*mm, 32.323*mm, 22.000*mm, 14.000*mm,
-                                      8.963*mm, 7.170*mm,  5.800*mm,   4.643*mm,
-                                      3.345*mm, 0.800*mm,  0.710*mm,   0.630*mm,
-                                      0.570*mm, 0.485*mm,  0.370*mm,   0.0*mm};
-  G4double ri_index[ri_entries];
-  for (int i=0; i<ri_entries; i++) {
-    ri_index[i] = 1.472;
+  std::vector<G4double> ri_index;
+  for (int i=0; i<(int)ri_energy.size(); i++) {
+    ri_index.push_back(1.472);
   }
 
-  pyrex_mpt->AddProperty("RINDEX", ri_energy, ri_index, ri_entries);
-  pyrex_mpt->AddProperty("ABSLENGTH", ri_energy, abs_length, ri_entries);
+  assert(ri_energy.size() == ri_index.size());
+  pyrex_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+
+  std::vector<G4double> abs_length = {99.800*mm, 99.999*mm, 95.000*mm, 70.000*mm,
+                                      48.500*mm, 32.323*mm, 22.000*mm, 14.000*mm,
+                                      8.963*mm, 7.170*mm,  5.800*mm,   4.643*mm,
+                                      3.345*mm, 0.800*mm,  0.710*mm,   0.630*mm,
+                                      0.570*mm, 0.485*mm,  0.370*mm,   0.0*mm,
+                                      0.0*mm};
+
+  assert(ri_energy.size() == abs_length.size());
+  pyrex_mpt->AddProperty("ABSLENGTH", ri_energy.data(), abs_length.data(), ri_energy.size());
 
   return pyrex_mpt;
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4double temperature)
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay_time)
 {
 
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
@@ -1073,235 +725,311 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4d
   /// A WLS material is characterized by its photon absorption and photon emission spectrum
   /// and by a possible time delay between the absorption and re-emission of the photon.
 
-  G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
+  // Data from https://doi.org/10.1140/epjc/s10052-018-5807-z
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  const G4int ri_entries = 9;
-  //const G4int ABSL_NUMENTRIES = 8;
-  //const G4int WLSABSL_NUMENTRIES = 7;
-  const G4int EMISSION_NUMENTRIES = 55;
+  // REFRACTIVE INDEX
+  std::vector<G4double> rIndex_energies = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> TPB_rIndex      = {1.67, 1.67};
 
-  XenonGasProperties GXe_prop(pressure, temperature);
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 7*eV, 8*eV, 9*eV};
-  G4double rindex[ri_entries];
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
-  }
+  assert(rIndex_energies.size() == TPB_rIndex.size());
+  mpt->AddProperty("RINDEX", rIndex_energies.data(), TPB_rIndex.data(), rIndex_energies.size());
 
-/* Right border of the bins*/
-  G4double WLS_Emission_Energies[EMISSION_NUMENTRIES] = {1.96800306364 *eV,  1.98230541148 *eV,  1.99681716413 *eV,  2.01154295443 *eV,  2.0264875529 *eV,  2.04165587291 *eV,  2.05705297602 *eV,  2.07268407766 *eV,  2.08855455299 *eV,  2.10466994306 *eV,  2.12103596128 *eV,  2.13765850016 *eV,  2.15454363839 *eV,  2.17169764825 *eV,  2.18912700337 *eV,  2.2068383869 *eV,  2.2248387 *eV,  2.24313507089 *eV,  2.26173486418 *eV,  2.28064569081 *eV,  2.29987541838 *eV,  2.31943218215 *eV,  2.3393243964 *eV,  2.35956076661 *eV,  2.3801503021 *eV,  2.4011023294 *eV,  2.4224265064 *eV,  2.4441328371 *eV,  2.46623168735 *eV,  2.48873380128 *eV,  2.51165031879 *eV,  2.53499279387 *eV,  2.55877321408 *eV,  2.58300402103 *eV,  2.60769813212 *eV,  2.63286896352 *eV,  2.65853045439 *eV,  2.68469709272 *eV,  2.71138394255 *eV,  2.7386066729 *eV,  2.76638158844 *eV,  2.7947256621 *eV,  2.82365656957 *eV,  2.85319272616 *eV,  2.8833533258 *eV,  2.91415838269 *eV,  2.9456287756 *eV,  2.97778629498 *eV,  3.01065369338 *eV,  3.04425473906 *eV,  3.07861427337 *eV,  3.11375827192 *eV,  3.14971391017 *eV,  3.18650963341 *eV,  3.22417523192 *eV};
-;
+  // ABSORPTION LENGTH
+  // Assuming no absorption except WLS
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length  = {noAbsLength_, noAbsLength_};
 
- G4double TPB_Emission[EMISSION_NUMENTRIES] = {5e-05 , 5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  0.0001 ,  0.0002 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0002 ,  0.0007 ,  0.0007 ,  0.001 ,  0.0011 ,  0.0013 ,  0.0016 ,  0.0018 ,  0.0022 ,  0.0029 ,  0.0035 ,  0.0034 ,  0.0041 ,  0.0046 ,  0.0053 ,  0.0061 ,  0.0069 ,  0.008 ,  0.0087 ,  0.0101 ,  0.0101 ,  0.0103 ,  0.0105 ,  0.0112 ,  0.0117 ,  0.0112 ,  0.011 ,  0.014 ,  0.008 ,  0.008 ,  0.007 ,  0.0038 ,  0.0012 ,  0.0008, 0.0004};
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
+  // WLS ABSORPTION LENGTH (Version No Secondary WLS)
+  // The No Secondary WLS is forced by setting the WLS_absLength to noAbsLength_
+  // for wavelengths higher than 380 nm where the WLS emission spectrum starts.
+  std::vector<G4double> WLS_abs_energy = {
+                               optPhotMinE_,
+                               h_Planck * c_light / (380. * nm),  h_Planck * c_light / (370. * nm),
+                               h_Planck * c_light / (360. * nm),  h_Planck * c_light / (330. * nm),
+                               h_Planck * c_light / (320. * nm),  h_Planck * c_light / (310. * nm),
+                               h_Planck * c_light / (300. * nm),  h_Planck * c_light / (270. * nm),
+                               h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
+                               h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
+                               h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
+                               h_Planck * c_light / (100. * nm),  optPhotMaxE_};
 
- // Values taken from Gehman's paper http://arxiv.org/pdf/1104.3259.pdf
- const G4int wls_numentries = 14;
- G4double WLS_Energies[wls_numentries] =
-   {1.*eV, 2.8*eV, 4.*eV, 4.95937*eV, 5.16601*eV, 5.39062*eV,
-    5.63565*eV, 5.90401*eV, 6.19921*eV, 6.52548*eV, 6.88801*eV, 7.29319*eV,
-    7.74901*eV, 8.26561*eV};
- G4double TPB_ConvEfficiency[wls_numentries] =
-   {0., 0., 0., .86, .90, .94,
-    .90, .80, .75, .70, .75, .82,
-    .85, .92};
+  std::vector<G4double> WLS_absLength = {
+                              noAbsLength_,
+                              noAbsLength_,   50. * nm,     // 380 , 370 nm
+                              30. * nm,      30. * nm,     // 360 , 330 nm
+                              50. * nm,      80. * nm,     // 320 , 310 nm
+                              100. * nm,     100. * nm,     // 300 , 270 nm
+                              400. * nm,     400. * nm,     // 250 , 230 nm
+                              350. * nm,     250. * nm,     // 210 , 190 nm
+                              350. * nm,     400. * nm,     // 170 , 150 nm
+                              400. * nm,     noAbsLength_ };// 100 nm
 
- tpb_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
- tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies,
-		      TPB_Emission, EMISSION_NUMENTRIES);
- tpb_mpt->AddProperty("WLSCONVEFFICIENCY", WLS_Energies,
-		      TPB_ConvEfficiency, wls_numentries);
- tpb_mpt->AddConstProperty("WLSTIMECONSTANT",2.2*ns);
+  assert(WLS_abs_energy.size() == WLS_absLength.size());
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy.data(),
+                   WLS_absLength.data(), WLS_abs_energy.size());
 
-  return tpb_mpt;
+  // WLS EMISSION SPECTRUM
+  // Implemented with formula (7), with parameter values in table (3)
+  // Sampling from ~380 nm to 600 nm <--> from 2.06 to 3.26 eV
+  const G4int WLS_emi_entries = 120;
+  std::vector<G4double> WLS_emi_energy;
+  for (int i=0; i<WLS_emi_entries; i++)
+    WLS_emi_energy.push_back(2.06 * eV + 0.01 * i * eV);
+
+  std::vector<G4double> WLS_emiSpectrum;
+  G4double A      = 0.782;
+  G4double alpha  = 3.7e-2;
+  G4double sigma1 = 15.43;
+  G4double mu1    = 418.10;
+  G4double sigma2 = 9.72;
+  G4double mu2    = 411.2;
+
+  for (int i=0; i<WLS_emi_entries; i++) {
+    G4double wl = (h_Planck * c_light / WLS_emi_energy[i]) / nm;
+    WLS_emiSpectrum.push_back(A * (alpha/2.) * exp((alpha/2.) *
+                                                   (2*mu1 + alpha*pow(sigma1,2) - 2*wl)) *
+                              erfc((mu1 + alpha*pow(sigma1,2) - wl) / (sqrt(2)*sigma1)) +
+                              (1-A) * (1 / sqrt(2*pow(sigma2,2)*3.1416)) *
+                              exp((-pow(wl-mu2,2)) / (2*pow(sigma2,2))));
+    // G4cout << "* TPB WLSemi:  " << std::setw(4)
+    //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
+  };
+
+  assert(WLS_emi_energy.size() == WLS_emiSpectrum.size());
+  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy.data(),
+                   WLS_emiSpectrum.data(), WLS_emi_energy.size());
+
+  // WLS Delay
+  mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
+
+  // WLS Quantum Efficiency
+  // According to the paper, the QE of TPB depends on the incident wavelength.
+  // As Geant4 doesn't allow this possibility, it is set to the value corresponding
+  // to Xe scintillation spectrum peak.
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.65);
+  //mpt->AddConstProperty("WLSTIMECONSTANT",2.2*ns);
+
+  return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay)
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay_time)
 {
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
   /// A WLS material is characterized by its photon absorption and photon emission spectrum
   /// and by a possible time delay between the absorption and re-emission of the photon.
+  /// The difference with TPB is that the refraction index is set equal to that of LXe.
 
-  G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
 
-  // const G4int ri_entries = 9;
-  //const G4int ABSL_NUMENTRIES = 8;
-  //const G4int WLSABSL_NUMENTRIES = 7;
-  const G4int EMISSION_NUMENTRIES = 55;
+  // Data from https://doi.org/10.1140/epjc/s10052-018-5807-z
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
+  // REFRACTIVE INDEX
   XenonLiquidProperties LXe_prop;
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
 
-  // const G4int ri_entries = 38;
-  // G4double ri_energy[ri_entries]
-  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-  //      7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.4*eV, 8.6*eV, 8.8*eV,
-  //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV,
-  //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
-
-  G4double rindex[ri_entries];
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-    // rindex[i] = 1.7;
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+  std::vector<G4double> ri_energy;
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy.push_back(optPhotMinE_ + i * eWidth);
   }
 
-/* Right border of the bins*/
-  G4double WLS_Emission_Energies[EMISSION_NUMENTRIES] = {1.96800306364 *eV,  1.98230541148 *eV,  1.99681716413 *eV,  2.01154295443 *eV,  2.0264875529 *eV,  2.04165587291 *eV,  2.05705297602 *eV,  2.07268407766 *eV,  2.08855455299 *eV,  2.10466994306 *eV,  2.12103596128 *eV,  2.13765850016 *eV,  2.15454363839 *eV,  2.17169764825 *eV,  2.18912700337 *eV,  2.2068383869 *eV,  2.2248387 *eV,  2.24313507089 *eV,  2.26173486418 *eV,  2.28064569081 *eV,  2.29987541838 *eV,  2.31943218215 *eV,  2.3393243964 *eV,  2.35956076661 *eV,  2.3801503021 *eV,  2.4011023294 *eV,  2.4224265064 *eV,  2.4441328371 *eV,  2.46623168735 *eV,  2.48873380128 *eV,  2.51165031879 *eV,  2.53499279387 *eV,  2.55877321408 *eV,  2.58300402103 *eV,  2.60769813212 *eV,  2.63286896352 *eV,  2.65853045439 *eV,  2.68469709272 *eV,  2.71138394255 *eV,  2.7386066729 *eV,  2.76638158844 *eV,  2.7947256621 *eV,  2.82365656957 *eV,  2.85319272616 *eV,  2.8833533258 *eV,  2.91415838269 *eV,  2.9456287756 *eV,  2.97778629498 *eV,  3.01065369338 *eV,  3.04425473906 *eV,  3.07861427337 *eV,  3.11375827192 *eV,  3.14971391017 *eV,  3.18650963341 *eV,  3.22417523192 *eV};
-;
+  std::vector<G4double> ri_index;
 
- G4double TPB_Emission[EMISSION_NUMENTRIES] = {5e-05 , 5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  0.0001 ,  0.0002 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0002 ,  0.0007 ,  0.0007 ,  0.001 ,  0.0011 ,  0.0013 ,  0.0016 ,  0.0018 ,  0.0022 ,  0.0029 ,  0.0035 ,  0.0034 ,  0.0041 ,  0.0046 ,  0.0053 ,  0.0061 ,  0.0069 ,  0.008 ,  0.0087 ,  0.0101 ,  0.0101 ,  0.0103 ,  0.0105 ,  0.0112 ,  0.0117 ,  0.0112 ,  0.011 ,  0.014 ,  0.008 ,  0.008 ,  0.007 ,  0.0038 ,  0.0012 ,  0.0008, 0.0004};
+  for (G4int i=0; i<ri_entries; i++) {
+    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
+  }
 
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
- // Values taken from Gehman's paper http://arxiv.org/pdf/1104.3259.pdf
- // const G4int wls_numentries = 14;
- // G4double WLS_Energies[wls_numentries] =
- //   {1.*eV, 2.8*eV, 4.*eV, 4.95937*eV, 5.16601*eV, 5.39062*eV,
- //    5.63565*eV, 5.90401*eV, 6.19921*eV, 6.52548*eV, 6.88801*eV, 7.29319*eV,
- //    7.74901*eV, 8.26561*eV};
- // G4double TPB_ConvEfficiency[wls_numentries] =
- //   {0., 0., 0., .86, .90, .94,
- //    .90, .80, .75, .70, .75, .82,
- //    .85, .92};
+  // ABSORPTION LENGTH
+  // Assuming no absorption except WLS
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length  = {noAbsLength_, noAbsLength_};
 
-  const G4int wls_numentries = 17;
- G4double WLS_Energies[wls_numentries] =
-   {1.*eV, 2.8*eV, 4.*eV, 4.95937*eV, 5.16601*eV, 5.39062*eV,
-    5.63565*eV, 5.90401*eV, 6.19921*eV, 6.52548*eV, 6.88801*eV, 7.29319*eV,
-    7.74901*eV, 8.26561*eV, 9.*eV, 10.*eV, 12.4*eV};
- G4double TPB_ConvEfficiency[wls_numentries] =
-   {0., 0., 0., .86, .90, .94,
-    .90, .80, .75, .70, .75, .82,
-    .85, .92, 1., 1., 1.};
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
- tpb_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
- tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies,
-		      TPB_Emission, EMISSION_NUMENTRIES);
- tpb_mpt->AddProperty("WLSCONVEFFICIENCY", WLS_Energies,
-		      TPB_ConvEfficiency, wls_numentries);
- tpb_mpt->AddConstProperty("WLSTIMECONSTANT", decay);
- //tpb_mpt->AddConstProperty("WLSTIMECONSTANT",0.1*picosecond);
+  // WLS ABSORPTION LENGTH (Version No Secondary WLS)
+  // The No Secondary WLS is forced by setting the WLS_absLength to noAbsLength_
+  // for wavelengths higher than 380 nm where the WLS emission spectrum starts.
+  std::vector<G4double> WLS_abs_energy = {
+                               optPhotMinE_,
+                               h_Planck * c_light / (380. * nm),  h_Planck * c_light / (370. * nm),
+                               h_Planck * c_light / (360. * nm),  h_Planck * c_light / (330. * nm),
+                               h_Planck * c_light / (320. * nm),  h_Planck * c_light / (310. * nm),
+                               h_Planck * c_light / (300. * nm),  h_Planck * c_light / (270. * nm),
+                               h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
+                               h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
+                               h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
+                               h_Planck * c_light / (100. * nm),  optPhotMaxE_};
 
- G4cout << "Decay time of TPB = " << decay/nanosecond << " nanoseconds." << G4endl;
+  std::vector<G4double> WLS_absLength = {
+                              noAbsLength_,
+                              noAbsLength_,   50. * nm,     // 380 , 370 nm
+                              30. * nm,      30. * nm,     // 360 , 330 nm
+                              50. * nm,      80. * nm,     // 320 , 310 nm
+                              100. * nm,     100. * nm,     // 300 , 270 nm
+                              400. * nm,     400. * nm,     // 250 , 230 nm
+                              350. * nm,     250. * nm,     // 210 , 190 nm
+                              350. * nm,     400. * nm,     // 170 , 150 nm
+                              400. * nm,     noAbsLength_ };// 100 nm
 
-  return tpb_mpt;
+  assert(WLS_abs_energy.size() == WLS_absLength.size());
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy.data(),
+                   WLS_absLength.data(), WLS_abs_energy.size());
+
+  // WLS EMISSION SPECTRUM
+  // Implemented with formula (7), with parameter values in table (3)
+  // Sampling from ~380 nm to 600 nm <--> from 2.06 to 3.26 eV
+  const G4int WLS_emi_entries = 120;
+  std::vector<G4double> WLS_emi_energy;
+  for (int i=0; i<WLS_emi_entries; i++)
+    WLS_emi_energy.push_back(2.06 * eV + 0.01 * i * eV);
+
+  std::vector<G4double> WLS_emiSpectrum;
+  G4double A      = 0.782;
+  G4double alpha  = 3.7e-2;
+  G4double sigma1 = 15.43;
+  G4double mu1    = 418.10;
+  G4double sigma2 = 9.72;
+  G4double mu2    = 411.2;
+
+  for (int i=0; i<WLS_emi_entries; i++) {
+    G4double wl = (h_Planck * c_light / WLS_emi_energy[i]) / nm;
+    WLS_emiSpectrum.push_back(A * (alpha/2.) * exp((alpha/2.) *
+                                                   (2*mu1 + alpha*pow(sigma1,2) - 2*wl)) *
+                              erfc((mu1 + alpha*pow(sigma1,2) - wl) / (sqrt(2)*sigma1)) +
+                              (1-A) * (1 / sqrt(2*pow(sigma2,2)*3.1416)) *
+                              exp((-pow(wl-mu2,2)) / (2*pow(sigma2,2))));
+    // G4cout << "* TPB WLSemi:  " << std::setw(4)
+    //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
+  };
+
+  assert(WLS_emi_energy.size() == WLS_emiSpectrum.size());
+  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy.data(),
+                   WLS_emiSpectrum.data(), WLS_emi_energy.size());
+
+  // WLS Delay
+  mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
+
+  // WLS Quantum Efficiency
+  // According to the paper, the QE of TPB depends on the incident wavelength.
+  // As Geant4 doesn't allow this possibility, it is set to the value corresponding
+  // to Xe scintillation spectrum peak.
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.65);
+  //mpt->AddConstProperty("WLSTIMECONSTANT",2.2*ns);
+
+  return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double decay)
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double decay_time)
 {
-  /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
+    /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
   /// A WLS material is characterized by its photon absorption and photon emission spectrum
   /// and by a possible time delay between the absorption and re-emission of the photon.
-
-  G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
-
-  // const G4int ri_entries = 9;
-  //const G4int ABSL_NUMENTRIES = 8;
-  //const G4int WLSABSL_NUMENTRIES = 7;
-  const G4int EMISSION_NUMENTRIES = 55;
-
-  XenonLiquidProperties LXe_prop;
-
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries]
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
-
-  G4double rindex[ri_entries];
-  for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = 1.7;
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
-  }
-
-/* Right border of the bins*/
-  G4double WLS_Emission_Energies[EMISSION_NUMENTRIES] = {1.96800306364 *eV,  1.98230541148 *eV,  1.99681716413 *eV,  2.01154295443 *eV,  2.0264875529 *eV,  2.04165587291 *eV,  2.05705297602 *eV,  2.07268407766 *eV,  2.08855455299 *eV,  2.10466994306 *eV,  2.12103596128 *eV,  2.13765850016 *eV,  2.15454363839 *eV,  2.17169764825 *eV,  2.18912700337 *eV,  2.2068383869 *eV,  2.2248387 *eV,  2.24313507089 *eV,  2.26173486418 *eV,  2.28064569081 *eV,  2.29987541838 *eV,  2.31943218215 *eV,  2.3393243964 *eV,  2.35956076661 *eV,  2.3801503021 *eV,  2.4011023294 *eV,  2.4224265064 *eV,  2.4441328371 *eV,  2.46623168735 *eV,  2.48873380128 *eV,  2.51165031879 *eV,  2.53499279387 *eV,  2.55877321408 *eV,  2.58300402103 *eV,  2.60769813212 *eV,  2.63286896352 *eV,  2.65853045439 *eV,  2.68469709272 *eV,  2.71138394255 *eV,  2.7386066729 *eV,  2.76638158844 *eV,  2.7947256621 *eV,  2.82365656957 *eV,  2.85319272616 *eV,  2.8833533258 *eV,  2.91415838269 *eV,  2.9456287756 *eV,  2.97778629498 *eV,  3.01065369338 *eV,  3.04425473906 *eV,  3.07861427337 *eV,  3.11375827192 *eV,  3.14971391017 *eV,  3.18650963341 *eV,  3.22417523192 *eV};
-;
-
- G4double TPB_Emission[EMISSION_NUMENTRIES] = {5e-05 , 5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  0.0001 ,  0.0002 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0002 ,  0.0007 ,  0.0007 ,  0.001 ,  0.0011 ,  0.0013 ,  0.0016 ,  0.0018 ,  0.0022 ,  0.0029 ,  0.0035 ,  0.0034 ,  0.0041 ,  0.0046 ,  0.0053 ,  0.0061 ,  0.0069 ,  0.008 ,  0.0087 ,  0.0101 ,  0.0101 ,  0.0103 ,  0.0105 ,  0.0112 ,  0.0117 ,  0.0112 ,  0.011 ,  0.014 ,  0.008 ,  0.008 ,  0.007 ,  0.0038 ,  0.0012 ,  0.0008, 0.0004};
+  /// The difference with TPB is that the refraction index is constant and set to 1.7.
 
 
- // Values taken from Gehman's paper http://arxiv.org/pdf/1104.3259.pdf
- const G4int wls_numentries = 14;
- G4double WLS_Energies[wls_numentries] =
-   {1.*eV, 2.8*eV, 4.*eV, 4.95937*eV, 5.16601*eV, 5.39062*eV,
-    5.63565*eV, 5.90401*eV, 6.19921*eV, 6.52548*eV, 6.88801*eV, 7.29319*eV,
-    7.74901*eV, 8.26561*eV};
- G4double TPB_ConvEfficiency[wls_numentries] =
-   {0., 0., 0., .86, .90, .94,
-    .90, .80, .75, .70, .75, .82,
-    .85, .92};
+  // Data from https://doi.org/10.1140/epjc/s10052-018-5807-z
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
- tpb_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
- tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies,
-		      TPB_Emission, EMISSION_NUMENTRIES);
- tpb_mpt->AddProperty("WLSCONVEFFICIENCY", WLS_Energies,
-		      TPB_ConvEfficiency, wls_numentries);
- tpb_mpt->AddConstProperty("WLSTIMECONSTANT", decay);
- //tpb_mpt->AddConstProperty("WLSTIMECONSTANT", 0.1*picosecond);
+  // REFRACTIVE INDEX
+  std::vector<G4double> ri_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> rindex    = {1.7, 1.7};
 
- G4cout << "Decay time of TPB = " << decay/nanosecond << " nanoseconds." << G4endl;
+  assert(ri_energy.size() == rindex.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), rindex.data(), ri_energy.size());
 
-  return tpb_mpt;
+  // ABSORPTION LENGTH
+  // Assuming no absorption except WLS
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length  = {noAbsLength_, noAbsLength_};
+
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+
+  // WLS ABSORPTION LENGTH (Version No Secondary WLS)
+  // The No Secondary WLS is forced by setting the WLS_absLength to noAbsLength_
+  // for wavelengths higher than 380 nm where the WLS emission spectrum starts.
+  std::vector<G4double> WLS_abs_energy = {
+                               optPhotMinE_,
+                               h_Planck * c_light / (380. * nm),  h_Planck * c_light / (370. * nm),
+                               h_Planck * c_light / (360. * nm),  h_Planck * c_light / (330. * nm),
+                               h_Planck * c_light / (320. * nm),  h_Planck * c_light / (310. * nm),
+                               h_Planck * c_light / (300. * nm),  h_Planck * c_light / (270. * nm),
+                               h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
+                               h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
+                               h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
+                               h_Planck * c_light / (100. * nm),  optPhotMaxE_};
+
+  std::vector<G4double> WLS_absLength = {
+                              noAbsLength_,
+                              noAbsLength_,   50. * nm,     // 380 , 370 nm
+                              30. * nm,      30. * nm,     // 360 , 330 nm
+                              50. * nm,      80. * nm,     // 320 , 310 nm
+                              100. * nm,     100. * nm,     // 300 , 270 nm
+                              400. * nm,     400. * nm,     // 250 , 230 nm
+                              350. * nm,     250. * nm,     // 210 , 190 nm
+                              350. * nm,     400. * nm,     // 170 , 150 nm
+                              400. * nm,     noAbsLength_ };// 100 nm
+
+  assert(WLS_abs_energy.size() == WLS_absLength.size());
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy.data(),
+                   WLS_absLength.data(), WLS_abs_energy.size());
+
+  // WLS EMISSION SPECTRUM
+  // Implemented with formula (7), with parameter values in table (3)
+  // Sampling from ~380 nm to 600 nm <--> from 2.06 to 3.26 eV
+  const G4int WLS_emi_entries = 120;
+  std::vector<G4double> WLS_emi_energy;
+  for (int i=0; i<WLS_emi_entries; i++)
+    WLS_emi_energy.push_back(2.06 * eV + 0.01 * i * eV);
+
+  std::vector<G4double> WLS_emiSpectrum;
+  G4double A      = 0.782;
+  G4double alpha  = 3.7e-2;
+  G4double sigma1 = 15.43;
+  G4double mu1    = 418.10;
+  G4double sigma2 = 9.72;
+  G4double mu2    = 411.2;
+
+  for (int i=0; i<WLS_emi_entries; i++) {
+    G4double wl = (h_Planck * c_light / WLS_emi_energy[i]) / nm;
+    WLS_emiSpectrum.push_back(A * (alpha/2.) * exp((alpha/2.) *
+                                                   (2*mu1 + alpha*pow(sigma1,2) - 2*wl)) *
+                              erfc((mu1 + alpha*pow(sigma1,2) - wl) / (sqrt(2)*sigma1)) +
+                              (1-A) * (1 / sqrt(2*pow(sigma2,2)*3.1416)) *
+                              exp((-pow(wl-mu2,2)) / (2*pow(sigma2,2))));
+    // G4cout << "* TPB WLSemi:  " << std::setw(4)
+    //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
+  };
+
+  assert(WLS_emi_energy.size() == WLS_emiSpectrum.size());
+  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy.data(),
+                   WLS_emiSpectrum.data(), WLS_emi_energy.size());
+
+  // WLS Delay
+  mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
+
+  // WLS Quantum Efficiency
+  // According to the paper, the QE of TPB depends on the incident wavelength.
+  // As Geant4 doesn't allow this possibility, it is set to the value corresponding
+  // to Xe scintillation spectrum peak.
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.65);
+  //mpt->AddConstProperty("WLSTIMECONSTANT",2.2*ns);
+
+  return mpt;
 }
-
-
-
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPBOld()
-{
-  /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
-  /// a wavelength shifter which allows to converts VUV photons to blue photons.
-  /// A WLS material is characterized by its photon absorption and photon emission spectrum
-  /// and by a possible time delay between the absorption and re-emission of the photon.
-
-  G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
-
-  const G4int RIN_NUMENTRIES  = 5;
-  const G4int ABSL_NUMENTRIES = 8;
-  const G4int WLSABSL_NUMENTRIES = 7;
-  const G4int EMISSION_NUMENTRIES = 55;
-
-  G4double Energies[RIN_NUMENTRIES] = {0.1*eV, 1.1*eV, 5.*eV, 10.*eV, 100.*eV};
-  G4double TPB_RIND[ABSL_NUMENTRIES]  = {1.3, 1.3, 1.3, 1.3, 1.3};
-
-/* Right border of the bins*/
-  G4double WLS_Emission_Energies[EMISSION_NUMENTRIES] = {1.96800306364 *eV,  1.98230541148 *eV,  1.99681716413 *eV,  2.01154295443 *eV,  2.0264875529 *eV,  2.04165587291 *eV,  2.05705297602 *eV,  2.07268407766 *eV,  2.08855455299 *eV,  2.10466994306 *eV,  2.12103596128 *eV,  2.13765850016 *eV,  2.15454363839 *eV,  2.17169764825 *eV,  2.18912700337 *eV,  2.2068383869 *eV,  2.2248387 *eV,  2.24313507089 *eV,  2.26173486418 *eV,  2.28064569081 *eV,  2.29987541838 *eV,  2.31943218215 *eV,  2.3393243964 *eV,  2.35956076661 *eV,  2.3801503021 *eV,  2.4011023294 *eV,  2.4224265064 *eV,  2.4441328371 *eV,  2.46623168735 *eV,  2.48873380128 *eV,  2.51165031879 *eV,  2.53499279387 *eV,  2.55877321408 *eV,  2.58300402103 *eV,  2.60769813212 *eV,  2.63286896352 *eV,  2.65853045439 *eV,  2.68469709272 *eV,  2.71138394255 *eV,  2.7386066729 *eV,  2.76638158844 *eV,  2.7947256621 *eV,  2.82365656957 *eV,  2.85319272616 *eV,  2.8833533258 *eV,  2.91415838269 *eV,  2.9456287756 *eV,  2.97778629498 *eV,  3.01065369338 *eV,  3.04425473906 *eV,  3.07861427337 *eV,  3.11375827192 *eV,  3.14971391017 *eV,  3.18650963341 *eV,  3.22417523192 *eV};
-;
-
- G4double TPB_Emission[EMISSION_NUMENTRIES] = {5e-05 , 5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  5e-05 ,  0.0001 ,  0.0002 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0003 ,  0.0002 ,  0.0007 ,  0.0007 ,  0.001 ,  0.0011 ,  0.0013 ,  0.0016 ,  0.0018 ,  0.0022 ,  0.0029 ,  0.0035 ,  0.0034 ,  0.0041 ,  0.0046 ,  0.0053 ,  0.0061 ,  0.0069 ,  0.008 ,  0.0087 ,  0.0101 ,  0.0101 ,  0.0103 ,  0.0105 ,  0.0112 ,  0.0117 ,  0.0112 ,  0.011 ,  0.014 ,  0.008 ,  0.008 ,  0.007 ,  0.0038 ,  0.0012 ,  0.0008, 0.0004};
-
-
- /// Initially, the absorption efficiency (that is, the number of shifted photons/number
-  /// of photons impinguing on the material) was set to 90% for VUV light and 0 for
-  /// any other wavelength, for a thickness of 1 micron of TPB (that is the thickness
-  /// assigned to the light tube coating).
-  /// That means I/I_0 = .1 = exp-(1/lambda) --> lambda = .43 micron. The absorption spectrum
-  /// (WLSABSLENGTH property) is then assigned this value for the whole scintillation range of energies
-  /// and no absorption for any other wavelegngth.
-  /// The coating of the SiPMs is way thinner (100 nm), thus that efficiency was
-  /// too low to have any shifting there. Therefore we set the absorption constant to
-  /// .00000043 cm, which gives 100% shifting efficiency to a 100-nm thickness, thus to
-  /// the 1-mu one, too.
-   G4double WLS_Abs_Energies[WLSABSL_NUMENTRIES] =
-     {0.1*eV, 4.*eV, 6.20625*eV, 7.2*eV, 8.20625*eV, 9.*eV, 100.*eV};
-   G4double TPB_WLSABSL[WLSABSL_NUMENTRIES]  =
-     {1000.*cm, 1000.*cm, 0.00000043*cm, 0.00000043*cm, 0.00000043*cm, 1000*cm, 1000.*cm};
-
-   G4cout << "Old TPB" << G4endl;
-  tpb_mpt->AddProperty("RINDEX", Energies, TPB_RIND, RIN_NUMENTRIES);
-  tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies, TPB_Emission, EMISSION_NUMENTRIES);
-  tpb_mpt->AddProperty("WLSABSLENGTH", WLS_Abs_Energies, TPB_WLSABSL,WLSABSL_NUMENTRIES);
-  tpb_mpt->AddConstProperty("WLSTIMECONSTANT",1.*ns);
-
-  return tpb_mpt;
-}
-
 
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
@@ -1312,27 +1040,22 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
   // Scintillation spectrum extracted from
   // https://www.crystals.saint-gobain.com/sites/imdf.crystals.com/files/documents/lyso-material-data-sheet.pdf
-  const G4int ri_entries = 16;
-  G4double ri_energy[ri_entries] = {1.9074*eV, 2.0891*eV, 2.2708*eV,
-				    2.3368*eV, 2.4028*eV, 2.5511*eV, 2.6203*eV,
-				    2.6895*eV, 2.7665*eV, 2.8437*eV, 2.89785*eV,
-				    2.9520*eV, 3.00665*eV, 3.0613*eV,
-				    3.1578*eV, 3.2542*eV};
-  G4double rindex[ri_entries] = { 1.802, 1.804, 1.806,
-				  1.808, 1.810, 1.813, 1.8155,
-				  1.818, 1.820, 1.822, 1.8245,
-				  1.827, 1.830, 1.833,
-				  1.838, 1.842};
+  std::vector<G4double> ri_energy = {lyso_minE_, 2.2708*eV, 2.4028*eV, 2.5511*eV,
+                                     2.6895*eV, 2.8437*eV, 2.9520*eV, 3.0613*eV,
+                                     lyso_maxE_};
+  std::vector<G4double> ri_index = {1.806, 1.806, 1.810, 1.813,
+                                    1.818, 1.822, 1.827, 1.833,
+                                    1.833};
 
+  // G4cout << "*** LYSO refractive index ***" << G4endl;
+  //  for (G4int i=1; i<ri_entries; i++) {
+  //   G4cout  << ri_energy[i] << " eV --> " << rindex[i] << ", " << G4endl;
+  // }
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
-  for (G4int i=1; i<ri_entries; i++) {
-    G4cout  << rindex[i] << ", " << G4endl;
-  }
-
-  const G4int sc_entries = 63;
-
- G4double sc_energy[] =
-   {1.9629408004008015*eV, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
+  std::vector<G4double> sc_energy =
+   {lyso_minE_, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
     2.075153360986118*eV, 2.1108921203127564*eV, 2.131530815691394*eV, 2.1549516183402426*eV,
     2.1788791714153226*eV, 2.2008686890176556*eV, 2.225818446565337*eV, 2.2461704051922378*eV,
     2.2774394451688957*eV, 2.2933838194379406*eV, 2.309537681443672*eV, 2.3287011454278184*eV,
@@ -1347,37 +1070,38 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
     3.048094952090428*eV, 3.057784590715629*eV, 3.0675360309025064*eV, 3.0870759513756334*eV,
     3.1271371999622284*eV, 3.1373650393337758*eV, 3.1527828353680922*eV, 3.1734564909877436*eV,
     3.189158818959311*eV, 3.199797076377322*eV, 3.2210492254756646*eV, 3.242646039884366*eV,
-    3.2699528217360423*eV, 3.2976765066977722*eV, 3.3428842485014827*eV};
+    3.2699528217360423*eV, 3.2976765066977722*eV, lyso_maxE_};
 
 
- G4double intensity[sc_entries] = {0., 0.0704225352112644, 0.3521126760563362, 0.633802816901401,
-0.7746478873239369, 1.1971830985915446, 1.5492957746478881, 1.8309859154929529, 2.2535211267605604,
-2.676056338028168, 3.2394366197183047, 3.8732394366197203, 4.507042253521121, 5.0,
-5.633802816901407, 6.126760563380272, 6.901408450704224, 7.464788732394362, 8.38028169014084,
-9.014084507042256, 9.788732394366193, 10.985915492957744, 12.183098591549294, 13.38028169014084,
-14.29577464788732, 15.352112676056334, 16.267605633802816, 17.183098591549292, 17.816901408450704,
-18.591549295774648, 19.295774647887324, 20.0, 20.704225352112672, 21.338028169014088,
-22.183098591549296, 23.02816901408451, 23.59154929577465, 24.15492957746479, 24.788732394366196,
-24.507042253521124, 23.80281690140845, 23.09859154929577, 22.04225352112676, 21.408450704225352,
-20.56338028169014, 19.64788732394366, 18.943661971830984, 18.239436619718308,
-17.464788732394368, 16.549295774647888, 15.633802816901408, 14.577464788732392, 11.338028169014079,
-10.281690140845065, 8.943661971830984, 7.746478873239432, 6.760563380281688, 5.7042253521126725,
-4.718309859154921, 3.450704225352105, 2.3239436619718252, 1.4084507042253518, 0.};
+  std::vector<G4double> intensity =
+    {0., 0.0704225352112644, 0.3521126760563362, 0.633802816901401, 0.7746478873239369,
+     1.1971830985915446, 1.5492957746478881, 1.8309859154929529, 2.2535211267605604, 2.676056338028168,
+     3.2394366197183047, 3.8732394366197203, 4.507042253521121, 5.0, 5.633802816901407,
+     6.126760563380272, 6.901408450704224, 7.464788732394362, 8.38028169014084, 9.014084507042256,
+     9.788732394366193, 10.985915492957744, 12.183098591549294, 13.38028169014084, 14.29577464788732,
+     15.352112676056334, 16.267605633802816, 17.183098591549292, 17.816901408450704, 18.591549295774648,
+     19.295774647887324, 20.0, 20.704225352112672, 21.338028169014088, 22.183098591549296,
+     23.02816901408451, 23.59154929577465, 24.15492957746479, 24.788732394366196, 24.507042253521124,
+     23.80281690140845, 23.09859154929577, 22.04225352112676, 21.408450704225352, 20.56338028169014,
+     19.64788732394366, 18.943661971830984, 18.239436619718308, 17.464788732394368, 16.549295774647888,
+     15.633802816901408, 14.577464788732392, 11.338028169014079, 10.281690140845065, 8.943661971830984,
+     7.746478873239432, 6.760563380281688, 5.7042253521126725, 4.718309859154921, 3.450704225352105,
+     2.3239436619718252, 1.4084507042253518, 0.};
 
+  assert(sc_energy.size() == intensity.size());
+  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
 
-
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   mpt->AddConstProperty("FASTTIMECONSTANT", 41*ns);
 
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {41.2*cm, 41.2*cm};
+  std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
 
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
   return mpt;
 }
@@ -1388,82 +1112,87 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO_nconst()
 
   // Refractive index taken by "Optical and Scintillation Properties of Inorganic Scintillators in High Energy Physics", R. Mao, Liyuan Zhang, and Ren-Yuan Zhu, IEEE TRANSACTIONS ON NUCLEAR SCIENCE, VOL. 55, NO. 4, AUGUST 2008
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
-  const G4int ri_entries = 9;
-  G4double ri_energy[ri_entries] = {1.9074*eV, 2.2708*eV, 2.4028*eV, 2.5511*eV, 2.6895*eV,
-                                    2.8437*eV, 2.9520*eV, 3.0613*eV, 3.2542*eV};
+  std::vector<G4double> ri_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> ri_index    = {1.8, 1.8};
 
-  G4double rindex[ri_entries] = { 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8};
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
+  std::vector<G4double> sc_energy =
+    {lyso_minE_, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
+     2.075153360986118*eV, 2.1108921203127564*eV, 2.131530815691394*eV, 2.1549516183402426*eV,
+     2.1788791714153226*eV, 2.2008686890176556*eV, 2.225818446565337*eV, 2.2461704051922378*eV,
+     2.2774394451688957*eV, 2.2933838194379406*eV, 2.309537681443672*eV, 2.3287011454278184*eV,
+     2.34534235398821*eV, 2.365099103796332*eV, 2.382250183859144*eV, 2.4085359216953424*eV,
+     2.4233406375845*eV, 2.456622921785144*eV, 2.4782281493172356*eV, 2.503411781001508*eV,
+     2.52588828700936*eV, 2.5487533714262676*eV, 2.572055225192039*eV, 2.588926183988832*eV,
+     2.6025967807599906*eV, 2.623400276029348*eV, 2.6374283564632037*eV, 2.6588048713474666*eV,
+     2.6623164236046244*eV, 2.6877929388662145*eV, 2.713729981831732*eV, 2.7325282355525173*eV,
+     2.7593839494903407*eV, 2.7907427243849288*eV, 2.83096946231753*eV, 2.885218973585188*eV,
+     2.9197414497478893*eV, 2.9417873478198326*eV, 2.9732295992116424*eV, 2.991505736849123*eV,
+     3.005429157443019*eV, 3.0194959021101067*eV, 3.0242886485355824*eV, 3.0432131984421833*eV,
+     3.048094952090428*eV, 3.057784590715629*eV, 3.0675360309025064*eV, 3.0870759513756334*eV,
+     3.1271371999622284*eV, 3.1373650393337758*eV, 3.1527828353680922*eV, 3.1734564909877436*eV,
+     3.189158818959311*eV, 3.199797076377322*eV, 3.2210492254756646*eV, 3.242646039884366*eV,
+     3.2699528217360423*eV, 3.2976765066977722*eV, lyso_maxE_};
 
-  const G4int sc_entries = 7;
-  G4double sc_energy[sc_entries] =
-    {1.9074*eV, 2.2543*eV, 2.4797*eV, 2.6436*eV, 2.8700*eV, 3.0996*eV, 3.2542*eV};
+  std::vector<G4double> intensity =
+    {0., 0.0704225352112644, 0.3521126760563362, 0.633802816901401, 0.7746478873239369,
+     1.1971830985915446, 1.5492957746478881, 1.8309859154929529, 2.2535211267605604, 2.676056338028168,
+     3.2394366197183047, 3.8732394366197203, 4.507042253521121, 5.0, 5.633802816901407,
+     6.126760563380272, 6.901408450704224, 7.464788732394362, 8.38028169014084, 9.014084507042256,
+     9.788732394366193, 10.985915492957744, 12.183098591549294, 13.38028169014084, 14.29577464788732,
+     15.352112676056334, 16.267605633802816, 17.183098591549292, 17.816901408450704, 18.591549295774648,
+     19.295774647887324, 20.0, 20.704225352112672, 21.338028169014088, 22.183098591549296,
+     23.02816901408451, 23.59154929577465, 24.15492957746479, 24.788732394366196, 24.507042253521124,
+     23.80281690140845, 23.09859154929577, 22.04225352112676, 21.408450704225352, 20.56338028169014,
+     19.64788732394366, 18.943661971830984, 18.239436619718308, 17.464788732394368, 16.549295774647888,
+     15.633802816901408, 14.577464788732392, 11.338028169014079, 10.281690140845065, 8.943661971830984,
+     7.746478873239432, 6.760563380281688, 5.7042253521126725, 4.718309859154921, 3.450704225352105,
+     2.3239436619718252, 1.4084507042253518, 0.};
 
-  G4double intensity[sc_entries] = {0., 0.0643, 0.1929, 0.4, 1, 0.4071, 0.};
+  assert(sc_energy.size() == intensity.size());
+  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
 
-
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.773703*ns);
-  // mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  // S Seifert et al 2012 JINST 7 P09004
+  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
-  // mpt->AddConstProperty("SCINTILLATIONYIELD", 100./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  //mpt->AddConstProperty("RAYLEIGH", 36000.*cm);
-  // check constants with the Aprile
   mpt->AddConstProperty("FASTTIMECONSTANT", 41*ns);
-  // mpt->AddConstProperty("SLOWTIMECONSTANT", 27.*ns);
-  //  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
-  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  // mpt->AddConstProperty("YIELDRATIO", 1.);
 
-  G4double energy[2] = {0.01*eV, 100.*eV};
+  std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
 
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  assert(abs_energy.size() == abs_length.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+
 
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FakeLYSO()
-{
-  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-
-  const G4int ri_entries = 9;
-  G4double ri_energy[ri_entries] = {1.9074*eV, 2.2708*eV, 2.4028*eV, 2.5511*eV, 2.6895*eV,
-                                    2.8437*eV, 2.9520*eV, 3.0613*eV, 3.2542*eV};
-  //G4double rindex[ri_entries] = { 1.802, 1.806, 1.810, 1.813, 1.818, 1.822, 1.827, 1.833, 1.842};
-  G4double rindex[ri_entries] = { 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8};
-
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  // G4double abslen[2] = {41.2*cm, 41.2*cm};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
-
-  return mpt;
-}
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::ReflectantSurface(G4double reflectivity)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-  G4cout << "Surface reflectivity = " << reflectivity << G4endl;
-  const G4int REFL_NUMENTRIES = 2;
 
-  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {reflectivity, reflectivity};
-  G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a
+  std::vector<G4double> ENERGIES = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> REFLECTIVITY = {reflectivity, reflectivity};
+  std::vector<G4double> specularlobe = {0., 0.}; // specular reflection about the normal to a
   //microfacet. Such a vector is chosen according to a gaussian distribution with
   //sigma = SigmaAlhpa (in rad) and centered in the average normal.
-  G4double specularspike[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the average normal
-  G4double backscatter[REFL_NUMENTRIES] = {0., 0.}; //180 degrees reflection
+  std::vector<G4double> specularspike = {0., 0.}; // specular reflection about the average normal
+  std::vector<G4double> backscatter = {0., 0.}; //180 degrees reflection
   // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
 
-  mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
-  mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES,specularlobe,REFL_NUMENTRIES);
-  mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES,specularspike,REFL_NUMENTRIES);
-  mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES,backscatter,REFL_NUMENTRIES);
+  assert(ENERGIES.size() == REFLECTIVITY.size());
+  mpt->AddProperty("REFLECTIVITY", ENERGIES.data(), REFLECTIVITY.data(), ENERGIES.size());
+
+  assert(ENERGIES.size() == specularlobe.size());
+  assert(ENERGIES.size() == specularspike.size());
+  assert(ENERGIES.size() == backscatter.size());
+  mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES.data(), specularlobe.data(), ENERGIES.size());
+  mpt->AddProperty("SPECULARSPIKECONSTANT", ENERGIES.data(), specularspike.data(), ENERGIES.size());
+  mpt->AddProperty("BACKSCATTERCONSTANT", ENERGIES.data(), backscatter.data(), ENERGIES.size());
 
   return mpt;
 }
