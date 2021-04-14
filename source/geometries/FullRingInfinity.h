@@ -57,12 +57,19 @@ private:
   /// Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 
+<<<<<<< HEAD
   G4double axial_length_;
   G4double sipm_pitch_;
   G4int n_sipm_rows_;
   G4int instr_faces_; ///< number of instrumented faces
   G4double kapton_thickn_;
   G4double depth_;
+=======
+    G4double inner_radius_, external_radius_;
+    G4double lxe_container_int_thickn_, lxe_container_ext_thickn_;
+    G4double vessel_int_thickn_, vessel_ext_thickn_;
+    G4double vacuum_thickn_;
+>>>>>>> Add a vacuum vessel to the ring.
 
   G4double inner_radius_, external_radius_;
   G4double cryo_width_, cryo_thickn_;
