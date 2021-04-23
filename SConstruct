@@ -111,6 +111,13 @@ vars.AddVariables(
                  NULL_PATH),
 
 
+    ## nexus
+
+    PathVariable('NEXUS_DIR',
+                 'Path to nexus installation.',
+                 NULL_PATH),
+
+
     ## The following vars shouldn't be defined by users unless they
     ## know what they are doing.
 
@@ -221,6 +228,16 @@ if not env['LIBPATH']:
 
 #    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
 #        Abort('GSL library not found.')
+
+    ## NEXUS configuration -------------------------------
+    env.ParseConfig('nexus-config --include --libdir --libs')
+
+    if not conf.CheckCXXHeader('nexus/NexusApp.h'):
+        Abort('NEXUS headers could not be found.')
+
+    if not conf.CheckLib(library='nexus', language='CXX', autoadd=0):
+        Abort('NEXUS libraries could not be found.')
+
 
 ## ##################################################################
     env = conf.Finish()
