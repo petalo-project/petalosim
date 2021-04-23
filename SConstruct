@@ -1,28 +1,26 @@
 ### ------------------------------------------------------------------
-###  SConstruct - Building script for NEXUS
+###  SConstruct - Building script for petalosim
 ###
-###  Author : J. Martin-Albo <jmalbos@ific.uv.es>
-###  Created: 23 July 2009
-###  Version: $Id$
-###
-###  Note.- First time this script is executed, a configure-like step
-###  tries to find out where are located the header and libraries
-###  of all NEXUS dependencies. If it succeeds, this configuration is
-###  stored in a file and used in future builds until a clean is
-###  performed. The script tries to locate the dependencies by using
-###  pkg-config scripts or searching at common paths. This should work
+###  Note.- The first time this script is executed, a configure-like step
+###  tries to find out where the header and libraries
+###  of all petalosim dependencies are located. If it succeeds,
+###  this configuration is stored in a file and used in future builds
+###  until a clean is performed. The script tries to locate the dependencies
+###  by using pkg-config scripts or searching at common paths. This should work
 ###  in most systems. However, if needed, users can provide via
 ###  command-line (or the BUILDVARS_FILE) the system path to any
 ###  dependency.
+###
+### The PETALO Collaboration
 ### ------------------------------------------------------------------
 from __future__ import print_function
 import os
 import subprocess
 
-## Geant4 version required by NEXUS
-MIN_NEXUS_G4VERSION_NUMBER = 1051
+## Geant4 version required by petalosim
+MIN_G4VERSION_NUMBER = 1051
 
-## NEXUS source code directories
+## petalosim source code directories
 SRCDIR = ['actions',
           'base',
           'generators',
@@ -69,9 +67,9 @@ def AssertG4Version(path):
         g4version = int(''.join(g4version.split('.')))
         msg = "Checking for Geant4 version..."
         print (msg, g4version)
-        if g4version < MIN_NEXUS_G4VERSION_NUMBER:
-            msg = 'This version of NEXUS requires Geant4 version >= ' \
-                + str(MIN_NEXUS_G4VERSION_NUMBER)
+        if g4version < MIN_G4VERSION_NUMBER:
+            msg = 'This version of petalosim requires Geant4 version >= ' \
+                + str(MIN_G4VERSION_NUMBER)
             Abort(msg)
 
 
@@ -231,7 +229,7 @@ vars.Save(BUILDVARS_FILE, env)
 
 
 ## ###################################################################
-## BUILDING NEXUS
+## BUILDING PETALOSIM
 
 SRCDIR  = ['source/' + dir for dir in SRCDIR]
 
@@ -244,7 +242,7 @@ for d in SRCDIR:
 env['CXXCOMSTR']  = "Compiling $SOURCE"
 env['LINKCOMSTR'] = "Linking $TARGET"
 
-nexus = env.Program('bin/nexus', ['source/nexus.cc']+src)
+nexus = env.Program('bin/petalo', ['source/petalo.cc']+src)
 
 TSTDIR = ['utils',
 	  'example']
@@ -255,6 +253,6 @@ for d in TSTDIR:
     tst += Glob(d+'/*.cc')
 
 env.Append(CPPPATH = ['source/tests'])
-nexus_test = env.Program('bin/nexus-test', ['source/nexus-test.cc']+tst+src)
+nexus_test = env.Program('bin/petalo-test', ['source/petalo-test.cc']+tst+src)
 
 Clean(nexus, 'buildvars.scons')
