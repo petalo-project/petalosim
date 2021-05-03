@@ -6,7 +6,7 @@
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
-#include "NexusApp.h"
+#include "nexus/NexusApp.h"
 
 #include <G4UImanager.hh>
 #include <G4UIterminal.hh>
