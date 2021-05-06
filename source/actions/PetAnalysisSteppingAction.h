@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | AnalysisSteppingAction.h
+// nexus | PetAnalysisSteppingAction.h
 //
 // This class allows the user to print the total number of photons detected by
 // all kinds of photosensors at the end of the run.
@@ -10,8 +10,8 @@
 // The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef ANALYSIS_STEPPING_ACTION_H
-#define ANALYSIS_STEPPING_ACTION_H
+#ifndef P_ANALYSIS_STEPPING_ACTION_H
+#define P_ANALYSIS_STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
 #include <G4GenericMessenger.hh>
@@ -26,13 +26,13 @@ class TH2F;
 
 namespace nexus {
 
-  class AnalysisSteppingAction: public G4UserSteppingAction
+  class PetAnalysisSteppingAction: public G4UserSteppingAction
   {
   public:
     /// Constructor
-    AnalysisSteppingAction();
+    PetAnalysisSteppingAction();
     /// Destructor
-    ~AnalysisSteppingAction();
+    ~PetAnalysisSteppingAction();
 
     virtual void UserSteppingAction(const G4Step*);
 

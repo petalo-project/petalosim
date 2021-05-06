@@ -11,6 +11,7 @@
 
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
+#include "nexus/FactoryBase.h"
 
 #include <G4Track.hh>
 #include <G4TrackingManager.hh>
@@ -31,7 +32,7 @@
 
 using namespace nexus;
 
-
+REGISTER_CLASS(AnalysisTrackingAction, G4UserTrackingAction)
 
 AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
                                                   file_name_("OpticalTracking"),

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PersistencyManager.h
+// nexus | PetaloPersistencyManager.h
 //
 // This class writes all the relevant information of the simulation
 // to an ouput file.
@@ -7,9 +7,10 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef PERSISTENCY_MANAGER_H
-#define PERSISTENCY_MANAGER_H
+#ifndef P_PERSISTENCY_MANAGER_H
+#define P_PERSISTENCY_MANAGER_H
 
+#include "nexus/BasePersistencyManager.h"
 #include <G4VPersistencyManager.hh>
 #include <vector>
 
@@ -25,12 +26,15 @@ namespace nexus {
 
   /// TODO. CLASS DESCRIPTION
 
-  class PersistencyManager: public G4VPersistencyManager
+  class PetaloPersistencyManager: public BasePersistencyManager
   {
   public:
+    PetaloPersistencyManager();
+    ~PetaloPersistencyManager();
+    PetaloPersistencyManager(const PetaloPersistencyManager&);
     /// Create the singleton instance of the persistency manager
-    static void Initialize(G4String init_macro, std::vector<G4String>& macros,
-                           std::vector<G4String>& delayed_macros);
+    //static void Initialize(G4String init_macro, std::vector<G4String>& macros,
+    //                       std::vector<G4String>& delayed_macros);
 
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
@@ -52,11 +56,6 @@ namespace nexus {
 
 
   private:
-    PersistencyManager(G4String init_macro, std::vector<G4String>& macros,
-                           std::vector<G4String>& delayed_macros);
-    ~PersistencyManager();
-    PersistencyManager(const PersistencyManager&);
-
     void StoreTrajectories(G4TrajectoryContainer*);
     void StoreHits(G4HCofThisEvent*);
     void StoreIonizationHits(G4VHitsCollection*);
@@ -74,7 +73,7 @@ namespace nexus {
     std::vector<G4String> delayed_macros_;
     std::vector<G4String> secondary_macros_;
 
-    G4bool ready_;     ///< Is the PersistencyManager ready to go?
+    G4bool ready_;     ///< Is the PetaloPersistencyManager ready to go?
     G4bool store_evt_; ///< Should we store the current event?
     G4bool store_steps_; ///< Should we store the steps for the current event?
     G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
@@ -104,19 +103,19 @@ namespace nexus {
 
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
-  inline void PersistencyManager::StoreCurrentEvent(G4bool sce)
+  inline void PetaloPersistencyManager::StoreCurrentEvent(G4bool sce)
   { store_evt_ = sce; }
-  inline void PersistencyManager::StoreSteps(G4bool ss)
+  inline void PetaloPersistencyManager::StoreSteps(G4bool ss)
   { store_steps_ = ss;}
-  inline void PersistencyManager::InteractingEvent(G4bool ie)
+  inline void PetaloPersistencyManager::InteractingEvent(G4bool ie)
   { interacting_evt_ = ie; }
-  inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
+  inline G4bool PetaloPersistencyManager::Store(const G4VPhysicalVolume*)
   { return false; }
-  inline G4bool PersistencyManager::Retrieve(G4Event*&)
+  inline G4bool PetaloPersistencyManager::Retrieve(G4Event*&)
   { return false; }
-  inline G4bool PersistencyManager::Retrieve(G4Run*&)
+  inline G4bool PetaloPersistencyManager::Retrieve(G4Run*&)
   { return false; }
-  inline G4bool PersistencyManager::Retrieve(G4VPhysicalVolume*&)
+  inline G4bool PetaloPersistencyManager::Retrieve(G4VPhysicalVolume*&)
   { return false; }
 
 } // namespace nexus

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PersistencyManager.cc
+// nexus | PetaloPersistencyManager.cc
 //
 // This class writes all the relevant information of the simulation
 // to an ouput file.
@@ -7,17 +7,17 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "PersistencyManager.h"
+#include "PetaloPersistencyManager.h"
 
-#include "Trajectory.h"
-#include "TrajectoryMap.h"
-#include "IonizationSD.h"
-#include "PmtSD.h"
-#include "NexusApp.h"
-#include "DetectorConstruction.h"
-#include "SaveAllSteppingAction.h"
-#include "BaseGeometry.h"
+#include "nexus/Trajectory.h"
+#include "nexus/TrajectoryMap.h"
+#include "nexus/IonizationSD.h"
+#include "nexus/PmtSD.h"
+#include "nexus/NexusApp.h"
+#include "nexus/DetectorConstruction.h"
+#include "nexus/SaveAllSteppingAction.h"
 #include "HDF5Writer.h"
+#include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
@@ -37,20 +37,19 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;
+using namespace CLHEP;
 
+REGISTER_CLASS(PetaloPersistencyManager, BasePersistencyManager)
 
-PersistencyManager::PersistencyManager(G4String init_macro,
-                                       std::vector<G4String>& macros,
-                                       std::vector<G4String>& delayed_macros):
-  G4VPersistencyManager(), msg_(0), init_macro_(init_macro), macros_(macros),
-  delayed_macros_(delayed_macros), ready_(false), store_evt_(true),
+PetaloPersistencyManager::PetaloPersistencyManager():
+  BasePersistencyManager(), msg_(0), ready_(false), store_evt_(true),
   store_steps_(false), interacting_evt_(false), event_type_("other"),
   saved_evts_(0), interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
   save_tot_charge_(true), h5writer_(0)
 {
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
-  msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
+  msg_->DeclareMethod("outputFile", &PetaloPersistencyManager::OpenFile, "");
   msg_->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");
   msg_->DeclareProperty("start_id", start_id_,
@@ -65,25 +64,28 @@ PersistencyManager::PersistencyManager(G4String init_macro,
   time_cmd.SetParameterName("tof_time", false);
   time_cmd.SetRange("tof_time>0.");
 
+  init_macro_ = "";
+  macros_.clear();
+  delayed_macros_.clear();
   secondary_macros_.clear();
 }
 
 
 
-PersistencyManager::~PersistencyManager()
+PetaloPersistencyManager::~PetaloPersistencyManager()
 {
   delete msg_;
   delete h5writer_;
 }
 
 
-void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
+/* void PetaloPersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
                                     std::vector<G4String>& delayed_macros)
 {
 
   // Get a pointer to the current singleton instance of the persistency
   // manager using the method of the base class
-  PersistencyManager* current = dynamic_cast<PersistencyManager*>
+  PetaloPersistencyManager* current = dynamic_cast<PetaloPersistencyManager*>
     (G4VPersistencyManager::GetPersistencyManager());
 
   // If no instance exists yet, create a new one.
@@ -92,11 +94,11 @@ void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& 
   // in the leak of that object since the pointer will no longer be
   // accessible.)
   if (!current) current =
-                  new PersistencyManager(init_macro, macros, delayed_macros);
-}
+                  new PetaloPersistencyManager(init_macro, macros, delayed_macros);
+} */
 
 
-void PersistencyManager::OpenFile(G4String filename)
+void PetaloPersistencyManager::OpenFile(G4String filename)
 {
   h5writer_ = new HDF5Writer();
   G4String hdf5file = filename + ".h5";
@@ -106,7 +108,7 @@ void PersistencyManager::OpenFile(G4String filename)
 
 
 
-void PersistencyManager::CloseFile()
+void PetaloPersistencyManager::CloseFile()
 {
   h5writer_->Close();
   return;
@@ -114,7 +116,7 @@ void PersistencyManager::CloseFile()
 
 
 
-G4bool PersistencyManager::Store(const G4Event* event)
+G4bool PetaloPersistencyManager::Store(const G4Event* event)
 {
   if (interacting_evt_) {
     interacting_evts_++;
@@ -157,7 +159,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
 
 
-void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
+void PetaloPersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
 {
 
   // If the pointer is null, no trajectories were stored in this event
@@ -231,7 +233,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
 
 
 
-void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
+void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
 {
   if (!hce) return;
 
@@ -262,14 +264,14 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
       G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
-      G4Exception("StoreHits()", "[PersistencyManager]", JustWarning, msg);
+      G4Exception("StoreHits()", "[PetaloPersistencyManager]", JustWarning, msg);
     }
   }
 }
 
 
 
-void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
+void PetaloPersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
  {
    IonizationHitsCollection* hits =
      dynamic_cast<IonizationHitsCollection*>(hc);
@@ -295,7 +297,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
 
 
-void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
+void PetaloPersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 {
   std::map<G4int, PmtHit*> mapOfHits;
 
@@ -411,7 +413,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   }
 }
 
-void PersistencyManager::StoreSteps()
+void PetaloPersistencyManager::StoreSteps()
 {
   SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
     G4RunManager::GetRunManager()->GetUserSteppingAction();
@@ -444,7 +446,7 @@ void PersistencyManager::StoreSteps()
   sa->Reset();
 }
 
-G4bool PersistencyManager::Store(const G4Run*)
+G4bool PetaloPersistencyManager::Store(const G4Run*)
 {
 
   // Store the number of events to be processed
@@ -476,7 +478,7 @@ G4bool PersistencyManager::Store(const G4Run*)
   return true;
 }
 
-void PersistencyManager::SaveConfigurationInfo(G4String file_name)
+void PetaloPersistencyManager::SaveConfigurationInfo(G4String file_name)
 {
   std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {

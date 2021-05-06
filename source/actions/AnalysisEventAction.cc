@@ -8,9 +8,11 @@
 // ----------------------------------------------------------------------------
 
 #include "AnalysisEventAction.h"
+#include "PetaloPersistencyManager.h"
 #include "Trajectory.h"
-#include "PersistencyManager.h"
 #include "IonizationHit.h"
+
+#include "nexus/FactoryBase.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -28,6 +30,7 @@
 
 namespace nexus {
 
+REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
 
   AnalysisEventAction::AnalysisEventAction(): G4UserEventAction(),
                                               nevt_(0), nupdate_(10),
@@ -112,19 +115,19 @@ namespace nexus {
         }
       }
 
-      PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+      PetaloPersistencyManager* pm = dynamic_cast<PetaloPersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
 
       if (!event->IsAborted() && edep>0) {
-	pm->InteractingEvent(true);
+	      pm->InteractingEvent(true);
       } else {
-	pm->InteractingEvent(false);
+	      pm->InteractingEvent(false);
       }
       if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_) {
-	pm->StoreCurrentEvent(true);
+	      pm->StoreCurrentEvent(true);
         hNPhotons->Fill(n_opt_photons);
       } else {
-	pm->StoreCurrentEvent(false);
+	      pm->StoreCurrentEvent(false);
       }
 
     }

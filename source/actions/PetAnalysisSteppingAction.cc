@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | AnalysisSteppingAction.cc
+// nexus | PetAnalysisSteppingAction.cc
 //
 // This class allows the user to print the total number of photons detected by
 // all kinds of photosensors at the end of the run.
@@ -10,7 +10,9 @@
 // The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "AnalysisSteppingAction.h"
+#include "PetAnalysisSteppingAction.h"
+
+#include "nexus/FactoryBase.h"
 
 #include <G4Step.hh>
 #include <G4SteppingManager.hh>
@@ -33,10 +35,11 @@
 using namespace nexus;
 using namespace CLHEP;
 
+REGISTER_CLASS(PetAnalysisSteppingAction, G4UserSteppingAction)
 
-AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0)
+PetAnalysisSteppingAction::PetAnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0)
 {
-  msg_ = new G4GenericMessenger(this, "/Actions/AnalysisSteppingAction/");
+  msg_ = new G4GenericMessenger(this, "/Actions/PetAnalysisSteppingAction/");
   msg_->DeclareProperty("file_number", file_no_, "");
 
   detected = 0;
@@ -63,7 +66,7 @@ AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_n
 
 
 
-AnalysisSteppingAction::~AnalysisSteppingAction()
+PetAnalysisSteppingAction::~PetAnalysisSteppingAction()
 {
 
 
@@ -109,7 +112,7 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
 
 
 
-void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
+void PetAnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 {
   G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
 
