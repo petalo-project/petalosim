@@ -1,34 +1,32 @@
 // ----------------------------------------------------------------------------
-// nexus | AnalysisEventAction.h
+// nexus | PetaloEventAction.h
 //
-// This class is based on DefaultEventAction and modified to produce
-// a histogram of the number of scintillation photons event by event.
+// This is the default event action of the NEXT simulations. Only events with
+// deposited energy larger than 0 are saved in the nexus output file.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef ANALYSIS_EVENT_ACTION_H
-#define ANALYSIS_EVENT_ACTION_H
+#ifndef PETALO_EVENT_ACTION_H
+#define PETALO_EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
 
 class G4Event;
 class G4GenericMessenger;
-class TH1F;
-class TFile;
 
 namespace nexus {
 
   /// This class is a general-purpose event run action.
 
-  class AnalysisEventAction: public G4UserEventAction
+  class PetaloEventAction: public G4UserEventAction
   {
   public:
     /// Constructor
-    AnalysisEventAction();
+    PetaloEventAction();
     /// Destructor
-    ~AnalysisEventAction();
+    ~PetaloEventAction();
 
     /// Hook at the beginning of the event loop
     void BeginOfEventAction(const G4Event*);
@@ -40,12 +38,6 @@ namespace nexus {
     G4int nevt_, nupdate_;
     G4double energy_threshold_;
     G4double energy_max_;
-    G4String file_name_;
-    G4int file_no_;
-
-    TH1F* hNPhotons;
-
-    TFile* Histo;
   };
 
 } // namespace nexus

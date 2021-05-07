@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | AnalysisTrackingAction.h
+// nexus | PetAnalysisTrackingAction.h
 //
 // This class produces histograms of the wavelengths and the time of production
 // of the optical photons.
@@ -7,8 +7,8 @@
 // The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef ANALYSIS_TRACKING_ACTION_H
-#define ANALYSIS_TRACKING_ACTION_H
+#ifndef P_ANALYSIS_TRACKING_ACTION_H
+#define P_ANALYSIS_TRACKING_ACTION_H
 
 #include "BaseGeometry.h"
 #include <G4UserTrackingAction.hh>
@@ -23,13 +23,13 @@ namespace nexus {
 
   // General-purpose user tracking action
 
-  class AnalysisTrackingAction: public G4UserTrackingAction
+  class PetAnalysisTrackingAction: public G4UserTrackingAction
   {
   public:
     /// Constructor
-    AnalysisTrackingAction();
+    PetAnalysisTrackingAction();
     /// Destructor
-    virtual ~AnalysisTrackingAction();
+    virtual ~PetAnalysisTrackingAction();
 
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);

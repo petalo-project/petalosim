@@ -1,17 +1,16 @@
 // ----------------------------------------------------------------------------
-// nexus | AnalysisEventAction.cc
+// nexus | PetaloEventAction.cc
 //
-// This class is based on DefaultEventAction and modified to produce
-// a histogram of the number of scintillation photons event by event.
+// This is the default event action of the NEXT simulations. Only events with
+// deposited energy larger than 0 are saved in the nexus output file.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "AnalysisEventAction.h"
-#include "PetaloPersistencyManager.h"
+#include "PetaloEventAction.h"
 #include "Trajectory.h"
+#include "PetaloPersistencyManager.h"
 #include "IonizationHit.h"
-
 #include "nexus/FactoryBase.h"
 
 #include <G4Event.hh>
@@ -22,24 +21,17 @@
 #include <G4SDManager.hh>
 #include <G4HCtable.hh>
 #include <globals.hh>
-#include <G4OpticalPhoton.hh>
-
-#include "TH1F.h"
-#include "TFile.h"
 
 
 namespace nexus {
 
-REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
+REGISTER_CLASS(PetaloEventAction, G4UserEventAction)
 
-  AnalysisEventAction::AnalysisEventAction(): G4UserEventAction(),
-                                              nevt_(0), nupdate_(10),
-                                              energy_threshold_(0.),
-                                              energy_max_(DBL_MAX),
-                                              file_name_("OpticalEvent"),
-                                              file_no_(0)
+  PetaloEventAction::PetaloEventAction():
+    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.),
+    energy_max_(DBL_MAX)
   {
-    msg_ = new G4GenericMessenger(this, "/Actions/AnalysisEventAction/");
+    msg_ = new G4GenericMessenger(this, "/Actions/PetaloEventAction/");
 
     G4GenericMessenger::Command& thresh_cmd =
        msg_->DeclareProperty("energy_threshold", energy_threshold_,
@@ -54,29 +46,17 @@ REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
     max_energy_cmd.SetParameterName("max_energy", true);
     max_energy_cmd.SetUnitCategory("Energy");
     max_energy_cmd.SetRange("max_energy>0.");
-
-    msg_->DeclareProperty("file_name", file_name_, "");
-    msg_->DeclareProperty("file_number", file_no_, "");
-
-    hNPhotons = new TH1F("NPhotons", "NPhotons", 5000, 0, 70000.);
-    hNPhotons->GetXaxis()->SetTitle("Number of optical photons");
   }
 
 
 
-  AnalysisEventAction::~AnalysisEventAction()
+  PetaloEventAction::~PetaloEventAction()
   {
-    std::ostringstream file_number;
-    file_number << file_no_;
-    G4String filename = file_name_+"."+file_number.str()+".root";
-    Histo = new TFile(filename, "recreate");
-    hNPhotons->Write();
-    Histo->Close();
   }
 
 
 
-  void AnalysisEventAction::BeginOfEventAction(const G4Event* /*event*/)
+  void PetaloEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
     if ((nevt_ % nupdate_) == 0) {
@@ -87,7 +67,7 @@ REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
 
 
 
-  void AnalysisEventAction::EndOfEventAction(const G4Event* event)
+  void PetaloEventAction::EndOfEventAction(const G4Event* event)
   {
     nevt_++;
 
@@ -99,7 +79,6 @@ REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
       // to calculate the total energy deposit
 
       G4double edep = 0.;
-      G4int n_opt_photons = 0;
 
       G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
       if (tc) {
@@ -108,16 +87,14 @@ REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
           edep += trj->GetEnergyDeposit();
           // Draw tracks in visual mode
           if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
-
-          if (trj->GetParticleDefinition() == G4OpticalPhoton::Definition()) {
-            n_opt_photons += 1;
-          }
         }
       }
 
       PetaloPersistencyManager* pm = dynamic_cast<PetaloPersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
 
+      // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
+      // else pm->StoreCurrentEvent(false);
       if (!event->IsAborted() && edep>0) {
 	      pm->InteractingEvent(true);
       } else {
@@ -125,7 +102,6 @@ REGISTER_CLASS(AnalysisEventAction, G4UserEventAction)
       }
       if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_) {
 	      pm->StoreCurrentEvent(true);
-        hNPhotons->Fill(n_opt_photons);
       } else {
 	      pm->StoreCurrentEvent(false);
       }

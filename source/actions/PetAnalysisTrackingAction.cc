@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | AnalysisTrackingAction.cc
+// nexus | PetAnalysisTrackingAction.cc
 //
 // This class produces histograms of the wavelengths and the time of production
 // of the optical photons.
@@ -7,7 +7,7 @@
 // The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "AnalysisTrackingAction.h"
+#include "PetAnalysisTrackingAction.h"
 
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
@@ -32,13 +32,13 @@
 
 using namespace nexus;
 
-REGISTER_CLASS(AnalysisTrackingAction, G4UserTrackingAction)
+REGISTER_CLASS(PetAnalysisTrackingAction, G4UserTrackingAction)
 
-AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
+PetAnalysisTrackingAction::PetAnalysisTrackingAction(): G4UserTrackingAction(),
                                                   file_name_("OpticalTracking"),
                                                   file_no_(0)
 {
-  msg_ = new G4GenericMessenger(this, "/Actions/AnalysisTrackingAction/");
+  msg_ = new G4GenericMessenger(this, "/Actions/PetAnalysisTrackingAction/");
   msg_->DeclareProperty("file_name", file_name_, "");
   msg_->DeclareProperty("file_number", file_no_, "");
 
@@ -66,7 +66,7 @@ AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
 
 
 
-AnalysisTrackingAction::~AnalysisTrackingAction()
+PetAnalysisTrackingAction::~PetAnalysisTrackingAction()
 {
   std::ostringstream file_number;
   file_number << file_no_;
@@ -83,7 +83,7 @@ AnalysisTrackingAction::~AnalysisTrackingAction()
 
 
 
-void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
+void PetAnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
   // if ( track->GetCreatorProcess())
   //   G4cout << track->GetCreatorProcess()->GetProcessName()  << G4endl;
@@ -117,7 +117,7 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 
 
-void AnalysisTrackingAction::PostUserTrackingAction(const G4Track* track)
+void PetAnalysisTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
   Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());
 

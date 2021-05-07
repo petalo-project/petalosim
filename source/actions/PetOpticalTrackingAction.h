@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | OpticalTrackingAction.h
+// nexus | PetOpticalTrackingAction.h
 //
 // This class saves the trajectories of optical photons, in addition to the
 // particles saved by the default tracking action. Its purpose is to store
@@ -8,8 +8,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef OPTICAL_TRACKING_ACTION_H
-#define OPTICAL_TRACKING_ACTION_H
+#ifndef P_OPTICAL_TRACKING_ACTION_H
+#define P_OPTICAL_TRACKING_ACTION_H
 
 #include <G4UserTrackingAction.hh>
 
@@ -20,13 +20,13 @@ namespace nexus {
 
   // Optical-checking user tracking action
 
-  class OpticalTrackingAction: public G4UserTrackingAction
+  class PetOpticalTrackingAction: public G4UserTrackingAction
   {
   public:
     /// Constructor
-    OpticalTrackingAction();
+    PetOpticalTrackingAction();
     /// Destructor
-    virtual ~OpticalTrackingAction();
+    virtual ~PetOpticalTrackingAction();
 
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);

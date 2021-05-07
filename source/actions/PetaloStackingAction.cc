@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | DefaultStackingAction.cc
+// nexus | PetaloStackingAction.cc
 //
 // This class is an example of how to implement a stacking action, if needed.
 // At the moment, it is not used in the NEXT simulations.
@@ -7,41 +7,42 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "DefaultStackingAction.h"
+#include "PetaloStackingAction.h"
 
+#include "nexus/FactoryBase.h"
 
 using namespace nexus;
 
+REGISTER_CLASS(PetaloStackingAction, G4UserStackingAction)
 
-
-DefaultStackingAction::DefaultStackingAction(): G4UserStackingAction()
+PetaloStackingAction::PetaloStackingAction(): G4UserStackingAction()
 {
 }
 
 
 
-DefaultStackingAction::~DefaultStackingAction()
+PetaloStackingAction::~PetaloStackingAction()
 {
 }
 
 
 
 G4ClassificationOfNewTrack
-DefaultStackingAction::ClassifyNewTrack(const G4Track* /*track*/)
+PetaloStackingAction::ClassifyNewTrack(const G4Track* /*track*/)
 {
   return fUrgent;
 }
 
 
 
-void DefaultStackingAction::NewStage()
+void PetaloStackingAction::NewStage()
 {
   return;
 }
 
 
 
-void DefaultStackingAction::PrepareNewEvent()
+void PetaloStackingAction::PrepareNewEvent()
 {
   return;
 }

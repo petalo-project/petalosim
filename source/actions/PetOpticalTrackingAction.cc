@@ -1,51 +1,45 @@
 // ----------------------------------------------------------------------------
-// nexus | DefaultTrackingAction.cc
+// nexus | PetOpticalTrackingAction.cc
 //
-// This class is the default tracking action of the NEXT simulation.
-// It stores in memory the trajectories of all particles, except optical photons
-// and ionization electrons, with the relevant tracking information that will be
-// saved to the output file.
+// This class saves the trajectories of optical photons, in addition to the
+// particles saved by the default tracking action. Its purpose is to store
+// optical photon information in the output file.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "DefaultTrackingAction.h"
+#include "PetOpticalTrackingAction.h"
 
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
 
+#include "nexus/FactoryBase.h"
+
 #include <G4Track.hh>
 #include <G4TrackingManager.hh>
 #include <G4Trajectory.hh>
-#include <G4ParticleDefinition.hh>
 #include <G4OpticalPhoton.hh>
 
 
 
 using namespace nexus;
 
+REGISTER_CLASS(PetOpticalTrackingAction, G4UserTrackingAction)
 
-
-DefaultTrackingAction::DefaultTrackingAction(): G4UserTrackingAction()
+PetOpticalTrackingAction::PetOpticalTrackingAction(): G4UserTrackingAction()
 {
 }
 
 
 
-DefaultTrackingAction::~DefaultTrackingAction()
+PetOpticalTrackingAction::~PetOpticalTrackingAction()
 {
 }
 
 
 
-void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
+void PetOpticalTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  // Do nothing if the track is an optical photon or an ionization electron
-  if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
-      fpTrackingManager->SetStoreTrajectory(false);
-      return;
-  }
-
   // Create a new trajectory associated to the track.
   // N.B. If the processesing of a track is interrupted to be resumed
   // later on (to process, for instance, its secondaries) more than
@@ -60,11 +54,8 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 
 
-void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
+void PetOpticalTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-  // Do nothing if the track is an optical photon or an ionization electron
-  if (track->GetDefinition() == G4OpticalPhoton::Definition()) return;
-
   Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());
 
   // Do nothing if the track has no associated trajectory in the map
@@ -74,10 +65,20 @@ void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalPosition(track->GetPosition());
   trj->SetFinalTime(track->GetGlobalTime());
   trj->SetTrackLength(track->GetTrackLength());
-  trj->SetFinalVolume(track->GetVolume()->GetName());
   trj->SetFinalMomentum(track->GetMomentum());
 
+  // In case of optical photons
+  if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
+    // If optical-photon has no NextVolume (escaping from the world)
+    // Assign current volume as the decay one
+    if (track->GetNextVolume()) trj->SetFinalVolume(track->GetNextVolume()->GetName());
+    else                        trj->SetFinalVolume(track->GetVolume()->GetName());
+  }
+  // Final Volume of non optical photons
+  else trj->SetFinalVolume(track->GetVolume()->GetName());
+
   // Record last process of the track
-  G4String proc_name = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
-  trj->SetFinalProcess(proc_name);
+  G4String final_process = track->GetStep()->GetPostStepPoint()
+                                ->GetProcessDefinedStep()->GetProcessName();
+  trj->SetFinalProcess(final_process);
 }

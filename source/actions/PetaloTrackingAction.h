@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | DefaultTrackingAction.h
+// nexus | PetaloTrackingAction.h
 //
 // This class is the default tracking action of the NEXT simulation.
 // It stores in memory the trajectories of all particles, except optical photons
@@ -9,8 +9,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef DEFAULT_TRACKING_ACTION_H
-#define DEFAULT_TRACKING_ACTION_H
+#ifndef PETALO_TRACKING_ACTION_H
+#define PETALO_TRACKING_ACTION_H
 
 #include <G4UserTrackingAction.hh>
 
@@ -21,13 +21,13 @@ namespace nexus {
 
   // General-purpose user tracking action
 
-  class DefaultTrackingAction: public G4UserTrackingAction
+  class PetaloTrackingAction: public G4UserTrackingAction
   {
   public:
     /// Constructor
-    DefaultTrackingAction();
+    PetaloTrackingAction();
     /// Destructor
-    virtual ~DefaultTrackingAction();
+    virtual ~PetaloTrackingAction();
 
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);

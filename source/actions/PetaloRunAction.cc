@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | DefaultRunAction.cc
+// nexus | PetaloRunAction.cc
 //
 // This is the default run action of the NEXT simulations.
 // A message at the beginning and at the end of the simulation is printed.
@@ -7,33 +7,35 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "DefaultRunAction.h"
+#include "PetaloRunAction.h"
+
+#include "nexus/FactoryBase.h"
 
 #include <G4Run.hh>
 
 using namespace nexus;
 
+REGISTER_CLASS(PetaloRunAction, G4UserRunAction)
 
-
-DefaultRunAction::DefaultRunAction(): G4UserRunAction()
+PetaloRunAction::PetaloRunAction(): G4UserRunAction()
 {
 }
 
 
 
-DefaultRunAction::~DefaultRunAction()
+PetaloRunAction::~PetaloRunAction()
 {
 }
 
 
 
-void DefaultRunAction::BeginOfRunAction(const G4Run* run)
+void PetaloRunAction::BeginOfRunAction(const G4Run* run)
 {
   G4cout << "### Run " << run->GetRunID() << " start." << G4endl;
 }
 
 
-void DefaultRunAction::EndOfRunAction(const G4Run* run)
+void PetaloRunAction::EndOfRunAction(const G4Run* run)
 {
   G4cout << "### Run " << run->GetRunID() << " end." << G4endl;
 }
