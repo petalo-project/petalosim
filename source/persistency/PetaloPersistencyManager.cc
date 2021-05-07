@@ -39,10 +39,10 @@
 using namespace nexus;
 using namespace CLHEP;
 
-REGISTER_CLASS(PetaloPersistencyManager, BasePersistencyManager)
+REGISTER_CLASS(PetaloPersistencyManager, PersistencyManagerBase)
 
 PetaloPersistencyManager::PetaloPersistencyManager():
-  BasePersistencyManager(), msg_(0), ready_(false), store_evt_(true),
+  PersistencyManagerBase(), msg_(0), ready_(false), store_evt_(true),
   store_steps_(false), interacting_evt_(false), event_type_("other"),
   saved_evts_(0), interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),

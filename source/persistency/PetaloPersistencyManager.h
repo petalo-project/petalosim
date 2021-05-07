@@ -10,7 +10,7 @@
 #ifndef P_PERSISTENCY_MANAGER_H
 #define P_PERSISTENCY_MANAGER_H
 
-#include "nexus/BasePersistencyManager.h"
+#include "nexus/PersistencyManagerBase.h"
 #include <G4VPersistencyManager.hh>
 #include <vector>
 
@@ -26,7 +26,7 @@ namespace nexus {
 
   /// TODO. CLASS DESCRIPTION
 
-  class PetaloPersistencyManager: public BasePersistencyManager
+  class PetaloPersistencyManager: public PersistencyManagerBase
   {
   public:
     PetaloPersistencyManager();
