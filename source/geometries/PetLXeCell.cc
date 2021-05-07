@@ -11,7 +11,7 @@
 #include "IonizationSD.h"
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
-#include "BoxPointSampler.h"
+#include "nexus/BoxPointSampler.h"
 //#include "SiPMHamamatsuBlue.h"
 #include "SiPMpetVUV.h"
 #include "nexus/Visibilities.h"

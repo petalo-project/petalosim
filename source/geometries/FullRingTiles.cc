@@ -10,7 +10,7 @@
 #include "FullRingTiles.h"
 #include "SiPMpetFBK.h"
 #include "Tile.h"
-#include "CylinderPointSampler.h"
+#include "nexus/CylinderPointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"

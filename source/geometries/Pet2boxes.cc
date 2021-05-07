@@ -12,7 +12,7 @@
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
-#include "BoxPointSampler.h"
+#include "nexus/BoxPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

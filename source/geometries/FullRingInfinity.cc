@@ -9,7 +9,7 @@
 
 #include "FullRingInfinity.h"
 #include "SiPMpetVUV.h"
-#include "SpherePointSampler.h"
+#include "nexus/SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"

@@ -12,7 +12,7 @@
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
-#include "BoxPointSampler.h"
+#include "nexus/BoxPointSampler.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
 

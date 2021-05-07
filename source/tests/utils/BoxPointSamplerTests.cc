@@ -1,4 +1,4 @@
-#include <BoxPointSampler.h>
+#include "nexus/BoxPointSampler.h"
 #include <Randomize.hh>
 
 #include <cmath>
