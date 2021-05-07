@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// nexus | NexusPhysics.h
+// nexus | PetaloPhysics.h
 //
 // This class registers any new physics process defined in nexus.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXUS_PHYSICS_H
-#define NEXUS_PHYSICS_H
+#ifndef PETALO_PHYSICS_H
+#define PETALO_PHYSICS_H
 
 #include <G4VPhysicsConstructor.hh>
 
@@ -18,13 +18,13 @@ namespace nexus {
 
   class WavelengthShifting;
 
-  class NexusPhysics: public G4VPhysicsConstructor
+  class PetaloPhysics: public G4VPhysicsConstructor
   {
   public:
     /// Constructor
-    NexusPhysics();
+    PetaloPhysics();
     /// Destructor
-    ~NexusPhysics();
+    ~PetaloPhysics();
 
     /// Construct all required particles (Geant4 mandatory method)
     virtual void ConstructParticle();

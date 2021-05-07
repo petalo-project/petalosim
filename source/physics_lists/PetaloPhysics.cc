@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | NexusPhysics.cc
+// nexus | PetaloPhysics.cc
 //
 // This class registers any new physics process defined in nexus.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "NexusPhysics.h"
+#include "PetaloPhysics.h"
 #include "WavelengthShifting.h"
 
 #include <G4Scintillation.hh>
@@ -25,13 +25,13 @@ namespace nexus {
 
   /// Macro that allows the use of this physics constructor
   /// with the generic physics list
-  G4_DECLARE_PHYSCONSTR_FACTORY(NexusPhysics);
+  G4_DECLARE_PHYSCONSTR_FACTORY(PetaloPhysics);
 
 
-  NexusPhysics::NexusPhysics():
-    G4VPhysicsConstructor("NexusPhysics"), risetime_(false), noCompt_(false)
+  PetaloPhysics::PetaloPhysics():
+    G4VPhysicsConstructor("PetaloPhysics"), risetime_(false), noCompt_(false)
   {
-    msg_ = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
+    msg_ = new G4GenericMessenger(this, "/PhysicsList/Petalo/",
       "Control commands of the nexus physics list.");
 
     msg_->DeclareProperty("scintRiseTime", risetime_,
@@ -43,7 +43,7 @@ namespace nexus {
 
 
 
-  NexusPhysics::~NexusPhysics()
+  PetaloPhysics::~PetaloPhysics()
   {
     delete msg_;
     delete wls_;
@@ -51,21 +51,21 @@ namespace nexus {
 
 
 
-  void NexusPhysics::ConstructParticle()
+  void PetaloPhysics::ConstructParticle()
   {
     G4OpticalPhoton::Definition();
   }
 
 
 
-  void NexusPhysics::ConstructProcess()
+  void PetaloPhysics::ConstructProcess()
   {
     G4ProcessManager* pmanager = 0;
 
     // Add our own wavelength shifting process for the optical photon
     pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
     if (!pmanager) {
-      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException,
+      G4Exception("ConstructProcess()", "[PetaloPhysics]", FatalException,
         "G4OpticalPhoton without a process manager.");
     }
     //WavelengthShifting* wls = new WavelengthShifting();

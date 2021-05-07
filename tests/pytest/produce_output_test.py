@@ -12,7 +12,7 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
 /PhysicsList/RegisterPhysics G4OpticalPhysics
-/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics PetaloPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
@@ -81,7 +81,7 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
 /PhysicsList/RegisterPhysics G4OpticalPhysics
-/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics PetaloPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
@@ -147,7 +147,7 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
 /PhysicsList/RegisterPhysics G4OpticalPhysics
-/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics PetaloPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
