@@ -12,34 +12,31 @@
 #include "nexus/GeometryBase.h"
 
 class G4GenericMessenger;
-namespace nexus {class Pet2boxes;}
-namespace nexus {class PetLYSObox;}
-namespace nexus {class PetLXeCell;}
-namespace nexus {class PetLYSOCell;}
+class Pet2boxes;
+class PetLYSObox;
+class PetLXeCell;
+class PetLYSOCell;
 
-namespace nexus {
+using namespace nexus;
 
-  class Lab: public GeometryBase
-  {
-  public:
-    /// Constructor
-    Lab();
-    /// Destructor
-    ~Lab();
+class Lab : public GeometryBase
+{
+public:
+  /// Constructor
+  Lab();
+  /// Destructor
+  ~Lab();
 
-    /// Return vertex within region <region> of the chamber
-    virtual G4ThreeVector GenerateVertex(const G4String& region) const;
+  /// Return vertex within region <region> of the chamber
+  virtual G4ThreeVector GenerateVertex(const G4String &region) const;
 
-    virtual void Construct();
+  virtual void Construct();
 
-  private:
-    /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
+private:
+  /// Messenger for the definition of control commands
+  G4GenericMessenger *msg_;
 
-    PetLXeCell* module_;
-
-  };
-
-} // end namespace nexus
+  PetLXeCell *module_;
+};
 
 #endif

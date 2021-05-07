@@ -27,135 +27,131 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
+using namespace nexus;
 
-namespace nexus {
+using namespace CLHEP;
 
-  using namespace CLHEP;
+SiPMquadFBK::SiPMquadFBK() : GeometryBase(),
+                             visibility_(0),
+                             refr_index_(1.54),
+                             eff_(1.),
+                             time_binning_(200. * nanosecond)
+{
+  /// Messenger
+  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
+  msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
+  msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
+  msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
 
-  SiPMquadFBK::SiPMquadFBK(): GeometryBase(),
-			    visibility_(0),
-			    refr_index_(1.54),
-                            eff_(1.),
-                            time_binning_(200.*nanosecond)
-  {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-    msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
-    msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
-    msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
-
-    G4GenericMessenger::Command& time_cmd =
+  G4GenericMessenger::Command &time_cmd =
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
-    time_cmd.SetUnitCategory("Time");
-    time_cmd.SetParameterName("time_binning", false);
-    time_cmd.SetRange("time_binning>0.");
-  }
+  time_cmd.SetUnitCategory("Time");
+  time_cmd.SetParameterName("time_binning", false);
+  time_cmd.SetRange("time_binning>0.");
+}
 
-  SiPMquadFBK::~SiPMquadFBK()
-  {
-  }
+SiPMquadFBK::~SiPMquadFBK()
+{
+}
 
-  void SiPMquadFBK::Construct()
-  {
+void SiPMquadFBK::Construct()
+{
 
-    // PACKAGE ///////////////////////////////////////////////////////
-    G4double offset = 0.1 * mm;
+  // PACKAGE ///////////////////////////////////////////////////////
+  G4double offset = 0.1 * mm;
 
-    G4double sipm_x = 5.9/2. * mm;
-    G4double sipm_y = 5.5/2. * mm;
-    G4double sipm_z = 1 * mm;
+  G4double sipm_x = 5.9 / 2. * mm;
+  G4double sipm_y = 5.5 / 2. * mm;
+  G4double sipm_z = 1 * mm;
 
-    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
+  SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
-    G4Box* sipm_solid = new G4Box("SiPMquadFBK", sipm_x/2., sipm_y/2., sipm_z/2);
+  G4Box *sipm_solid = new G4Box("SiPMquadFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-    G4Material* epoxy = MaterialsList::Epoxy();
-    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  G4Material *epoxy = MaterialsList::Epoxy();
+  epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
-    G4LogicalVolume* sipm_logic =
+  G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMquadFBK");
 
-    this->SetLogicalVolume(sipm_logic);
+  this->SetLogicalVolume(sipm_logic);
 
-    // ACTIVE WINDOW /////////////////////////////////////////////////
+  // ACTIVE WINDOW /////////////////////////////////////////////////
 
-    G4double active_x = sipm_x;
-    G4double active_y = sipm_y;
-    G4double active_depth = 0.01 * mm;
+  G4double active_x = sipm_x;
+  G4double active_y = sipm_y;
+  G4double active_depth = 0.01 * mm;
 
-    G4Box* active_solid =
-      new G4Box("PHOTODIODES", active_x/2., active_y/2., active_depth/2);
+  G4Box *active_solid =
+      new G4Box("PHOTODIODES", active_x / 2., active_y / 2., active_depth / 2);
 
-    G4Material* silicon =
+  G4Material *silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
-    G4LogicalVolume* active_logic =
+  G4LogicalVolume *active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - offset),
-                      active_logic, "PHOTODIODES", sipm_logic, false, 0, false);
+  new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z / 2. - active_depth / 2. - offset),
+                    active_logic, "PHOTODIODES", sipm_logic, false, 0, false);
 
-    // OPTICAL SURFACES /////////////////////////////////////////////
+  // OPTICAL SURFACES /////////////////////////////////////////////
 
-    const G4int entries = 12;
+  const G4int entries = 12;
 
+  G4double energies[entries] = {1.5 * eV, 6.19919 * eV, 6.35814 * eV, 6.52546 * eV,
+                                6.70182 * eV, 6.88799 * eV, 7.08479 * eV,
+                                7.29316 * eV, 7.51417 * eV, 7.74898 * eV,
+                                7.99895 * eV, 8.26558 * eV};
+  G4double reflectivity[entries] = {0., 0., 0., 0.,
+                                    0., 0., 0.,
+                                    0., 0., 0.,
+                                    0., 0.};
+  G4double efficiency[entries] = {eff_, eff_, eff_,
+                                  eff_, eff_, eff_,
+                                  eff_, eff_, eff_,
+                                  eff_, eff_};
 
-    G4double energies[entries] = {1.5*eV, 6.19919*eV, 6.35814*eV, 6.52546*eV,
-				   6.70182*eV, 6.88799*eV, 7.08479*eV,
-				   7.29316*eV, 7.51417*eV, 7.74898*eV,
-				   7.99895*eV, 8.26558*eV};
-    G4double reflectivity[entries] = {0., 0., 0., 0.,
-				      0., 0., 0.,
-                                      0., 0., 0.,
-				      0., 0.};
-    G4double efficiency[entries]   = {eff_, eff_, eff_,
-                                      eff_, eff_, eff_,
-                                      eff_, eff_, eff_,
-                                      eff_, eff_};
+  G4MaterialPropertiesTable *sipm_mt = new G4MaterialPropertiesTable();
+  sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
+  sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-
-    G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
-    sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
-    sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
-
-    G4OpticalSurface* sipm_opsurf =
+  G4OpticalSurface *sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
-    sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
+  sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
-    new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
+  new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
 
+  // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    // SENSITIVE DETECTOR ////////////////////////////////////////////
+  G4String sdname = "/SIPM/SiPMquadFBK";
+  G4SDManager *sdmgr = G4SDManager::GetSDMpointer();
 
-    G4String sdname = "/SIPM/SiPMquadFBK";
-    G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+  if (!sdmgr->FindSensitiveDetector(sdname, false))
+  {
+    //PmtSD* sipmsd = new PmtSD(sdname);
+    ToFSD *sipmsd = new ToFSD(sdname);
+    sipmsd->SetDetectorVolumeDepth(0);
+    sipmsd->SetDetectorNamingOrder(1000.);
+    sipmsd->SetTimeBinning(time_binning_);
+    sipmsd->SetMotherVolumeDepth(1);
 
-    if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      //PmtSD* sipmsd = new PmtSD(sdname);
-      ToFSD* sipmsd = new ToFSD(sdname);
-      sipmsd->SetDetectorVolumeDepth(0);
-      sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(time_binning_);
-      sipmsd->SetMotherVolumeDepth(1);
-
-      G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-      sipm_logic->SetSensitiveDetector(sipmsd);
-    }
-
-    G4cout << visibility_ << G4endl;
-    // Visibilities
-    if (visibility_) {
-      G4VisAttributes sipm_col = nexus::Yellow();
-      sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes active_col = nexus::Blue();
-      active_col.SetForceSolid(true);
-      active_logic->SetVisAttributes(active_col);
-    }
-    else {
-      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      active_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
+    G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
+    sipm_logic->SetSensitiveDetector(sipmsd);
   }
 
-
-} // end namespace nexus
+  G4cout << visibility_ << G4endl;
+  // Visibilities
+  if (visibility_)
+  {
+    G4VisAttributes sipm_col = nexus::Yellow();
+    sipm_logic->SetVisAttributes(sipm_col);
+    G4VisAttributes active_col = nexus::Blue();
+    active_col.SetForceSolid(true);
+    active_logic->SetVisAttributes(active_col);
+  }
+  else
+  {
+    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+}

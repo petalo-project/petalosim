@@ -8,6 +8,7 @@
 // ----------------------------------------------------------------------------
 
 #include "PetaloPersistencyManager.h"
+#include "HDF5Writer.h"
 
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
@@ -16,7 +17,6 @@
 #include "nexus/NexusApp.h"
 #include "nexus/DetectorConstruction.h"
 #include "nexus/SaveAllSteppingAction.h"
-#include "HDF5Writer.h"
 #include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>

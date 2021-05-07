@@ -16,30 +16,26 @@
 class G4Event;
 class G4GenericMessenger;
 
-namespace nexus {
+/// This class is a general-purpose event run action.
 
-  /// This class is a general-purpose event run action.
+class PetaloEventAction : public G4UserEventAction
+{
+public:
+  /// Constructor
+  PetaloEventAction();
+  /// Destructor
+  ~PetaloEventAction();
 
-  class PetaloEventAction: public G4UserEventAction
-  {
-  public:
-    /// Constructor
-    PetaloEventAction();
-    /// Destructor
-    ~PetaloEventAction();
+  /// Hook at the beginning of the event loop
+  void BeginOfEventAction(const G4Event *);
+  /// Hook at the end of the event loop
+  void EndOfEventAction(const G4Event *);
 
-    /// Hook at the beginning of the event loop
-    void BeginOfEventAction(const G4Event*);
-    /// Hook at the end of the event loop
-    void EndOfEventAction(const G4Event*);
-
-  private:
-    G4GenericMessenger* msg_;
-    G4int nevt_, nupdate_;
-    G4double energy_threshold_;
-    G4double energy_max_;
-  };
-
-} // namespace nexus
+private:
+  G4GenericMessenger *msg_;
+  G4int nevt_, nupdate_;
+  G4double energy_threshold_;
+  G4double energy_max_;
+};
 
 #endif

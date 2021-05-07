@@ -21,7 +21,7 @@
 #include <G4OpticalPhoton.hh>
 
 
-
+namespace nexus {}
 using namespace nexus;
 
 REGISTER_CLASS(PetOpticalTrackingAction, G4UserTrackingAction)

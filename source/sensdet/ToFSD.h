@@ -22,96 +22,92 @@ class G4VTouchable;
 class G4TouchableHistory;
 class G4OpBoundaryProcess;
 
+using namespace nexus;
 
-namespace nexus {
+class ToFSD : public G4VSensitiveDetector
+{
+public:
+  /// Constructor providing names for the sensitive detector
+  /// and the collection of hits
+  ToFSD(G4String sdname);
+  /// The destructor
+  ~ToFSD();
 
-  class ToFSD: public G4VSensitiveDetector
-  {
-  public:
-    /// Constructor providing names for the sensitive detector
-    /// and the collection of hits
-    ToFSD(G4String sdname);
-    /// The destructor
-    ~ToFSD();
+  /// Initialization of the sensitive detector. Invoked at the beginning
+  /// of every event. The collection of hits is created here and registered
+  /// in the event (so that it can be retrieved thru the G4HCofThisEvent object).
+  void Initialize(G4HCofThisEvent *);
 
-    /// Initialization of the sensitive detector. Invoked at the beginning
-    /// of every event. The collection of hits is created here and registered
-    /// in the event (so that it can be retrieved thru the G4HCofThisEvent object).
-    void Initialize(G4HCofThisEvent*);
+  /// Method invoked at the end of every event
+  void EndOfEvent(G4HCofThisEvent *);
 
-    /// Method invoked at the end of every event
-    void EndOfEvent(G4HCofThisEvent*);
+  /// Set the depth of the sensitive detector in the geometry hierarchy
+  void SetDetectorVolumeDepth(G4int);
+  /// Return the depth of the sensitive detector in the volume hierarchy
+  G4int GetDetectorVolumeDepth() const;
+  /// Set the depth of the SD's mother volume in the geometry hierarchy
+  void SetMotherVolumeDepth(G4int);
+  /// Return the depth of the SD's mother volume in the geometry hierarchy
+  G4int GetMotherVolumeDepth() const;
+  /// Set the naming order (typically, a multiple of 10) of the SD
+  void SetDetectorNamingOrder(G4int);
+  /// Return the naming order of the SD
+  G4int GetDetectorNamingOrder() const;
 
-    /// Set the depth of the sensitive detector in the geometry hierarchy
-    void SetDetectorVolumeDepth(G4int);
-    /// Return the depth of the sensitive detector in the volume hierarchy
-    G4int GetDetectorVolumeDepth() const;
-    /// Set the depth of the SD's mother volume in the geometry hierarchy
-    void SetMotherVolumeDepth(G4int);
-    /// Return the depth of the SD's mother volume in the geometry hierarchy
-    G4int GetMotherVolumeDepth() const;
-    /// Set the naming order (typically, a multiple of 10) of the SD
-    void SetDetectorNamingOrder(G4int);
-    /// Return the naming order of the SD
-    G4int GetDetectorNamingOrder() const;
+  /// Set the depth of the SD's grandmother volume in the geometry hierarchy
+  void SetGrandMotherVolumeDepth(G4int);
+  /// Return the depth of the SD's grandmother volume in the geometry hierarchy
+  G4int GetGrandMotherVolumeDepth() const;
 
-    /// Set the depth of the SD's grandmother volume in the geometry hierarchy
-    void SetGrandMotherVolumeDepth(G4int);
-    /// Return the depth of the SD's grandmother volume in the geometry hierarchy
-    G4int GetGrandMotherVolumeDepth() const;
+  /// Return the time binning chosen for the pmt hits
+  G4double GetTimeBinning() const;
+  /// Set a time binning for the pmt hits
+  void SetTimeBinning(G4double);
 
-    /// Return the time binning chosen for the pmt hits
-    G4double GetTimeBinning() const;
-    /// Set a time binning for the pmt hits
-    void SetTimeBinning(G4double);
+  /// Set the box geometry parameter
+  void SetBoxGeom(G4int);
 
-    /// Set the box geometry parameter
-    void SetBoxGeom(G4int);
+  /// Return the unique name of the hits collection created
+  /// by this sensitive detector. This will be used by the
+  /// persistency manager to select the collection.
+  static G4String GetCollectionUniqueName();
 
-    /// Return the unique name of the hits collection created
-    /// by this sensitive detector. This will be used by the
-    /// persistency manager to select the collection.
-    static G4String GetCollectionUniqueName();
+private:
+  G4bool ProcessHits(G4Step *, G4TouchableHistory *);
 
-  private:
+  G4int FindPmtID(const G4VTouchable *);
 
-    G4bool ProcessHits(G4Step*, G4TouchableHistory*);
+  G4int naming_order_;      ///< Order of the naming scheme
+  G4int sensor_depth_;      ///< Depth of the SD in the geometry tree
+  G4int mother_depth_;      ///< Depth of the SD's mother in the geometry tree
+  G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-    G4int FindPmtID(const G4VTouchable*);
+  G4double timebinning_; ///< Time bin width
 
-    G4int naming_order_; ///< Order of the naming scheme
-    G4int sensor_depth_; ///< Depth of the SD in the geometry tree
-    G4int mother_depth_; ///< Depth of the SD's mother in the geometry tree
-    G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
+  G4OpBoundaryProcess *boundary_; ///< Pointer to the optical boundary process
 
-    G4double timebinning_; ///< Time bin width
+  G4int box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
 
-    G4OpBoundaryProcess* boundary_; ///< Pointer to the optical boundary process
+  PmtHitsCollection *HC_; ///< Pointer to the collection of hits
+};
 
-    G4int box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
+// INLINE METHODS //////////////////////////////////////////////////
 
-    PmtHitsCollection* HC_; ///< Pointer to the collection of hits
-  };
+inline void ToFSD::SetDetectorVolumeDepth(G4int d) { sensor_depth_ = d; }
+inline G4int ToFSD::GetDetectorVolumeDepth() const { return sensor_depth_; }
 
-  // INLINE METHODS //////////////////////////////////////////////////
+inline void ToFSD::SetMotherVolumeDepth(G4int d) { mother_depth_ = d; }
+inline G4int ToFSD::GetMotherVolumeDepth() const { return mother_depth_; }
 
-  inline void ToFSD::SetDetectorVolumeDepth(G4int d) { sensor_depth_ = d; }
-  inline G4int ToFSD::GetDetectorVolumeDepth() const { return sensor_depth_; }
+inline void ToFSD::SetDetectorNamingOrder(G4int o) { naming_order_ = o; }
+inline G4int ToFSD::GetDetectorNamingOrder() const { return naming_order_; }
 
-  inline void ToFSD::SetMotherVolumeDepth(G4int d) { mother_depth_ = d; }
-  inline G4int ToFSD::GetMotherVolumeDepth() const { return mother_depth_; }
+inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; }
+inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
 
-  inline void ToFSD::SetDetectorNamingOrder(G4int o) { naming_order_ = o; }
-  inline G4int ToFSD::GetDetectorNamingOrder() const { return naming_order_; }
+inline G4double ToFSD::GetTimeBinning() const { return timebinning_; }
+inline void ToFSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
 
-  inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; }
-  inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
-
-  inline G4double ToFSD::GetTimeBinning() const { return timebinning_; }
-  inline void ToFSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
-
-  inline void ToFSD::SetBoxGeom(G4int bg) { box_geom_ = bg; }
-
-} // end namespace nexus
+inline void ToFSD::SetBoxGeom(G4int bg) { box_geom_ = bg; }
 
 #endif

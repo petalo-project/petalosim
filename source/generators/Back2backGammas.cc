@@ -10,14 +10,13 @@
 // ----------------------------------------------------------------------------
 
 #include "Back2backGammas.h"
-
-#include "G4Event.hh"
-#include "nexus/DetectorConstruction.h"
-#include "nexus/GeometryBase.h"
 #include "RandomUtils.h"
 
+#include "nexus/DetectorConstruction.h"
+#include "nexus/GeometryBase.h"
 #include "nexus/FactoryBase.h"
 
+#include <G4Event.hh>
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>

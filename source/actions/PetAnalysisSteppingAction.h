@@ -24,38 +24,34 @@ class G4GenericMessenger;
 class TH1F;
 class TH2F;
 
-namespace nexus {
 
-  class PetAnalysisSteppingAction: public G4UserSteppingAction
-  {
-  public:
-    /// Constructor
-    PetAnalysisSteppingAction();
-    /// Destructor
-    ~PetAnalysisSteppingAction();
+class PetAnalysisSteppingAction : public G4UserSteppingAction
+{
+public:
+  /// Constructor
+  PetAnalysisSteppingAction();
+  /// Destructor
+  ~PetAnalysisSteppingAction();
 
-    virtual void UserSteppingAction(const G4Step*);
+  virtual void UserSteppingAction(const G4Step *);
 
-  private:
+private:
+  G4int detected;
+  G4int not_det;
 
-    G4int detected;
-    G4int not_det;
+  std::vector<double> times;
+  std::vector<double> wavelengths;
 
-    std::vector<double> times;
-    std::vector<double> wavelengths;
+  TH1F *hVelocity;
+  TH2F *hVE;
+  TH2F *hTV;
+  TH1F *hCherLambdaDet;
 
-    TH1F* hVelocity;
-    TH2F* hVE;
-    TH2F* hTV;
-    TH1F* hCherLambdaDet;
+  G4GenericMessenger *msg_;
+  G4int file_no_;
 
-    G4GenericMessenger* msg_;
-    G4int file_no_;
-
-    typedef std::map<G4String, int> detectorCounts;
-    detectorCounts my_counts;
-  };
-
-} // namespace nexus
+  typedef std::map<G4String, int> detectorCounts;
+  detectorCounts my_counts;
+};
 
 #endif

@@ -18,36 +18,30 @@ class G4GenericMessenger;
 class TH1F;
 class TFile;
 
-namespace nexus {
+class PetAnalysisEventAction : public G4UserEventAction
+{
+public:
+  /// Constructor
+  PetAnalysisEventAction();
+  /// Destructor
+  ~PetAnalysisEventAction();
 
-  /// This class is a general-purpose event run action.
+  /// Hook at the beginning of the event loop
+  void BeginOfEventAction(const G4Event *);
+  /// Hook at the end of the event loop
+  void EndOfEventAction(const G4Event *);
 
-  class PetAnalysisEventAction: public G4UserEventAction
-  {
-  public:
-    /// Constructor
-    PetAnalysisEventAction();
-    /// Destructor
-    ~PetAnalysisEventAction();
+private:
+  G4GenericMessenger *msg_;
+  G4int nevt_, nupdate_;
+  G4double energy_threshold_;
+  G4double energy_max_;
+  G4String file_name_;
+  G4int file_no_;
 
-    /// Hook at the beginning of the event loop
-    void BeginOfEventAction(const G4Event*);
-    /// Hook at the end of the event loop
-    void EndOfEventAction(const G4Event*);
+  TH1F *hNPhotons;
 
-  private:
-    G4GenericMessenger* msg_;
-    G4int nevt_, nupdate_;
-    G4double energy_threshold_;
-    G4double energy_max_;
-    G4String file_name_;
-    G4int file_no_;
-
-    TH1F* hNPhotons;
-
-    TFile* Histo;
-  };
-
-} // namespace nexus
+  TFile *Histo;
+};
 
 #endif

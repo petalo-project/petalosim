@@ -14,7 +14,7 @@
 
 class G4GenericMessenger;
 
-namespace nexus {
+using namespace nexus;
 
 
   /// Geometry of the Hamamatsu surface-mounted 1x1 mm2 MPPC (SiPM)
@@ -46,8 +46,5 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
   };
-
-
-} // end namespace nexus
 
 #endif

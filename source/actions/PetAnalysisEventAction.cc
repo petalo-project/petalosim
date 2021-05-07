@@ -26,111 +26,113 @@
 #include "TH1F.h"
 #include "TFile.h"
 
-
-namespace nexus {
+namespace nexus {}
+using namespace nexus;
 
 REGISTER_CLASS(PetAnalysisEventAction, G4UserEventAction)
 
-  PetAnalysisEventAction::PetAnalysisEventAction(): G4UserEventAction(),
-                                              nevt_(0), nupdate_(10),
-                                              energy_threshold_(0.),
-                                              energy_max_(DBL_MAX),
-                                              file_name_("OpticalEvent"),
-                                              file_no_(0)
-  {
-    msg_ = new G4GenericMessenger(this, "/Actions/PetAnalysisEventAction/");
+PetAnalysisEventAction::PetAnalysisEventAction() : G4UserEventAction(),
+                                                   nevt_(0), nupdate_(10),
+                                                   energy_threshold_(0.),
+                                                   energy_max_(DBL_MAX),
+                                                   file_name_("OpticalEvent"),
+                                                   file_no_(0)
+{
+  msg_ = new G4GenericMessenger(this, "/Actions/PetAnalysisEventAction/");
 
-    G4GenericMessenger::Command& thresh_cmd =
-       msg_->DeclareProperty("energy_threshold", energy_threshold_,
-                             "Minimum deposited energy to save the event to file.");
-    thresh_cmd.SetParameterName("energy_threshold", true);
-    thresh_cmd.SetUnitCategory("Energy");
-    thresh_cmd.SetRange("energy_threshold>0.");
+  G4GenericMessenger::Command &thresh_cmd =
+      msg_->DeclareProperty("energy_threshold", energy_threshold_,
+                            "Minimum deposited energy to save the event to file.");
+  thresh_cmd.SetParameterName("energy_threshold", true);
+  thresh_cmd.SetUnitCategory("Energy");
+  thresh_cmd.SetRange("energy_threshold>0.");
 
-    G4GenericMessenger::Command& max_energy_cmd =
+  G4GenericMessenger::Command &max_energy_cmd =
       msg_->DeclareProperty("max_energy", energy_max_,
                             "Maximum deposited energy to save the event to file.");
-    max_energy_cmd.SetParameterName("max_energy", true);
-    max_energy_cmd.SetUnitCategory("Energy");
-    max_energy_cmd.SetRange("max_energy>0.");
+  max_energy_cmd.SetParameterName("max_energy", true);
+  max_energy_cmd.SetUnitCategory("Energy");
+  max_energy_cmd.SetRange("max_energy>0.");
 
-    msg_->DeclareProperty("file_name", file_name_, "");
-    msg_->DeclareProperty("file_number", file_no_, "");
+  msg_->DeclareProperty("file_name", file_name_, "");
+  msg_->DeclareProperty("file_number", file_no_, "");
 
-    hNPhotons = new TH1F("NPhotons", "NPhotons", 5000, 0, 70000.);
-    hNPhotons->GetXaxis()->SetTitle("Number of optical photons");
-  }
+  hNPhotons = new TH1F("NPhotons", "NPhotons", 5000, 0, 70000.);
+  hNPhotons->GetXaxis()->SetTitle("Number of optical photons");
+}
 
+PetAnalysisEventAction::~PetAnalysisEventAction()
+{
+  std::ostringstream file_number;
+  file_number << file_no_;
+  G4String filename = file_name_ + "." + file_number.str() + ".root";
+  Histo = new TFile(filename, "recreate");
+  hNPhotons->Write();
+  Histo->Close();
+}
 
-
-  PetAnalysisEventAction::~PetAnalysisEventAction()
+void PetAnalysisEventAction::BeginOfEventAction(const G4Event * /*event*/)
+{
+  // Print out event number info
+  if ((nevt_ % nupdate_) == 0)
   {
-    std::ostringstream file_number;
-    file_number << file_no_;
-    G4String filename = file_name_+"."+file_number.str()+".root";
-    Histo = new TFile(filename, "recreate");
-    hNPhotons->Write();
-    Histo->Close();
+    G4cout << " >> Event no. " << nevt_ << G4endl;
+    if (nevt_ == (10 * nupdate_))
+      nupdate_ *= 10;
   }
+}
 
+void PetAnalysisEventAction::EndOfEventAction(const G4Event *event)
+{
+  nevt_++;
 
-
-  void PetAnalysisEventAction::BeginOfEventAction(const G4Event* /*event*/)
+  // Determine whether total energy deposit in ionization sensitive
+  // detectors is above threshold
+  if (energy_threshold_ >= 0.)
   {
-    // Print out event number info
-    if ((nevt_ % nupdate_) == 0) {
-      G4cout << " >> Event no. " << nevt_  << G4endl;
-      if (nevt_  == (10 * nupdate_)) nupdate_ *= 10;
-    }
-  }
 
+    // Get the trajectories stored for this event and loop through them
+    // to calculate the total energy deposit
 
+    G4double edep = 0.;
+    G4int n_opt_photons = 0;
 
-  void PetAnalysisEventAction::EndOfEventAction(const G4Event* event)
-  {
-    nevt_++;
+    G4TrajectoryContainer *tc = event->GetTrajectoryContainer();
+    if (tc)
+    {
+      for (unsigned int i = 0; i < tc->size(); ++i)
+      {
+        Trajectory *trj = dynamic_cast<Trajectory *>((*tc)[i]);
+        edep += trj->GetEnergyDeposit();
+        // Draw tracks in visual mode
+        if (G4VVisManager::GetConcreteInstance())
+          trj->DrawTrajectory();
 
-    // Determine whether total energy deposit in ionization sensitive
-    // detectors is above threshold
-    if (energy_threshold_ >= 0.) {
-
-      // Get the trajectories stored for this event and loop through them
-      // to calculate the total energy deposit
-
-      G4double edep = 0.;
-      G4int n_opt_photons = 0;
-
-      G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
-      if (tc) {
-        for (unsigned int i=0; i<tc->size(); ++i) {
-          Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
-          edep += trj->GetEnergyDeposit();
-          // Draw tracks in visual mode
-          if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
-
-          if (trj->GetParticleDefinition() == G4OpticalPhoton::Definition()) {
-            n_opt_photons += 1;
-          }
+        if (trj->GetParticleDefinition() == G4OpticalPhoton::Definition())
+        {
+          n_opt_photons += 1;
         }
       }
+    }
 
-      PetaloPersistencyManager* pm = dynamic_cast<PetaloPersistencyManager*>
-        (G4VPersistencyManager::GetPersistencyManager());
+    PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
-      if (!event->IsAborted() && edep>0) {
-	      pm->InteractingEvent(true);
-      } else {
-	      pm->InteractingEvent(false);
-      }
-      if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_) {
-	      pm->StoreCurrentEvent(true);
-        hNPhotons->Fill(n_opt_photons);
-      } else {
-	      pm->StoreCurrentEvent(false);
-      }
-
+    if (!event->IsAborted() && edep > 0)
+    {
+      pm->InteractingEvent(true);
+    }
+    else
+    {
+      pm->InteractingEvent(false);
+    }
+    if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_)
+    {
+      pm->StoreCurrentEvent(true);
+      hNPhotons->Fill(n_opt_photons);
+    }
+    else
+    {
+      pm->StoreCurrentEvent(false);
     }
   }
-
-
-} // end namespace nexus
+}

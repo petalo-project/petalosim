@@ -18,38 +18,34 @@ class G4GenericMessenger;
 class TH1F;
 class TFile;
 
+using namespace nexus;
 
-namespace nexus {
+// General-purpose user tracking action
 
-  // General-purpose user tracking action
+class PetAnalysisTrackingAction : public G4UserTrackingAction
+{
+public:
+  /// Constructor
+  PetAnalysisTrackingAction();
+  /// Destructor
+  virtual ~PetAnalysisTrackingAction();
 
-  class PetAnalysisTrackingAction: public G4UserTrackingAction
-  {
-  public:
-    /// Constructor
-    PetAnalysisTrackingAction();
-    /// Destructor
-    virtual ~PetAnalysisTrackingAction();
+  virtual void PreUserTrackingAction(const G4Track *);
+  virtual void PostUserTrackingAction(const G4Track *);
 
-    virtual void PreUserTrackingAction(const G4Track*);
-    virtual void PostUserTrackingAction(const G4Track*);
+private:
+  G4GenericMessenger *msg_;
+  G4String file_name_;
+  G4int file_no_;
 
-  private:
+  //TH1F* hScintEnergy_;
+  //TH1F* hCherEnergy_;
 
-    G4GenericMessenger* msg_;
-    G4String file_name_;
-    G4int file_no_;
+  TH1F *hCherLambda_;
+  TH1F *hScintLambda_;
+  TH1F *hScintTime;
 
-    //TH1F* hScintEnergy_;
-    //TH1F* hCherEnergy_;
-
-    TH1F* hCherLambda_;
-    TH1F* hScintLambda_;
-    TH1F* hScintTime;
-
-    TFile* OptPhotons_;
-  };
-
-}
+  TFile *OptPhotons_;
+};
 
 #endif

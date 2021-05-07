@@ -15,44 +15,36 @@
 
 class G4GenericMessenger;
 
-namespace nexus {
+using namespace nexus;
 
+/// Geometry of 3x3 mm2 active surface SiPMs
 
-  /// Geometry of 3x3 mm2 active surface SiPMs
+class SiPMpetTPB : public GeometryBase
+{
+public:
+  /// Constructor
+  SiPMpetTPB();
+  /// Destructor
+  ~SiPMpetTPB();
 
-  class SiPMpetTPB: public GeometryBase
-  {
-  public:
-    /// Constructor
-    SiPMpetTPB();
-    /// Destructor
-    ~SiPMpetTPB();
+  /// Invoke this method to build the volumes of the geometry
+  void Construct();
 
-    /// Invoke this method to build the volumes of the geometry
-    void Construct();
+private:
+  // Visibility of the tracking plane
+  G4bool visibility_;
 
-  private:
+  // Optical properties to be used for epoxy
+  G4double refr_index_;
 
-    // Visibility of the tracking plane
-    G4bool visibility_;
+  G4double decay_time_; ///< decay time of TPB
 
-    // Optical properties to be used for epoxy
-    G4double refr_index_;
+  G4bool phys_;
 
-    G4double decay_time_; ///< decay time of TPB
+  G4double time_binning_;
 
-    G4bool phys_;
-
-    G4double time_binning_;
-
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
-
-
-
-  };
-
-
-} // end namespace nexus
+  // Messenger for the definition of control commands
+  G4GenericMessenger *msg_;
+};
 
 #endif

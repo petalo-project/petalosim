@@ -13,59 +13,55 @@
 #include <G4Material.hh>
 #include <vector>
 
-
 class G4GenericMessenger;
-namespace nexus {class SiPMpetVUV;}
 
-namespace nexus {
+class SiPMpetVUV;
 
-  /// Geometry of the Kapton Dice Boards (KDBFixedPitch) used in the NEW detector
+using namespace nexus;
 
-  class PetKDBFixedPitch: public GeometryBase
-  {
-  public:
-    /// Constructor
-    PetKDBFixedPitch();
+/// Geometry of the Kapton Dice Boards (KDBFixedPitch) used in the NEW detector
 
-    /// Destructor
-    ~PetKDBFixedPitch();
+class PetKDBFixedPitch : public GeometryBase
+{
+public:
+  /// Constructor
+  PetKDBFixedPitch();
 
-    // Dimension setter
-    void SetXYsize(G4double xysize);
-    void SetPitchSize(G4double pitch);
+  /// Destructor
+  ~PetKDBFixedPitch();
 
-    G4ThreeVector GetDimensions() const;
-    const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
+  // Dimension setter
+  void SetXYsize(G4double xysize);
+  void SetPitchSize(G4double pitch);
 
-    /// Builder
-    virtual void Construct();
+  G4ThreeVector GetDimensions() const;
+  const std::vector<std::pair<int, G4ThreeVector> > &GetPositions();
 
-    void SetMaterial(G4Material& mat);
+  /// Builder
+  virtual void Construct();
 
-  private:
+  void SetMaterial(G4Material &mat);
 
-    G4ThreeVector dimensions_;
-    std::vector<std::pair<int, G4ThreeVector> > positions_;
+private:
+  G4ThreeVector dimensions_;
+  std::vector<std::pair<int, G4ThreeVector> > positions_;
 
-    // Visibility of the shielding
-    G4bool visibility_;
+  // Visibility of the shielding
+  G4bool visibility_;
 
-    // SiPM pitch
-    G4double sipm_pitch_;
+  // SiPM pitch
+  G4double sipm_pitch_;
 
-    // Reflectivity of the board in LXe
-    G4double refl_;
+  // Reflectivity of the board in LXe
+  G4double refl_;
 
-    // xy dimensions
-    G4double xysize_;
+  // xy dimensions
+  G4double xysize_;
 
-    // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
+  // Messenger for the definition of control commands
+  G4GenericMessenger *msg_;
 
-    SiPMpetVUV* sipm_;
-
-  };
-
-} // end namespace nexus
+  SiPMpetVUV *sipm_;
+};
 
 #endif

@@ -32,6 +32,7 @@
 #include <iostream>
 #include <sstream>
 
+namespace nexus {}
 using namespace nexus;
 using namespace CLHEP;
 

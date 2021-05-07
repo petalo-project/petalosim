@@ -12,34 +12,28 @@
 #include <G4VPhysicsConstructor.hh>
 
 class G4GenericMessenger;
+class WavelengthShifting;
 
+class PetaloPhysics : public G4VPhysicsConstructor
+{
+public:
+  /// Constructor
+  PetaloPhysics();
+  /// Destructor
+  ~PetaloPhysics();
 
-namespace nexus {
+  /// Construct all required particles (Geant4 mandatory method)
+  virtual void ConstructParticle();
+  /// Construct all required physics processes (Geant4 mandatory method)
+  virtual void ConstructProcess();
 
-  class WavelengthShifting;
+private:
+  G4bool risetime_; ///< Rise time for LYSO
 
-  class PetaloPhysics: public G4VPhysicsConstructor
-  {
-  public:
-    /// Constructor
-    PetaloPhysics();
-    /// Destructor
-    ~PetaloPhysics();
+  G4bool noCompt_; ///< Switch off Compton scattering
 
-    /// Construct all required particles (Geant4 mandatory method)
-    virtual void ConstructParticle();
-    /// Construct all required physics processes (Geant4 mandatory method)
-    virtual void ConstructProcess();
-
-  private:
-    G4bool risetime_; ///< Rise time for LYSO
-
-    G4bool noCompt_; ///< Switch off Compton scattering
-
-    G4GenericMessenger* msg_;
-    WavelengthShifting* wls_;
-  };
-
-} // end namespace nexus
+  G4GenericMessenger *msg_;
+  WavelengthShifting *wls_;
+};
 
 #endif

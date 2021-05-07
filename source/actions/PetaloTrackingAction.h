@@ -16,23 +16,18 @@
 
 class G4Track;
 
+// General-purpose user tracking action
 
-namespace nexus {
+class PetaloTrackingAction : public G4UserTrackingAction
+{
+public:
+  /// Constructor
+  PetaloTrackingAction();
+  /// Destructor
+  virtual ~PetaloTrackingAction();
 
-  // General-purpose user tracking action
-
-  class PetaloTrackingAction: public G4UserTrackingAction
-  {
-  public:
-    /// Constructor
-    PetaloTrackingAction();
-    /// Destructor
-    virtual ~PetaloTrackingAction();
-
-    virtual void PreUserTrackingAction(const G4Track*);
-    virtual void PostUserTrackingAction(const G4Track*);
-  };
-
-}
+  virtual void PreUserTrackingAction(const G4Track *);
+  virtual void PostUserTrackingAction(const G4Track *);
+};
 
 #endif

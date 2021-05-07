@@ -12,24 +12,19 @@
 
 #include <G4UserStackingAction.hh>
 
+// General-purpose user stacking action
 
-namespace nexus {
+class PetaloStackingAction : public G4UserStackingAction
+{
+public:
+  /// Constructor
+  PetaloStackingAction();
+  /// Destructor
+  ~PetaloStackingAction();
 
-  // General-purpose user stacking action
-
-  class PetaloStackingAction: public G4UserStackingAction
-  {
-  public:
-    /// Constructor
-    PetaloStackingAction();
-    /// Destructor
-    ~PetaloStackingAction();
-
-    virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track*);
-    virtual void NewStage();
-    virtual void PrepareNewEvent();
-  };
-
-} // end namespace nexus
+  virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track *);
+  virtual void NewStage();
+  virtual void PrepareNewEvent();
+};
 
 #endif

@@ -16,45 +16,41 @@
 #include <TFile.h>
 
 class G4GenericMessenger;
-namespace nexus {class Pet2boxes;}
-namespace nexus {class PetLYSObox;}
-namespace nexus {class PetLXeCell;}
-namespace nexus {class PetLYSOCell;}
+class Pet2boxes;
+class PetLYSObox;
+class PetLXeCell;
+class PetLYSOCell;
 
-namespace nexus {
+using namespace nexus;
 
-  class Lab_vertices: public GeometryBase
-  {
-  public:
-    /// Constructor
-    Lab_vertices();
-    /// Destructor
-    ~Lab_vertices();
+class Lab_vertices : public GeometryBase
+{
+public:
+  /// Constructor
+  Lab_vertices();
+  /// Destructor
+  ~Lab_vertices();
 
-    /// Return vertex within region <region> of the chamber
-    virtual G4ThreeVector GenerateVertex(const G4String& region) const;
+  /// Return vertex within region <region> of the chamber
+  virtual G4ThreeVector GenerateVertex(const G4String &region) const;
 
-    virtual void Construct();
+  virtual void Construct();
 
-  private:
-    /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
+private:
+  /// Messenger for the definition of control commands
+  G4GenericMessenger *msg_;
 
-    PetLXeCell* module_;
+  PetLXeCell *module_;
 
-    TFile* file_;
-    G4float px1_, py1_, pz1_, px2_, py2_, pz2_;
-    mutable G4int index_;
-    mutable std::vector<G4ThreeVector> vertices1_;
-    mutable std::vector<G4ThreeVector> vertices2_;
+  TFile *file_;
+  G4float px1_, py1_, pz1_, px2_, py2_, pz2_;
+  mutable G4int index_;
+  mutable std::vector<G4ThreeVector> vertices1_;
+  mutable std::vector<G4ThreeVector> vertices2_;
 
-
-    G4int starting_point_;
-    G4String filename_;
-    G4String type_;
-
-  };
-
-} // end namespace nexus
+  G4int starting_point_;
+  G4String filename_;
+  G4String type_;
+};
 
 #endif

@@ -13,7 +13,6 @@
 
 #include <G4Run.hh>
 
-using namespace nexus;
 
 REGISTER_CLASS(PetaloRunAction, G4UserRunAction)
 

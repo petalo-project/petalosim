@@ -14,42 +14,38 @@
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-namespace nexus {
-    class SiPMHamamatsuVUV;}
 
-namespace nexus {
+class SiPMHamamatsuVUV;
 
-  class TileHamamatsuVUV: public TileGeometryBase
-  {
-  public:
-    /// Constructor
-    TileHamamatsuVUV();
-    /// Destructor
-    ~TileHamamatsuVUV();
+using namespace nexus;
 
-    /// Invoke this method to build the volumes of the geometry
-    void Construct();
+class TileHamamatsuVUV : public TileGeometryBase
+{
+public:
+  /// Constructor
+  TileHamamatsuVUV();
+  /// Destructor
+  ~TileHamamatsuVUV();
 
-  private:
+  /// Invoke this method to build the volumes of the geometry
+  void Construct();
 
-    // Tile dimensions
-    G4double tile_x_, tile_y_, tile_z_;
+private:
+  // Tile dimensions
+  G4double tile_x_, tile_y_, tile_z_;
 
-    // SiPM pitch
-    G4double sipm_pitch_;
+  // SiPM pitch
+  G4double sipm_pitch_;
 
-    // Rows and columns of SiPMs
-    G4int n_rows_, n_columns_;
+  // Rows and columns of SiPMs
+  G4int n_rows_, n_columns_;
 
-    // Thickness of the LXe and quartz in front of the sensors
-    G4double lxe_thick_;
-    G4double quartz_rindex_;
-    G4double quartz_thick_;
+  // Thickness of the LXe and quartz in front of the sensors
+  G4double lxe_thick_;
+  G4double quartz_rindex_;
+  G4double quartz_thick_;
 
-    SiPMHamamatsuVUV* sipm_;
-
-  };
-
-} // end namespace nexus
+  SiPMHamamatsuVUV *sipm_;
+};
 
 #endif

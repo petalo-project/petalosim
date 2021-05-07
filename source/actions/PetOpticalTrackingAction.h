@@ -15,23 +15,18 @@
 
 class G4Track;
 
+// Optical-checking user tracking action
 
-namespace nexus {
+class PetOpticalTrackingAction : public G4UserTrackingAction
+{
+public:
+  /// Constructor
+  PetOpticalTrackingAction();
+  /// Destructor
+  virtual ~PetOpticalTrackingAction();
 
-  // Optical-checking user tracking action
-
-  class PetOpticalTrackingAction: public G4UserTrackingAction
-  {
-  public:
-    /// Constructor
-    PetOpticalTrackingAction();
-    /// Destructor
-    virtual ~PetOpticalTrackingAction();
-
-    virtual void PreUserTrackingAction(const G4Track*);
-    virtual void PostUserTrackingAction(const G4Track*);
-  };
-
-}
+  virtual void PreUserTrackingAction(const G4Track *);
+  virtual void PostUserTrackingAction(const G4Track *);
+};
 
 #endif

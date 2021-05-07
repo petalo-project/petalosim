@@ -19,105 +19,108 @@ class G4TrajectoryContainer;
 class G4HCofThisEvent;
 class G4VHitsCollection;
 
-namespace nexus { class HDF5Writer; }
+class HDF5Writer;
 
-namespace nexus {
+class PetaloPersistencyManager : public PersistencyManagerBase
+{
+public:
+  PetaloPersistencyManager();
+  ~PetaloPersistencyManager();
+  PetaloPersistencyManager(const PetaloPersistencyManager &);
+  /// Create the singleton instance of the persistency manager
+  //static void Initialize(G4String init_macro, std::vector<G4String>& macros,
+  //                       std::vector<G4String>& delayed_macros);
 
+  /// Set whether to store or not the current event
+  void StoreCurrentEvent(G4bool);
+  void InteractingEvent(G4bool);
+  void StoreSteps(G4bool);
 
-  /// TODO. CLASS DESCRIPTION
+  ///
+  virtual G4bool Store(const G4Event *);
+  virtual G4bool Store(const G4Run *);
+  virtual G4bool Store(const G4VPhysicalVolume *);
 
-  class PetaloPersistencyManager: public PersistencyManagerBase
-  {
-  public:
-    PetaloPersistencyManager();
-    ~PetaloPersistencyManager();
-    PetaloPersistencyManager(const PetaloPersistencyManager&);
-    /// Create the singleton instance of the persistency manager
-    //static void Initialize(G4String init_macro, std::vector<G4String>& macros,
-    //                       std::vector<G4String>& delayed_macros);
+  virtual G4bool Retrieve(G4Event *&);
+  virtual G4bool Retrieve(G4Run *&);
+  virtual G4bool Retrieve(G4VPhysicalVolume *&);
 
-    /// Set whether to store or not the current event
-    void StoreCurrentEvent(G4bool);
-    void InteractingEvent(G4bool);
-    void StoreSteps(G4bool);
+public:
+  void OpenFile(G4String);
+  void CloseFile();
 
-    ///
-    virtual G4bool Store(const G4Event*);
-    virtual G4bool Store(const G4Run*);
-    virtual G4bool Store(const G4VPhysicalVolume*);
+private:
+  void StoreTrajectories(G4TrajectoryContainer *);
+  void StoreHits(G4HCofThisEvent *);
+  void StoreIonizationHits(G4VHitsCollection *);
+  void StorePmtHits(G4VHitsCollection *);
+  void StoreSteps();
 
-    virtual G4bool Retrieve(G4Event*&);
-    virtual G4bool Retrieve(G4Run*&);
-    virtual G4bool Retrieve(G4VPhysicalVolume*&);
+  void SaveConfigurationInfo(G4String history);
 
-  public:
-    void OpenFile(G4String);
-    void CloseFile();
+private:
+  G4GenericMessenger *msg_; ///< User configuration messenger
 
+  G4String init_macro_;
+  std::vector<G4String> macros_;
+  std::vector<G4String> delayed_macros_;
+  std::vector<G4String> secondary_macros_;
 
-  private:
-    void StoreTrajectories(G4TrajectoryContainer*);
-    void StoreHits(G4HCofThisEvent*);
-    void StoreIonizationHits(G4VHitsCollection*);
-    void StorePmtHits(G4VHitsCollection*);
-    void StoreSteps();
+  G4bool ready_;           ///< Is the PetaloPersistencyManager ready to go?
+  G4bool store_evt_;       ///< Should we store the current event?
+  G4bool store_steps_;     ///< Should we store the steps for the current event?
+  G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
 
-    void SaveConfigurationInfo(G4String history);
+  G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
+  std::vector<G4int> sns_posvec_;
 
-  private:
-    G4GenericMessenger* msg_; ///< User configuration messenger
+  G4int saved_evts_;                      ///< number of events to be saved
+  G4int interacting_evts_;                ///< number of events interacting in ACTIVE
+  G4double pmt_bin_size_, sipm_bin_size_; ///< bin width of sensors
 
-    G4String init_macro_;
-    std::vector<G4String> macros_;
-    std::vector<G4String> delayed_macros_;
-    std::vector<G4String> secondary_macros_;
+  G4int nevt_;       ///< Event ID
+  G4int start_id_;   ///< ID for the first event in file
+  G4bool first_evt_; ///< true only for the first event of the run
 
-    G4bool ready_;     ///< Is the PetaloPersistencyManager ready to go?
-    G4bool store_evt_; ///< Should we store the current event?
-    G4bool store_steps_; ///< Should we store the steps for the current event?
-    G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
+  G4int thr_charge_;
+  G4double tof_time_;
+  G4bool sns_only_;
+  G4bool save_tot_charge_;
+  HDF5Writer *h5writer_; ///< Event writer to hdf5 file
 
-    G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
+  G4double bin_size_, tof_bin_size_;
+};
 
-    std::vector<G4int> sns_posvec_;
+// INLINE DEFINITIONS //////////////////////////////////////////////
 
-    G4int saved_evts_; ///< number of events to be saved
-    G4int interacting_evts_; ///< number of events interacting in ACTIVE
-    G4double pmt_bin_size_, sipm_bin_size_; ///< bin width of sensors
-
-    G4int nevt_; ///< Event ID
-    G4int start_id_; ///< ID for the first event in file
-    G4bool first_evt_; ///< true only for the first event of the run
-
-    G4int thr_charge_;
-    G4double tof_time_;
-    G4bool sns_only_;
-    G4bool save_tot_charge_;
-    HDF5Writer* h5writer_;  ///< Event writer to hdf5 file
-
-    G4double bin_size_, tof_bin_size_;
-
-  };
-
-
-  // INLINE DEFINITIONS //////////////////////////////////////////////
-
-  inline void PetaloPersistencyManager::StoreCurrentEvent(G4bool sce)
-  { store_evt_ = sce; }
-  inline void PetaloPersistencyManager::StoreSteps(G4bool ss)
-  { store_steps_ = ss;}
-  inline void PetaloPersistencyManager::InteractingEvent(G4bool ie)
-  { interacting_evt_ = ie; }
-  inline G4bool PetaloPersistencyManager::Store(const G4VPhysicalVolume*)
-  { return false; }
-  inline G4bool PetaloPersistencyManager::Retrieve(G4Event*&)
-  { return false; }
-  inline G4bool PetaloPersistencyManager::Retrieve(G4Run*&)
-  { return false; }
-  inline G4bool PetaloPersistencyManager::Retrieve(G4VPhysicalVolume*&)
-  { return false; }
-
-} // namespace nexus
+inline void PetaloPersistencyManager::StoreCurrentEvent(G4bool sce)
+{
+  store_evt_ = sce;
+}
+inline void PetaloPersistencyManager::StoreSteps(G4bool ss)
+{
+  store_steps_ = ss;
+}
+inline void PetaloPersistencyManager::InteractingEvent(G4bool ie)
+{
+  interacting_evt_ = ie;
+}
+inline G4bool PetaloPersistencyManager::Store(const G4VPhysicalVolume *)
+{
+  return false;
+}
+inline G4bool PetaloPersistencyManager::Retrieve(G4Event *&)
+{
+  return false;
+}
+inline G4bool PetaloPersistencyManager::Retrieve(G4Run *&)
+{
+  return false;
+}
+inline G4bool PetaloPersistencyManager::Retrieve(G4VPhysicalVolume *&)
+{
+  return false;
+}
 
 #endif

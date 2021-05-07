@@ -14,9 +14,9 @@
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-namespace nexus {class SiPMFBKVUV;}
+class SiPMFBKVUV;
 
-namespace nexus {
+using namespace nexus;
 
   class TileFBK: public TileGeometryBase
   {
@@ -46,7 +46,5 @@ namespace nexus {
     SiPMFBKVUV* sipm_;
 
   };
-
-} // end namespace nexus
 
 #endif

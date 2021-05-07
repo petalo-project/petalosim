@@ -12,21 +12,16 @@
 
 #include <G4UserRunAction.hh>
 
+class PetaloRunAction : public G4UserRunAction
+{
+public:
+  /// Constructor
+  PetaloRunAction();
+  /// Destructor
+  ~PetaloRunAction();
 
-namespace nexus {
-
-  class PetaloRunAction: public G4UserRunAction
-  {
-  public:
-    /// Constructor
-    PetaloRunAction();
-    /// Destructor
-    ~PetaloRunAction();
-
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void EndOfRunAction(const G4Run*);
-  };
-
-}
+  virtual void BeginOfRunAction(const G4Run *);
+  virtual void EndOfRunAction(const G4Run *);
+};
 
 #endif

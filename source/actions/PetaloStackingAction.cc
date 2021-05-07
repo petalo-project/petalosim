@@ -11,7 +11,6 @@
 
 #include "nexus/FactoryBase.h"
 
-using namespace nexus;
 
 REGISTER_CLASS(PetaloStackingAction, G4UserStackingAction)
 

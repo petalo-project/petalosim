@@ -16,8 +16,6 @@
 #include <stdint.h>
 #include <iostream>
 
-using namespace nexus;
-
 
 HDF5Writer::HDF5Writer():
   file_(0), irun_(0), ismp_(0),
