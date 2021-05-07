@@ -8,9 +8,9 @@
 // ----------------------------------------------------------------------------
 
 #include "PetaloEventAction.h"
-#include "nexus/Trajectory.h"
 #include "PetaloPersistencyManager.h"
-#include "IonizationHit.h"
+
+#include "nexus/Trajectory.h"
 #include "nexus/FactoryBase.h"
 
 #include <G4Event.hh>

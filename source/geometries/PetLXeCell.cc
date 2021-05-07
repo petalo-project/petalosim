@@ -8,7 +8,7 @@
 
 #include "PetLXeCell.h"
 #include "MaterialsList.h"
-#include "IonizationSD.h"
+#include "nexus/IonizationSD.h"
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
 #include "nexus/BoxPointSampler.h"

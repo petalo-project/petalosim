@@ -11,7 +11,7 @@
 #include "OpticalMaterialProperties.h"
 #include "nexus/Visibilities.h"
 #include "SiPMHamamatsuVUV.h"
-#include "IonizationSD.h"
+#include "nexus/IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

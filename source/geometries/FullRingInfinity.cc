@@ -11,7 +11,7 @@
 #include "SiPMpetVUV.h"
 #include "nexus/SpherePointSampler.h"
 #include "MaterialsList.h"
-#include "IonizationSD.h"
+#include "nexus/IonizationSD.h"
 #include "OpticalMaterialProperties.h"
 #include "nexus/Visibilities.h"
 

@@ -9,7 +9,7 @@
 #include "PetKDBFixedPitch.h"
 
 #include "SiPMpetVUV.h"
-#include "PmtSD.h"
+#include "nexus/PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "nexus/Visibilities.h"

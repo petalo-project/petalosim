@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMSensl.h"
-#include "PmtSD.h"
+#include "nexus/PmtSD.h"
 #include "MaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"

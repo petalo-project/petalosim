@@ -14,7 +14,7 @@
 #define TOF_SD_H
 
 #include <G4VSensitiveDetector.hh>
-#include "PmtHit.h"
+#include "nexus/PmtHit.h"
 
 class G4Step;
 class G4HCofThisEvent;

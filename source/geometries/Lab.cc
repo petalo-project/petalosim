@@ -14,7 +14,7 @@
 #include "PetLYSOCell.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "IonizationSD.h"
+#include "nexus/IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

@@ -8,7 +8,7 @@
 
 #include "Pet2boxes.h"
 #include "MaterialsList.h"
-#include "IonizationSD.h"
+#include "nexus/IonizationSD.h"
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"

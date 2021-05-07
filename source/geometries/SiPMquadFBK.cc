@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMquadFBK.h"
-#include "PmtSD.h"
+#include "nexus/PmtSD.h"
 #include "ToFSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
