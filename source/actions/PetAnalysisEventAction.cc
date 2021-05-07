@@ -9,7 +9,7 @@
 
 #include "PetAnalysisEventAction.h"
 #include "PetaloPersistencyManager.h"
-#include "Trajectory.h"
+#include "nexus/Trajectory.h"
 #include "IonizationHit.h"
 
 #include "nexus/FactoryBase.h"

@@ -9,8 +9,8 @@
 
 #include "PetAnalysisTrackingAction.h"
 
-#include "Trajectory.h"
-#include "TrajectoryMap.h"
+#include "nexus/Trajectory.h"
+#include "nexus/TrajectoryMap.h"
 #include "nexus/FactoryBase.h"
 
 #include <G4Track.hh>

@@ -9,8 +9,8 @@
 #include "IonizationSD.h"
 
 #include "IonizationHit.h"
-#include "Trajectory.h"
-#include "TrajectoryMap.h"
+#include "nexus/Trajectory.h"
+#include "nexus/TrajectoryMap.h"
 
 #include <G4SDManager.hh>
 #include <G4Step.hh>

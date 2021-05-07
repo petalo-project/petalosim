@@ -10,8 +10,8 @@
 
 #include "PetOpticalTrackingAction.h"
 
-#include "Trajectory.h"
-#include "TrajectoryMap.h"
+#include "nexus/Trajectory.h"
+#include "nexus/TrajectoryMap.h"
 
 #include "nexus/FactoryBase.h"
 
