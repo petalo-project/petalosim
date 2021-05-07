@@ -30,7 +30,7 @@
 
 namespace nexus {
 
-  PetBox::PetBox(): BaseGeometry(),
+  PetBox::PetBox(): GeometryBase(),
                     visibility_(0),
                     reflectivity_(0),
                     tile_vis_(1),

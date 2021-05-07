@@ -17,7 +17,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class GeometryFactory
   {
@@ -25,7 +25,7 @@ namespace nexus {
     GeometryFactory();
     ~GeometryFactory();
 
-    BaseGeometry* CreateGeometry() const;
+    GeometryBase* CreateGeometry() const;
 
   private:
     G4GenericMessenger* msg_;

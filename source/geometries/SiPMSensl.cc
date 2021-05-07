@@ -31,7 +31,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMSensl::SiPMSensl(): BaseGeometry(),
+  SiPMSensl::SiPMSensl(): GeometryBase(),
                           visibility_(1),
                           binning_(1.*microsecond)
 

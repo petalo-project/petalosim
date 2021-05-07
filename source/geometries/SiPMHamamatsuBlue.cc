@@ -28,7 +28,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMHamamatsuBlue::SiPMHamamatsuBlue(): BaseGeometry(),
+  SiPMHamamatsuBlue::SiPMHamamatsuBlue(): GeometryBase(),
                                           visibility_(1),
                                           time_binning_(200.*nanosecond),
                                           sensor_depth_(-1),

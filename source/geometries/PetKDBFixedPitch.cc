@@ -34,7 +34,7 @@ namespace nexus {
   using namespace CLHEP;
 
   PetKDBFixedPitch::PetKDBFixedPitch():
-    BaseGeometry(),
+    GeometryBase(),
     visibility_ (0),
     sipm_pitch_(3.2*mm),
     refl_(0.97),

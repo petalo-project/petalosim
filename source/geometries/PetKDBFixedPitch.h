@@ -9,7 +9,7 @@
 #ifndef PET_KDBFixedPitch_H
 #define PET_KDBFixedPitch_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4Material.hh>
 #include <vector>
 
@@ -21,7 +21,7 @@ namespace nexus {
 
   /// Geometry of the Kapton Dice Boards (KDBFixedPitch) used in the NEW detector
 
-  class PetKDBFixedPitch: public BaseGeometry
+  class PetKDBFixedPitch: public GeometryBase
   {
   public:
     /// Constructor

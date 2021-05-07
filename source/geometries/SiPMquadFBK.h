@@ -9,14 +9,14 @@
 #ifndef SIPM_quad_FBK_H
 #define SIPM_quad_FBK_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
 
 namespace nexus {
 
-  class SiPMquadFBK: public BaseGeometry
+  class SiPMquadFBK: public GeometryBase
   {
   public:
     /// Constructor

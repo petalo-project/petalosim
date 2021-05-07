@@ -32,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMquadFBK::SiPMquadFBK(): BaseGeometry(),
+  SiPMquadFBK::SiPMquadFBK(): GeometryBase(),
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),

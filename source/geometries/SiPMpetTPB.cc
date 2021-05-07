@@ -33,7 +33,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMpetTPB::SiPMpetTPB(): BaseGeometry(),
+  SiPMpetTPB::SiPMpetTPB(): GeometryBase(),
 			    visibility_(0),
                             refr_index_(1.),
                             decay_time_(2.2*nanosecond),

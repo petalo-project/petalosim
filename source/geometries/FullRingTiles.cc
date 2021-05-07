@@ -35,7 +35,7 @@
 namespace nexus {
 
   FullRingTiles::FullRingTiles():
-    BaseGeometry(),
+    GeometryBase(),
     // Detector dimensions
     lat_dimension_cell_(48.*mm), // 52.*mm for quads
     //sipm_pitch_(4.*mm),

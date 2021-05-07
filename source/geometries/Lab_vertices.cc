@@ -37,12 +37,12 @@
 
 namespace nexus {
 
-  REGISTER_CLASS(Lab_vertices, BaseGeometry)
+  REGISTER_CLASS(Lab_vertices, GeometryBase)
 
   using namespace CLHEP;
 
   Lab_vertices::Lab_vertices():
-    BaseGeometry(), msg_(0), type_("LXe")
+    GeometryBase(), msg_(0), type_("LXe")
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/Lab_vertices/",
 				  "Control commands of geometry Lab_vertices.");

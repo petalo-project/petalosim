@@ -36,7 +36,7 @@
 namespace nexus {
 
   PetLYSOCell::PetLYSOCell():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Detector dimensions
     //    vacuum_thickn_(1.*mm),

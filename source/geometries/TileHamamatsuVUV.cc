@@ -31,7 +31,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  TileHamamatsuVUV::TileHamamatsuVUV(): TileBaseGeometry(),
+  TileHamamatsuVUV::TileHamamatsuVUV(): TileGeometryBase(),
                                         tile_x_(30.9 * mm),
                                         tile_y_(30.7 * mm),
                                         tile_z_(3. * mm),

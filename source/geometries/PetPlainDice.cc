@@ -32,7 +32,7 @@ namespace nexus {
   using namespace CLHEP;
 
   PetPlainDice::PetPlainDice():
-    BaseGeometry(),
+    GeometryBase(),
     rows_(8),
     columns_(8),
     visibility_ (1),

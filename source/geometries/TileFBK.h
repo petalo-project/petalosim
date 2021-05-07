@@ -9,7 +9,7 @@
 #ifndef TILE_FBK_H
 #define TILE_FBK_H
 
-#include "TileBaseGeometry.h"
+#include "TileGeometryBase.h"
 
 #include <G4ThreeVector.hh>
 
@@ -18,7 +18,7 @@ namespace nexus {class SiPMFBKVUV;}
 
 namespace nexus {
 
-  class TileFBK: public TileBaseGeometry
+  class TileFBK: public TileGeometryBase
   {
   public:
     /// Constructor

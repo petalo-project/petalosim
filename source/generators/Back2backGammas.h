@@ -22,8 +22,8 @@ class TH1F;
 
 namespace nexus {
 
-  class BaseGeometry;
-  
+  class GeometryBase;
+
   class Back2backGammas: public G4VPrimaryGenerator
   {
   public:
@@ -37,7 +37,7 @@ namespace nexus {
   private:
 
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
 
     G4String region_;
 

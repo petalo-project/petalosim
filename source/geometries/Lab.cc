@@ -36,7 +36,7 @@ namespace nexus {
   using namespace CLHEP;
 
   Lab::Lab():
-    BaseGeometry(), msg_(0)
+    GeometryBase(), msg_(0)
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/Lab/",
 				  "Control commands of geometry Lab.");

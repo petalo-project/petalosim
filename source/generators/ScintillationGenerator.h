@@ -21,14 +21,14 @@ class G4PhysicsOrderedFreeVector;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
 
-  /// Primary generator (concrete class of G4VPrimaryGenerator) for events 
+  /// Primary generator (concrete class of G4VPrimaryGenerator) for events
   /// consisting of a single particle. The user must specify via configuration
   /// parameters the particle type, a kinetic energy interval (a random
   /// value with random .
-  
+
   class ScintillationGenerator: public G4VPrimaryGenerator
   {
   public:
@@ -36,12 +36,12 @@ namespace nexus {
     ScintillationGenerator();
     /// Destructor
     ~ScintillationGenerator();
-    
-    /// This method is invoked at the beginning of the event. It sets 
+
+    /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)
     /// in the event.
     void GeneratePrimaryVertex(G4Event*);
-    
+
   private:
 
     void ComputeCumulativeDistribution(const G4PhysicsOrderedFreeVector&,
@@ -49,11 +49,11 @@ namespace nexus {
 
     G4GenericMessenger* msg_;
     G4Navigator* geom_navigator_; ///< Geometry Navigator
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4String region_;
     G4int    nphotons_;
-   
+
 
   };
 

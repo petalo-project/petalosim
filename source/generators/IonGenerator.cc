@@ -10,7 +10,7 @@
 
 #include "IonGenerator.h"
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include "DetectorConstruction.h"
 
 #include <G4GenericMessenger.hh>

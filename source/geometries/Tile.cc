@@ -31,7 +31,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Tile::Tile(): BaseGeometry(),
+  Tile::Tile(): GeometryBase(),
 		visibility_(0),
 		tile_x_(19.8 * mm),
 		tile_y_(38.6 * mm),

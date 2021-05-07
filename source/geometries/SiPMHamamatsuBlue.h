@@ -9,14 +9,14 @@
 #ifndef SIPM_pet_Blue_H
 #define SIPM_pet_Blue_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
 
 namespace nexus {
 
-  class SiPMHamamatsuBlue: public BaseGeometry
+  class SiPMHamamatsuBlue: public GeometryBase
   {
   public:
     /// Constructor

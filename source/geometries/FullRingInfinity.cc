@@ -37,10 +37,10 @@
 
 namespace nexus {
 
-  REGISTER_CLASS(FullRingInfinity, BaseGeometry)
+  REGISTER_CLASS(FullRingInfinity, GeometryBase)
 
   FullRingInfinity::FullRingInfinity():
-    BaseGeometry(),
+    GeometryBase(),
     // Detector dimensions
     sipm_pitch_(4.*mm),
     n_sipm_rows_(16),

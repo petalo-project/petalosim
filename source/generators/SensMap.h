@@ -19,9 +19,9 @@ class G4Event;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
-  
+
   class SensMap: public G4VPrimaryGenerator
   {
   public:
@@ -29,15 +29,15 @@ namespace nexus {
     SensMap();
     /// Destructor
     ~SensMap();
-    
-    /// This method is invoked at the beginning of the event. It sets 
+
+    /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)
     /// in the event.
     void GeneratePrimaryVertex(G4Event*);
 
   private:
     G4GenericMessenger* msg_; ///< Pointer to UI messenger
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4int num_gammas_;
   };

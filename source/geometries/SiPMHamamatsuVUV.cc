@@ -32,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMHamamatsuVUV::SiPMHamamatsuVUV(): BaseGeometry(),
+  SiPMHamamatsuVUV::SiPMHamamatsuVUV(): GeometryBase(),
                                         visibility_(1),
                                         time_binning_(200.*nanosecond),
                                         sensor_depth_(-1),

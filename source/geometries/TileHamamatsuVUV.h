@@ -9,7 +9,7 @@
 #ifndef TILE_HAMAMATSU_VUV_H
 #define TILE_HAMAMATSU_VUV_H
 
-#include "TileBaseGeometry.h"
+#include "TileGeometryBase.h"
 
 #include <G4ThreeVector.hh>
 
@@ -19,7 +19,7 @@ namespace nexus {
 
 namespace nexus {
 
-  class TileHamamatsuVUV: public TileBaseGeometry
+  class TileHamamatsuVUV: public TileGeometryBase
   {
   public:
     /// Constructor

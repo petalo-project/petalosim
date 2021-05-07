@@ -33,7 +33,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  TileHamamatsuBlue::TileHamamatsuBlue(): TileBaseGeometry(),
+  TileHamamatsuBlue::TileHamamatsuBlue(): TileGeometryBase(),
                                           tile_x_(25. * mm),
                                           tile_y_(25. * mm),
                                           tile_z_(1.35 * mm),

@@ -10,7 +10,7 @@
 #ifndef P_ANALYSIS_TRACKING_ACTION_H
 #define P_ANALYSIS_TRACKING_ACTION_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4UserTrackingAction.hh>
 
 class G4Track;

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | TileBaseGeometry.h
+// nexus | TileGeometryBase.h
 //
 // This is an abstract base class for encapsulation of SiPM board geometries.
 //
@@ -9,19 +9,19 @@
 #ifndef TILE_BASE_GEOMETRY_H
 #define TILE_BASE_GEOMETRY_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 //#include <CLHEP/Units/SystemOfUnits.h>
 
 class G4VPhysicalVolume;
 namespace nexus {
 
-  class TileBaseGeometry : public BaseGeometry
+  class TileGeometryBase : public GeometryBase
   {
   public:
 
     /// Destructor
-    virtual ~TileBaseGeometry();
+    virtual ~TileGeometryBase();
 
     void SetBoxGeom (G4int box_geom);
     G4int GetBoxGeom() const;
@@ -47,7 +47,7 @@ namespace nexus {
   protected:
     /// Default constructor defined as protected so no instance of
     /// this base class can be created.
-    TileBaseGeometry();
+    TileGeometryBase();
 
   private:
     G4int box_geom_;
@@ -60,26 +60,26 @@ namespace nexus {
 
   // Inline definitions ///////////////////////////////////
 
-  inline TileBaseGeometry::TileBaseGeometry():  box_geom_(0) {}
-  inline TileBaseGeometry::~TileBaseGeometry() {}
+  inline TileGeometryBase::TileGeometryBase():  box_geom_(0) {}
+  inline TileGeometryBase::~TileGeometryBase() {}
 
-  inline void TileBaseGeometry::SetBoxGeom(G4int box_geom) { box_geom_ = box_geom; }
-  inline G4int TileBaseGeometry::GetBoxGeom() const  { return box_geom_; }
+  inline void TileGeometryBase::SetBoxGeom(G4int box_geom) { box_geom_ = box_geom; }
+  inline G4int TileGeometryBase::GetBoxGeom() const  { return box_geom_; }
 
-  inline void TileBaseGeometry::SetTileVisibility(G4bool vis) { tile_vis_ = vis; }
-  inline G4bool TileBaseGeometry::GetTileVisibility() const  { return tile_vis_; }
+  inline void TileGeometryBase::SetTileVisibility(G4bool vis) { tile_vis_ = vis; }
+  inline G4bool TileGeometryBase::GetTileVisibility() const  { return tile_vis_; }
 
-  inline void TileBaseGeometry::SetTileReflectivity(G4double refl) { tile_refl_ = refl; }
-  inline G4double TileBaseGeometry::GetTileReflectivity() const  { return tile_refl_; }
+  inline void TileGeometryBase::SetTileReflectivity(G4double refl) { tile_refl_ = refl; }
+  inline G4double TileGeometryBase::GetTileReflectivity() const  { return tile_refl_; }
 
-  inline void TileBaseGeometry::SetTimeBinning(G4double tb) { time_binning_ = tb; }
-  inline G4double TileBaseGeometry::GetTimeBinning() const  { return time_binning_; }
+  inline void TileGeometryBase::SetTimeBinning(G4double tb) { time_binning_ = tb; }
+  inline G4double TileGeometryBase::GetTimeBinning() const  { return time_binning_; }
 
-  inline void TileBaseGeometry::SetPDE(G4double eff) { sipm_pde_ = eff; }
-  inline G4double TileBaseGeometry::GetPDE() const  { return sipm_pde_; }
+  inline void TileGeometryBase::SetPDE(G4double eff) { sipm_pde_ = eff; }
+  inline G4double TileGeometryBase::GetPDE() const  { return sipm_pde_; }
 
-  inline void TileBaseGeometry::SetMotherPhysicalVolume(G4VPhysicalVolume* mpv) { mpv_ = mpv; }
-  inline G4VPhysicalVolume* TileBaseGeometry::GetMotherPhysicalVolume() const  { return mpv_; }
+  inline void TileGeometryBase::SetMotherPhysicalVolume(G4VPhysicalVolume* mpv) { mpv_ = mpv; }
+  inline G4VPhysicalVolume* TileGeometryBase::GetMotherPhysicalVolume() const  { return mpv_; }
 
  }
 

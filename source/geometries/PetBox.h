@@ -9,8 +9,8 @@
 #ifndef PET_BOX_H
 #define PET_BOX_H
 
-#include "BaseGeometry.h"
-#include "TileBaseGeometry.h"
+#include "nexus/GeometryBase.h"
+#include "TileGeometryBase.h"
 
 class G4GenericMessenger;
 class G4LogicalVolume;
@@ -23,7 +23,7 @@ namespace nexus {
 }
 
 namespace nexus {
-  class PetBox : public BaseGeometry {
+  class PetBox : public GeometryBase {
 
   public:
     // Constructor
@@ -34,7 +34,7 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    TileBaseGeometry* tile_;
+    TileGeometryBase* tile_;
 
     private:
     void Construct();

@@ -20,8 +20,8 @@ class G4ParticleDefinition;
 
 namespace nexus {
 
-  class BaseGeometry;
-  
+  class GeometryBase;
+
   class DoubleParticle: public G4VPrimaryGenerator
   {
   public:
@@ -29,8 +29,8 @@ namespace nexus {
     DoubleParticle();
     /// Destructor
     ~DoubleParticle();
-    
-    /// This method is invoked at the beginning of the event. It sets 
+
+    /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)
     /// in the event.
     void GeneratePrimaryVertex(G4Event*);
@@ -39,23 +39,23 @@ namespace nexus {
 
     void SetParticleDefinition(G4String);
 
-    /// Generate a random kinetic energy with flat probability in 
+    /// Generate a random kinetic energy with flat probability in
     //  the interval [energy_min, energy_max].
     G4double RandomEnergy() const;
-    
+
   private:
     G4GenericMessenger* msg_;
-  
+
     G4ParticleDefinition* particle_definition_;
 
-    G4double energy_min_; ///< Minimum kinetic energy 
+    G4double energy_min_; ///< Minimum kinetic energy
     G4double energy_max_; ///< Maximum kinetic energy
 
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4String region_;
 
-    
+
   };
 
 } // end namespace nexus

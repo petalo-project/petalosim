@@ -11,7 +11,7 @@
 #include "SensMap.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -36,7 +36,7 @@ SensMap::SensMap():
   msg_ = new G4GenericMessenger(this, "/Generator/SensMap/",
     "Control commands of the sensitivity map primary generator.");
 
-    msg_->DeclareProperty("num_gammas", num_gammas_, 
+    msg_->DeclareProperty("num_gammas", num_gammas_,
 			  "Set number of back-to-back gammas to be generated.");
 
   // Retrieve pointer to detector geometry from the run manager
@@ -68,7 +68,7 @@ void SensMap::GeneratePrimaryVertex(G4Event* event)
   G4double mass = particle_definition->GetPDGMass();
   // Set charges to PDG value
   G4double charge = particle_definition->GetPDGCharge();
-  
+
   // Calculate cartesian components of momentum
   G4double energy = 510.999*keV + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
@@ -87,7 +87,7 @@ void SensMap::GeneratePrimaryVertex(G4Event* event)
     particle1->SetCharge(charge);
     particle1->SetPolarization(0.,0.,0.);
     vertex->SetPrimary(particle1);
-  
+
     G4PrimaryParticle* particle2 =
       new G4PrimaryParticle(particle_definition, -px, -py, -pz);
     particle2->SetMass(mass);

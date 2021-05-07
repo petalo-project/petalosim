@@ -32,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMpetFBK::SiPMpetFBK(): BaseGeometry(),
+  SiPMpetFBK::SiPMpetFBK(): GeometryBase(),
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),
@@ -148,7 +148,7 @@ namespace nexus {
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       ToFSD* sipmsd = new ToFSD(sdname);
 
-      if (sensor_depth_ == -1) 
+      if (sensor_depth_ == -1)
         G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
                     "Sensor depth must be set before constructing");
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);

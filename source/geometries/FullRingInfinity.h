@@ -10,7 +10,7 @@
 #ifndef FULL_RING_INF_H
 #define FULL_RING_INF_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <vector>
 
 class G4GenericMessenger;
@@ -21,7 +21,7 @@ namespace nexus {
 }
 
 namespace nexus {
-  class FullRingInfinity : public BaseGeometry {
+  class FullRingInfinity : public GeometryBase {
 
   public:
     // Constructor

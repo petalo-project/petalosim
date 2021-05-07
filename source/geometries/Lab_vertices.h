@@ -11,7 +11,7 @@
 #ifndef LAB_V_H
 #define LAB_V_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 #include <TFile.h>
 
@@ -23,7 +23,7 @@ namespace nexus {class PetLYSOCell;}
 
 namespace nexus {
 
-  class Lab_vertices: public BaseGeometry
+  class Lab_vertices: public GeometryBase
   {
   public:
     /// Constructor

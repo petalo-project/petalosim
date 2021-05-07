@@ -14,7 +14,7 @@
 #include "SingleParticle.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include "RandomUtils.h"
 
 #include <G4GenericMessenger.hh>

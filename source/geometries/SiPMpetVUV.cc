@@ -30,7 +30,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMpetVUV::SiPMpetVUV(): BaseGeometry(),
+  SiPMpetVUV::SiPMpetVUV(): GeometryBase(),
 			                      visibility_(0),
 			                      refr_index_(1.6),
 			                      eff_(1.),

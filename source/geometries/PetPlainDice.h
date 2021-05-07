@@ -9,7 +9,7 @@
 #ifndef PET_PLAIN_DICE_H
 #define PET_PLAIN_DICE_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <vector>
 
 class G4Material;
@@ -19,7 +19,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class PetPlainDice: public BaseGeometry
+  class PetPlainDice: public GeometryBase
   {
   public:
     /// Constructor

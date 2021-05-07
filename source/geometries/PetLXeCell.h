@@ -9,7 +9,7 @@
 #ifndef PET_LXE_CELL_H
 #define PET_LXE_CELL_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -25,7 +25,7 @@ namespace nexus {class SiPMpetPlots;}
 
 namespace nexus {
 
-  class PetLXeCell: public BaseGeometry {
+  class PetLXeCell: public GeometryBase {
   public:
     /// Constructor
     PetLXeCell();
@@ -75,7 +75,7 @@ namespace nexus {
     // PetKDBFixedPitch* db_;
     PetPlainDice* pdb_;
 
-    BaseGeometry* sipm_;
+    SiPMpetVUV* sipm_;
     /* SiPMpetVUV* sipmVUV_; */
     /* SiPMpetTPB* sipmTPB_; */
     /* SiPMpetPlots* sipmPlots_; */

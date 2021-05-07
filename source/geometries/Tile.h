@@ -9,7 +9,7 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
@@ -17,7 +17,7 @@ namespace nexus {class SiPMpetFBK;}
 
 namespace nexus {
 
-  class Tile: public BaseGeometry
+  class Tile: public GeometryBase
   {
   public:
     /// Constructor

@@ -9,7 +9,7 @@
 #ifndef LAB_H
 #define LAB_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 class G4GenericMessenger;
 namespace nexus {class Pet2boxes;}
@@ -19,7 +19,7 @@ namespace nexus {class PetLYSOCell;}
 
 namespace nexus {
 
-  class Lab: public BaseGeometry
+  class Lab: public GeometryBase
   {
   public:
     /// Constructor

@@ -20,7 +20,7 @@ class G4ParticleDefinition;
 
 namespace nexus{
 
-  class BaseGeometry;
+  class GeometryBase;
 
 
   // Primary generator for events consisting in the decay of a radioactive ion
@@ -48,7 +48,7 @@ namespace nexus{
     G4bool decay_at_time_zero_;
     G4String region_;
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
   };
 
 } // end namespace nexus

@@ -32,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  TileFBK::TileFBK(): TileBaseGeometry(),
+  TileFBK::TileFBK(): TileGeometryBase(),
                       tile_x_(29.0 * mm),
                       tile_y_(29.0 * mm),
                       tile_z_(1.6 * mm),

@@ -9,7 +9,7 @@
 #ifndef TILE_HAMAMATSU_BLUE_H
 #define TILE_HAMAMATSU_BLUE_H
 
-#include "TileBaseGeometry.h"
+#include "TileGeometryBase.h"
 
 #include <G4ThreeVector.hh>
 
@@ -18,7 +18,7 @@ namespace nexus {class SiPMHamamatsuBlue;}
 
 namespace nexus {
 
-  class TileHamamatsuBlue: public TileBaseGeometry
+  class TileHamamatsuBlue: public TileGeometryBase
   {
   public:
     /// Constructor

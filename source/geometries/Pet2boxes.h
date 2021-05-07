@@ -9,7 +9,7 @@
 #ifndef PET2BOXES_H
 #define PET2BOXES_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -20,7 +20,7 @@ namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
-  class Pet2boxes: public BaseGeometry {
+  class Pet2boxes: public GeometryBase {
   public:
     /// Constructor
     Pet2boxes();

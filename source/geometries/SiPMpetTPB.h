@@ -10,7 +10,7 @@
 #ifndef SIPM_pet_TPB_H
 #define SIPM_pet_TPB_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
@@ -20,7 +20,7 @@ namespace nexus {
 
   /// Geometry of 3x3 mm2 active surface SiPMs
 
-  class SiPMpetTPB: public BaseGeometry
+  class SiPMpetTPB: public GeometryBase
   {
   public:
     /// Constructor

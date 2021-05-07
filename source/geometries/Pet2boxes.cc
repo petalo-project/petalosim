@@ -34,7 +34,7 @@
 namespace nexus {
 
   Pet2boxes::Pet2boxes():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Detector dimensions
     //    vacuum_thickn_(1.*mm),

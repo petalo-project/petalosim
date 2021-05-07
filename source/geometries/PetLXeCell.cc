@@ -39,7 +39,7 @@
 namespace nexus {
 
   PetLXeCell::PetLXeCell():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Detector dimensions
     //    vacuum_thickn_(1.*mm),

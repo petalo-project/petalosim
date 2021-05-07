@@ -32,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMpet::SiPMpet(): BaseGeometry(),
+  SiPMpet::SiPMpet(): GeometryBase(),
                       visibility_(0),
                       time_binning_(1.*microsecond)
   {

@@ -13,7 +13,7 @@
 
 #include "G4Event.hh"
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include "RandomUtils.h"
 
 #include "nexus/FactoryBase.h"

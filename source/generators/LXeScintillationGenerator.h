@@ -19,7 +19,7 @@ class G4PhysicsOrderedFreeVector;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class LXeScintillationGenerator: public G4VPrimaryGenerator
   {
@@ -40,7 +40,7 @@ namespace nexus {
                                        G4PhysicsOrderedFreeVector&);
 
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4String region_;
     G4int    nphotons_;

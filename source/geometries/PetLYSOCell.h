@@ -9,7 +9,7 @@
 #ifndef PET_LYSO_CELL_H
 #define PET_LYSO_CELL_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -22,7 +22,7 @@ namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
-  class PetLYSOCell: public BaseGeometry {
+  class PetLYSOCell: public GeometryBase {
   public:
     /// Constructor
     PetLYSOCell();
@@ -74,7 +74,7 @@ namespace nexus {
     PetPlainDice* pdb_;
 
     //SiPMpetVUV* sipm_;
-    BaseGeometry* sipm_;
+    GeometryBase* sipm_;
 
     G4double  pdb_z_;
 

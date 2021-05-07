@@ -28,7 +28,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMFBKVUV::SiPMFBKVUV(): BaseGeometry(),
+  SiPMFBKVUV::SiPMFBKVUV(): GeometryBase(),
                             visibility_(1),
                             eff_(1.),
                             time_binning_(200.*nanosecond),
