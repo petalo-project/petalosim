@@ -16,6 +16,8 @@
 #include "BaseGeometry.h"
 #include "RandomUtils.h"
 
+#include "nexus/FactoryBase.h"
+
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
@@ -31,6 +33,8 @@
 
 using namespace CLHEP;
 using namespace nexus;
+
+REGISTER_CLASS(Back2backGammas, G4VPrimaryGenerator)
 
 Back2backGammas::Back2backGammas() : geom_(0), costheta_min_(-1.),
                                      costheta_max_(1.),
