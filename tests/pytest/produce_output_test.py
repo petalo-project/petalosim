@@ -15,13 +15,18 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry FULLRING
+### GEOMETRY
+/nexus/RegisterGeometry FullRingInfinity
 
-/Generator/RegisterGenerator BACK2BACK
+### GENERATOR
+/nexus/RegisterGenerator Back2backGammas
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+### ACTIONS
+/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
 
 /nexus/RegisterMacro {config_tmpdir}/{base_name_full_body}.config.mac
 """
@@ -63,7 +68,7 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/nexus'
+     nexus_exe = NEXUSDIR + '/bin/petalo'
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
@@ -79,13 +84,18 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry RING_TILES
+### GEOMETRY
+/nexus/RegisterGeometry FullRingTiles
 
-/Generator/RegisterGenerator BACK2BACK
+### GENERATOR
+/nexus/RegisterGenerator Back2backGammas
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+### ACTIONS
+/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
 
 /nexus/RegisterMacro {config_tmpdir}/{base_name_ring_tiles}.config.mac
 """
@@ -122,7 +132,7 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/nexus'
+     nexus_exe = NEXUSDIR + '/bin/petalo'
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
@@ -139,11 +149,21 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
-/Geometry/RegisterGeometry PETBOX
-/Generator/RegisterGenerator BACK2BACK
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+
+### GEOMETRY
+/nexus/RegisterGeometry PetBox
+
+### GENERATOR
+/nexus/RegisterGenerator Back2backGammas
+#/nexus/RegisterGenerator SingleParticleGenerator
+
+### ACTIONS
+/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
+
 /nexus/RegisterMacro {config_tmpdir}/{nexus_pet_box_basenames}.config.mac
 """
      init_path = os.path.join(config_tmpdir, nexus_pet_box_basenames+'.init.mac')
@@ -155,12 +175,16 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
 /Geometry/PetBox/tile_type {tile_type}
 /Geometry/PetBox/tile_refl 0.
 /Geometry/PetBox/sipm_time_binning 1. microsecond
 /Geometry/PetBox/sipm_pde 0.5
+
 /Generator/Back2back/region CENTER
+
 /nexus/persistency/outputFile {output_tmpdir}/{nexus_pet_box_basenames}
+
 /nexus/random_seed 23102020
 """
 
@@ -170,6 +194,6 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/nexus'
+     nexus_exe = NEXUSDIR + '/bin/petalo'
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
