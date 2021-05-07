@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMHamamatsuVUV.cc
+// petalosim | SiPMHamamatsuVUV.cc
 //
 // 6x6 mm2 VUV Hamamatsu SiPM geometry.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SiPMHamamatsuVUV.h"

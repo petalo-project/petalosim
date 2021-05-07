@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PetAnalysisTrackingAction.h
+// petalosim | PetAnalysisTrackingAction.h
 //
 // This class produces histograms of the wavelengths and the time of production
 // of the optical photons.

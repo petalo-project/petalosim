@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | DoubleParticle.cc
+// petalosim | DoubleParticle.cc
 //
 // This generator is based on the SingleParticle generator, but simulates
 // two particles instead of one. The region passed to the GenerateVertex()
 // method must provide two positions.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "DoubleParticle.h"

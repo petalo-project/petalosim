@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | TileHamamatsuBlue.cc
+// petalosim | TileHamamatsuBlue.cc
 //
 // Hamamatsu Blue sensor tile geometry.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "TileHamamatsuBlue.h"

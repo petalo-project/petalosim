@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | ScintillationGenerator.h
+// petalosim | ScintillationGenerator.h
 //
 // This class is the primary generator of a number of optical photons with
 // energy following the scintillation spectrum of the material
 // where the vertex is produced.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SCINTILLATIONGENERATOR_H

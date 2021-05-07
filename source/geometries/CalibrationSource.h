@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | CalibrationSource.h
+// petalosim | CalibrationSource.h
 //
 // This class describes a source of configurable size.
 // The isotope is also configurable. It is used to simulate the small sources,
 // shaped as capsules, used in Canfranc.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef CAL_SOURCE_H

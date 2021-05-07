@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | FullRingTiles.cc
+// petalosim | FullRingTiles.cc
 //
 // This class implements the geometry of a cylindric ring of LXe,
 // of configurable length and diameter, instrumented with specific tiles.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "FullRingTiles.h"

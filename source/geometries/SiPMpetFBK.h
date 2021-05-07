@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetFBK.h
+// petalosim | SiPMpetFBK.h
 //
 // Basic SiPM geometry without TPB coating.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SIPM_pet_FBK_H

@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | TileHamamatsuVUV.cc
+// petalosim | TileHamamatsuVUV.cc
 //
 // Hamamatsu VUV sensor tile geometry.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "TileHamamatsuVUV.h"

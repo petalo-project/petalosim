@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetLYSOCell.cc
+// petalosim | PetLYSOCell.cc
 //
 // Basic cell made of LYSO.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetLYSOCell.h"

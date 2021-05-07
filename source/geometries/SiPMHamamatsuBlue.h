@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMHamamatsuBlue.cc
+// petalosim | SiPMHamamatsuBlue.cc
 //
 // 6x6 mm2 Hamamatsu Blue SiPM geometry.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SIPM_pet_Blue_H

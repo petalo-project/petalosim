@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloStackingAction.h
+// petalosim | PetaloStackingAction.h
 //
 // This class is an example of how to implement a stacking action, if needed.
 // At the moment, it is not used in the NEXT simulations.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PETALO_STACKING_ACTION_H

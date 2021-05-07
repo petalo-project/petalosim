@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloPersistencyManager.cc
+// petalosim | PetaloPersistencyManager.cc
 //
 // This class writes all the relevant information of the simulation
 // to an ouput file.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetaloPersistencyManager.h"

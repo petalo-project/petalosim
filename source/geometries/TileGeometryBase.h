@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | TileGeometryBase.h
+// petalosim | TileGeometryBase.h
 //
 // This is an abstract base class for encapsulation of SiPM board geometries.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef TILE_BASE_GEOMETRY_H

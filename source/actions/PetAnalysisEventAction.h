@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | PetAnalysisEventAction.h
+// petalosim | PetAnalysisEventAction.h
 //
 // This class is based on DefaultEventAction and modified to produce
 // a histogram of the number of scintillation photons event by event.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef P_ANALYSIS_EVENT_ACTION_H

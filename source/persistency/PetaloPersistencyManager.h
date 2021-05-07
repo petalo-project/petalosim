@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloPersistencyManager.h
+// petalosim | PetaloPersistencyManager.h
 //
 // This class writes all the relevant information of the simulation
 // to an ouput file.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef P_PERSISTENCY_MANAGER_H

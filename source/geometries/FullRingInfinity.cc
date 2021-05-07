@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | FullRingInfinity.cc
+// petalosim | FullRingInfinity.cc
 //
 // This class implements the geometry of a cylindric ring of LXe,
 // of configurable length and diameter.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "FullRingInfinity.h"

@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | RandomUtils.h
+// petalosim | RandomUtils.h
 //
 // This class defines commonly used functions to generate random quantities.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include <G4ThreeVector.hh>

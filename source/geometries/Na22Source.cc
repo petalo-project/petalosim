@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | Na22Source.cc
+// petalosim | Na22Source.cc
 //
 // Na-22 calibration specific source with plastic support used at LSC.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Na22Source.h"

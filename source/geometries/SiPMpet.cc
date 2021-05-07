@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpet.cc
+// petalosim | SiPMpet.cc
 //
 // Basic SiPM geometry with TPB coating.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SiPMpet.h"

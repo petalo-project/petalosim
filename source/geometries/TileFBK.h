@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | TileFBK.h
+// petalosim | TileFBK.h
 //
 // Geometry of a FBK sensor tile.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef TILE_FBK_H

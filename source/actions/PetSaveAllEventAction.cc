@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | PetSaveAllEventAction.cc
+// petalosim | PetSaveAllEventAction.cc
 //
 // This class is based on DefaultEventAction and modified to store
 // all the events, no matter how much energy is deposited.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetSaveAllEventAction.h"

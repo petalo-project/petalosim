@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | WavelengthShifting.h
+// petalosim | WavelengthShifting.h
 //
 // This is a class with a nexus-defined process for wavelength shifting.
 // It differs from G4OpWls, because the mean free path is not calculated
 // from a wls_absorption length property but through a probability property,
 // thus independent from the material thickness.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef WLS_H

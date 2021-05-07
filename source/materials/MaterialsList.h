@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | MaterialsList.h
+// petalosim | MaterialsList.h
 //
 // Definition of materials of common use.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef MATERIALS_LIST_H

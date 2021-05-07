@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | PetSaveAllSteppingAction.cc
+// petalosim | PetSaveAllSteppingAction.cc
 //
 // This class sets the store_steps flag of the persistency manager
 // so all steps are saved.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetSaveAllSteppingAction.h"

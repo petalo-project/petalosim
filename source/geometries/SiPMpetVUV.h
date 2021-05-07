@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetVUV.h
+// petalosim | SiPMpetVUV.h
 //
 // Variable size SiPM geometry with no wavelength shifter
 // and a window with perfect transparency and configurable refractive index.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SIPM_pet_VUV_H

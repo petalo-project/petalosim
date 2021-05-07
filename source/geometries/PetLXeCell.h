@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetLXeCell.ch
+// petalosim | PetLXeCell.ch
 //
 // Basic cell filled with LXe.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PET_LXE_CELL_H

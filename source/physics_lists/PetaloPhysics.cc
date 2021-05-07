@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloPhysics.cc
+// petalosim | PetaloPhysics.cc
 //
 // This class registers any new physics process defined in petalosim.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetaloPhysics.h"

@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetTPB.h
+// petalosim | SiPMpetTPB.h
 //
 // Basic 3x3 mm2 SiPM geometry with TPB coating.
 // The decay time of TPB is configurable.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SIPM_pet_TPB_H

@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | DiskSource.h
+// petalosim | DiskSource.h
 //
 // Calibration source with disk shape, used for the bigger source at LSC.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef DISK_SOURCE_H

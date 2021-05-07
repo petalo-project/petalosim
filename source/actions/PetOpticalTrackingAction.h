@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | PetOpticalTrackingAction.h
+// petalosim | PetOpticalTrackingAction.h
 //
 // This class saves the trajectories of optical photons, in addition to the
 // particles saved by the default tracking action. Its purpose is to store
 // optical photon information in the output file.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef P_OPTICAL_TRACKING_ACTION_H

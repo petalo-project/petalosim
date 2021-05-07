@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | SellmeierEquation.h
+// petalosim | SellmeierEquation.h
 //
 // The Sellmeier equation is an empirical relationship between refractive
 // index and wavelength for a dielectric transparent medium.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SELLMEIER_EQUATION_H

@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// nexus | Kr83mGenerator.cc
+// petalosim | Kr83mGenerator.cc
 //
 // This class is the primary generator for the decay chain
 // of the isomeric state krypton 83.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Kr83mGenerator.h"

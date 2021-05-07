@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | HDF5Writer.h
+// petalosim | HDF5Writer.h
 //
 // This class writes the h5 nexus output file.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef HDF5WRITER_H

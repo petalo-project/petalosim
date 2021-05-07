@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetBox.h
+// petalosim | PetBox.h
 //
 // This class implements the geometry of a symmetric box of LXe.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PET_BOX_H

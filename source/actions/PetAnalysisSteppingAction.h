@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PetAnalysisSteppingAction.h
+// petalosim | PetAnalysisSteppingAction.h
 //
 // This class allows the user to print the total number of photons detected by
 // all kinds of photosensors at the end of the run.

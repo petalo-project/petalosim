@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | HeliumGasProperties.h
+// petalosim | HeliumGasProperties.h
 //
 // This class collects the relevant physical properties of gaseous helium.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef HELIUM_GAS_PROPERTIES_H

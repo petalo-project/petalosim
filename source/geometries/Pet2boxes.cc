@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | Pet2boxes.cc
+// petalosim | Pet2boxes.cc
 //
 // This class consists of a steel box filled with LXe.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Pet2boxes.h"

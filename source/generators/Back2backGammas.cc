@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | Back2backGammas.cc
+// petalosim | Back2backGammas.cc
 //
 // This generator simulates two gammas of 510.999 keV back to back, with
 // random direction. It is possible to specify a limited solid angle.
 // Control histograms of the solid angle where gammas are generated
 // are produced.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Back2backGammas.h"

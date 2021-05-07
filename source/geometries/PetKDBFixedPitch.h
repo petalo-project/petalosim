@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetKDBFixedPitch.h
+// petalosim | PetKDBFixedPitch.h
 //
 // Kapton dice board with a fixed distance among SiPMs.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PET_KDBFixedPitch_H

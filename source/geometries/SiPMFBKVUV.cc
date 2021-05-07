@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMFBKVUV.cc
+// petalosim | SiPMFBKVUV.cc
 //
 // 3x3 mm2 FBK SiPM geometry.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SiPMFBKVUV.h"

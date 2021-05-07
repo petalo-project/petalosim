@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | XenonGasProperties.cc
+// petalosim | XenonGasProperties.cc
 //
 // This class collects the relevant physical properties of gaseous xenon.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "XenonGasProperties.h"

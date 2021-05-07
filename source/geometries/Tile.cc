@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | Tile.cc
+// petalosim | Tile.cc
 //
 // Geometry of a basic tile.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Tile.h"

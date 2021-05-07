@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | Lab_vertices.h
+// petalosim | Lab_vertices.h
 //
 // This class consists of two LXe cells placed opposite to each other.
 // A file is expected to be read with the positions of the vertices of the gamma
 // interactions in each cell.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef LAB_V_H

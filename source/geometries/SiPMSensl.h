@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMSensl.h
+// petalosim | SiPMSensl.h
 //
 // Geometry of the SensL SiPM used in the NEXT-WHITE detector.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SILICON_PM_SENSL_H

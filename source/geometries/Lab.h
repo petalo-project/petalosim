@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | Lab.h
+// petalosim | Lab.h
 //
 // This class consists of two LXe cells placed opposite to each other.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef LAB_H

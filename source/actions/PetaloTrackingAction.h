@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloTrackingAction.h
+// petalosim | PetaloTrackingAction.h
 //
 // This class is the default tracking action of the NEXT simulation.
 // It stores in memory the trajectories of all particles, except optical photons
 // and ionization electrons, with the relevant tracking information that will be
 // saved to the output file.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PETALO_TRACKING_ACTION_H

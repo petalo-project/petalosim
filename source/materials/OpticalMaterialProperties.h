@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | OpticalMaterialProperties.h
+// petalosim | OpticalMaterialProperties.h
 //
 // Optical properties of relevant materials.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef OPTICAL_MATERIAL_PROPERTIES_H

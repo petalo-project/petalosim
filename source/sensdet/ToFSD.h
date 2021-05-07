@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | ToFSD.h
+// petalosim | ToFSD.h
 //
 // This class is the sensitive detector used for PETALO.
 // Each time a photoelectron is detected by a sensor, two PmtHit instances
@@ -7,7 +7,7 @@
 // binning and the other one with a fine time binning, which stores only
 // the first part of the waveform.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef TOF_SD_H

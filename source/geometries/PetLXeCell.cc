@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetLXeCell.cc
+// petalosim | PetLXeCell.cc
 //
 // Basic cell filled with LXe.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetLXeCell.h"

@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | IonGenerator.h
+// petalosim | IonGenerator.h
 //
 // This class is the primary generator for events consisting in the decay
 // of a radioactive ion. The user must specify via configuration parameters
 // the atomic number, mass number and energy level of the isotope of interest.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef ION_GENERATOR_H

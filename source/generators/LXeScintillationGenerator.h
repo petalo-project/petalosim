@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | LXeScintillationGenerator.h
+// petalosim | LXeScintillationGenerator.h
 //
 // This class is the primary generator of a number of optical photons with
 // energy following the scintillation spectrum of LXe,
 // where the vertex is produced.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef LXESCINTILLATIONGENERATOR_H

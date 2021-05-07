@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMquadFBK.cc
+// petalosim | SiPMquadFBK.cc
 //
 // Specific SiPM geometry proposed by FBK.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SiPMquadFBK.h"

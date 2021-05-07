@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SingleParticle.cc
+// petalosim | SingleParticle.cc
 //
 // This class is the primary generator for events consisting of
 // a single particle. The user must specify via configuration
@@ -8,7 +8,7 @@
 // Particle energy is generated with flat random probability
 // between E_min and E_max.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SingleParticle.h"

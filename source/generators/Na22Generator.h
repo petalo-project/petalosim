@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-// nexus | Na22Generator.h
+// petalosim | Na22Generator.h
 //
 // This class is the primary generator of Na22-like events consisting of
 // two particles in coincidence (back-to-back) coming from e+e- annihilation
 // and one disexcitation gamma.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef NA22GENERATOR_H

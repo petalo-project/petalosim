@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetPlainDice.cc
+// petalosim | PetPlainDice.cc
 //
 // Kapton non-instrumented dice board.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetPlainDice.h"
