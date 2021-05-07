@@ -12,7 +12,7 @@
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>

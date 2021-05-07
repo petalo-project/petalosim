@@ -10,7 +10,7 @@
 #include "ToFSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>

@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "PetPlainDice.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 

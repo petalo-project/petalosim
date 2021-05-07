@@ -12,7 +12,7 @@
 #include "TileFBK.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 #include "IonizationSD.h"
 
 #include "nexus/FactoryBase.h"

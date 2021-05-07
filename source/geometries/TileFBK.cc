@@ -9,7 +9,7 @@
 #include "TileFBK.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 #include "SiPMFBKVUV.h"
 #include "IonizationSD.h"
 

@@ -9,7 +9,7 @@
 #include "TileHamamatsuVUV.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 #include "SiPMHamamatsuVUV.h"
 #include "IonizationSD.h"
 

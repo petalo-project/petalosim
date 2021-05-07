@@ -14,7 +14,7 @@
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 
 #include "nexus/FactoryBase.h"
 

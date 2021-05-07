@@ -11,7 +11,7 @@
 #include "MaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>

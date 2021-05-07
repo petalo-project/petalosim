@@ -10,7 +10,7 @@
 
 #include "CalibrationSource.h"
 #include "MaterialsList.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 
 #include <G4Tubs.hh>
 #include <G4NistManager.hh>

@@ -14,7 +14,7 @@
 #include "BoxPointSampler.h"
 //#include "SiPMHamamatsuBlue.h"
 #include "SiPMpetVUV.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 //#include "SiPMHamamatsuBlue.h"
 //#include "SiPMpetTPB.h"
 //#include "SiPMpetPlots.h"

@@ -9,7 +9,7 @@
 #include "TileHamamatsuBlue.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "nexus/Visibilities.h"
 #include "SiPMHamamatsuBlue.h"
 #include "IonizationSD.h"
 
