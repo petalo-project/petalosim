@@ -14,7 +14,9 @@
 #include "PetLYSOCell.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
+
 #include "nexus/IonizationSD.h"
+#include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -34,6 +36,8 @@
 namespace nexus {
 
   using namespace CLHEP;
+
+  REGISTER_CLASS(Lab, GeometryBase)
 
   Lab::Lab():
     GeometryBase(), msg_(0)
