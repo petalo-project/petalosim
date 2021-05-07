@@ -10,7 +10,7 @@
 
 #include "SensMap.h"
 
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 
 #include <G4GenericMessenger.hh>

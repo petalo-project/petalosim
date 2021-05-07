@@ -12,7 +12,7 @@
 #include "Back2backGammas.h"
 
 #include "G4Event.hh"
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 #include "RandomUtils.h"
 

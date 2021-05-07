@@ -10,7 +10,7 @@
 
 #include "DoubleParticle.h"
 
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 #include "Pet2boxes.h"
 
 #include "nexus/FactoryBase.h"

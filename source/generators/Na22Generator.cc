@@ -11,7 +11,7 @@
 #include "Na22Generator.h"
 
 #include "G4Event.hh"
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 
 #include <G4GenericMessenger.hh>

@@ -11,7 +11,7 @@
 #include "IonGenerator.h"
 
 #include "nexus/GeometryBase.h"
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>

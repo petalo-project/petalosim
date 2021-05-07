@@ -10,7 +10,7 @@
 
 #include "LXeScintillationGenerator.h"
 
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 #include "OpticalMaterialProperties.h"
 

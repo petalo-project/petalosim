@@ -13,7 +13,7 @@
 
 #include "SingleParticle.h"
 
-#include "DetectorConstruction.h"
+#include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 #include "RandomUtils.h"
 
