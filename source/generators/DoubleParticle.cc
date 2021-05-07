@@ -13,6 +13,8 @@
 #include "DetectorConstruction.h"
 #include "Pet2boxes.h"
 
+#include "nexus/FactoryBase.h"
+
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
 #include <G4RunManager.hh>
@@ -29,6 +31,8 @@
 using namespace nexus;
 using namespace CLHEP;
 
+REGISTER_CLASS(DoubleParticle, G4VPrimaryGenerator)
+
 
 DoubleParticle::DoubleParticle():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
@@ -37,22 +41,22 @@ energy_min_(0.), energy_max_(0.), geom_(0)
   msg_ = new G4GenericMessenger(this, "/Generator/DoubleParticle/",
     "Control commands of single-particle generator.");
 
-  msg_->DeclareMethod("particle", &DoubleParticle::SetParticleDefinition, 
+  msg_->DeclareMethod("particle", &DoubleParticle::SetParticleDefinition,
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
-    msg_->DeclareProperty("min_energy", energy_min_, 
+    msg_->DeclareProperty("min_energy", energy_min_,
       "Set minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_, 
+    msg_->DeclareProperty("max_energy", energy_max_,
       "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
 
-  msg_->DeclareProperty("region", region_, 
+  msg_->DeclareProperty("region", region_,
     "Set the region of the geometry where the vertex will be generated.");
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -70,7 +74,7 @@ DoubleParticle::~DoubleParticle()
 
 void DoubleParticle::SetParticleDefinition(G4String particle_name)
 {
-  particle_definition_ = 
+  particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!particle_definition_)
@@ -83,9 +87,8 @@ void DoubleParticle::SetParticleDefinition(G4String particle_name)
 void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate an initial position for the particle using the geometry
-  std::pair<G4ThreeVector, G4ThreeVector>  positions = geom_->GenerateVertices(region_);
-  G4ThreeVector pos1 = positions.first;
-  G4ThreeVector pos2 = positions.second;
+  G4ThreeVector  pos1 = geom_->GenerateVertex(region_);
+  G4ThreeVector  pos2 = geom_->GenerateVertex(region_);
 
   G4double time1 = sqrt(pos1.getX()*pos1.getX() + pos1.getY()*pos1.getY() + pos1.getZ()*pos1.getZ())/c_light;
   G4double time2 = sqrt(pos2.getX()*pos2.getX() + pos2.getY()*pos2.getY() + pos2.getZ()*pos2.getZ())/c_light;
@@ -114,7 +117,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 
 
   // Create the new primary particle and set it some properties
-  G4PrimaryParticle* particle = 
+  G4PrimaryParticle* particle =
     new G4PrimaryParticle(particle_definition_, px, py, pz);
 
   // Set random polarization
@@ -122,7 +125,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
     G4ThreeVector polarization = G4RandomDirection();
     particle->SetPolarization(polarization);
   }
- 
+
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
@@ -145,7 +148,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
   G4double pz2 = pmod2 * momentum_direction2_.z();
 
   // Create the new primary particle and set it some properties
-  G4PrimaryParticle* particle2 = 
+  G4PrimaryParticle* particle2 =
     new G4PrimaryParticle(particle_definition_, px2, py2, pz2);
 
   // Set random polarization
@@ -153,7 +156,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
     G4ThreeVector polarization2 = G4RandomDirection();
     particle2->SetPolarization(polarization2);
   }
- 
+
     // Add particle to the vertex and this to the event
   vertex2->SetPrimary(particle2);
   event->AddPrimaryVertex(vertex2);
@@ -163,7 +166,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 
 G4double DoubleParticle::RandomEnergy() const
 {
-  if (energy_max_ == energy_min_) 
+  if (energy_max_ == energy_min_)
     return energy_min_;
   else
     return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);

@@ -33,7 +33,6 @@ namespace nexus {
 
     /// Return vertex within region <region> of the chamber
     virtual G4ThreeVector GenerateVertex(const G4String& region) const;
-    std::pair<G4ThreeVector, G4ThreeVector> GenerateVertices(const G4String& /*region*/) const;
 
     virtual void Construct();
 
@@ -46,12 +45,14 @@ namespace nexus {
     TFile* file_;
     G4float px1_, py1_, pz1_, px2_, py2_, pz2_;
     mutable G4int index_;
-    mutable std::vector<std::pair<G4ThreeVector, G4ThreeVector> > vertices_;
+    mutable std::vector<G4ThreeVector> vertices1_;
+    mutable std::vector<G4ThreeVector> vertices2_;
+
 
     G4int starting_point_;
     G4String filename_;
     G4String type_;
-    
+
   };
 
 } // end namespace nexus

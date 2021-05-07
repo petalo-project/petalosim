@@ -31,12 +31,13 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMpetVUV::SiPMpetVUV(): BaseGeometry(),
-			    visibility_(0),
-			    refr_index_(1.6),
-			    eff_(1.),
+			                      visibility_(0),
+			                      refr_index_(1.6),
+			                      eff_(1.),
                             time_binning_(1.*microsecond),
+                            sipm_size_(3.*mm),
                             sensor_depth_(-1),
-			    mother_depth_(0),
+			                      mother_depth_(0),
                             naming_order_(0)
   {
     /// Messenger
@@ -82,22 +83,22 @@ namespace nexus {
 
     this->SetLogicalVolume(sipm_logic);
 
-    
+
     // QUARTZ WINDOW
-    
+
     G4double window_thickness = 0.6 * mm;
     G4Box* window_solid_vol =
     new G4Box("SIPM_WNDW", sipm_size_/2., sipm_size_/2., window_thickness/2.);
 
     G4LogicalVolume* window_logic_vol =
       new G4LogicalVolume(window_solid_vol, window_mat, "SIPM_WNDW");
-    
+
     G4double window_zpos = sipm_z/2. - window_thickness/2.;
-    
+
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos), window_logic_vol,
                       "SIPM_WNDW", sipm_logic, false, 0, true);
 
-   
+
     // ACTIVE WINDOW /////////////////////////////////////////////////
 
     G4double active_x = sipm_x - 0.001 * mm;
@@ -157,7 +158,7 @@ namespace nexus {
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       ToFSD* sipmsd = new ToFSD(sdname);
 
-      if (sensor_depth_ == -1) 
+      if (sensor_depth_ == -1)
         G4Exception("[SiPMpetVUV]", "Construct()", FatalException,
                     "Sensor depth must be set before constructing");
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);

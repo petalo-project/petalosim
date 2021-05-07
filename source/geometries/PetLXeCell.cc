@@ -115,6 +115,7 @@ namespace nexus {
     pdb_->Construct();
     pdb_z_ = pdb_->GetDimensions().z();
 
+    sipm_->SetSensorDepth(1);
     sipm_->Construct();
 
     // Vertex Generators
