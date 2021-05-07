@@ -7,15 +7,17 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry FULLRING
+/nexus/RegisterGeometry FullRingInfinity
 
 ### GENERATOR
-/Generator/RegisterGenerator BACK2BACK
+/nexus/RegisterGenerator Back2backGammas
 
 ### ACTIONS
-/Actions/RegisterRunAction DEFAULT
-/Actions/RegisterEventAction EL_SIM
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterSteppingAction SAVE_ALL
+/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterEventAction PetSaveAllEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+/nexus/RegisterSteppingAction PetSaveAllSteppingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
 
 /nexus/RegisterMacro macros/PET_steps.config.mac

@@ -15,6 +15,8 @@
 #include "Visibilities.h"
 #include "IonizationSD.h"
 
+#include "nexus/FactoryBase.h"
+
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -29,6 +31,8 @@
 #include <G4LogicalSkinSurface.hh>
 
 namespace nexus {
+
+  REGISTER_CLASS(PetBox, GeometryBase)
 
   PetBox::PetBox(): GeometryBase(),
                     visibility_(0),

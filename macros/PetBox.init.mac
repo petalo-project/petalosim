@@ -7,15 +7,17 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry PETBOX
+/nexus/RegisterGeometry PetBox
 
 ### GENERATOR
-/Generator/RegisterGenerator BACK2BACK
-#/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator Back2backGammas
+#/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
-/Actions/RegisterRunAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
+/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
 
 /nexus/RegisterMacro macros/PetBox.config.mac

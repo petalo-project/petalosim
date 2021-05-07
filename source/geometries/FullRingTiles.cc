@@ -16,6 +16,8 @@
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 
+#include "nexus/FactoryBase.h"
+
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -33,6 +35,8 @@
 #include <stdexcept>
 
 namespace nexus {
+
+  REGISTER_CLASS(FullRingTiles, GeometryBase)
 
   FullRingTiles::FullRingTiles():
     GeometryBase(),

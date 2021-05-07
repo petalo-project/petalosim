@@ -12,6 +12,7 @@
 
 #include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
+#include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -28,7 +29,7 @@
 using namespace nexus;
 using namespace CLHEP;
 
-
+REGISTER_CLASS(SensMap, G4VPrimaryGenerator)
 
 SensMap::SensMap():
   G4VPrimaryGenerator(), msg_(0), num_gammas_(1)

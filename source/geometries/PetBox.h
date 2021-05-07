@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PetBox.cc
+// nexus | PetBox.h
 //
 // This class implements the geometry of a symmetric box of LXe.
 //
