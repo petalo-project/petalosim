@@ -7,13 +7,10 @@
 // ----------------------------------------------------------------------------
 
 #include "PetMaterialsList.h"
-#include "XenonGasProperties.h"
 
 #include <G4Material.hh>
 #include <G4Element.hh>
 #include <G4NistManager.hh>
-
-using namespace nexus;
 
 
 G4Material* PetMaterialsList::Steel()
