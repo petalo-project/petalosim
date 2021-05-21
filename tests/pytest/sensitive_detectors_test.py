@@ -2,11 +2,11 @@ import pandas as pd
 import numpy  as np
 
 
-def test_sensor_ids(nexus_params):
+def test_sensor_ids(petalosim_params):
      """
      Check that sensors are correctly numbered.
      """
-     filename, nsipms, n_boards, sipms_per_board, board_ordering = nexus_params
+     filename, nsipms, n_boards, sipms_per_board, board_ordering = petalosim_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
@@ -27,11 +27,11 @@ def test_sensor_ids(nexus_params):
           assert (sipm_ids % board_ordering).max() <=  sipms_per_board
 
 
-def test_sensor_ids_pet_box(nexus_pet_box_params):
+def test_sensor_ids_pet_box(petalosim_pet_box_params):
      """
      Check that sensors are correctly numbered for the PetBox geometry.
      """
-     filename, nsipms, sipms_per_tile, init_sns_id, sensor_name = nexus_pet_box_params
+     filename, nsipms, sipms_per_tile, init_sns_id, sensor_name = petalosim_pet_box_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()

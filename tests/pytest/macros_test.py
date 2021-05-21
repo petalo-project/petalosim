@@ -14,9 +14,9 @@ Caveats:
 """
 
 @pytest.fixture(scope='module')
-def macro_list(NEXUSDIR):
+def macro_list(PETALODIR):
 
-    all_macros = np.array(glob.glob(NEXUSDIR + '/macros/**/*.init.mac',
+    all_macros = np.array(glob.glob(PETALODIR + '/macros/**/*.init.mac',
                                     recursive=True))
     example_macros = all_macros[['/old/' not in m for m in all_macros]]
 
@@ -62,7 +62,7 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
 
 
 @pytest.mark.order('last')
-def test_run_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
+def test_run_examples(capsys, config_tmpdir, output_tmpdir, PETALODIR, macro_list):
     """Run example macros"""
 
     my_env = os.environ.copy()
@@ -72,12 +72,12 @@ def test_run_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list
 
     for macro in macro_list:
         init_macro = copy_and_modify_macro(config_tmpdir, output_tmpdir, macro)
-        if macro == NEXUSDIR + '/macros/PETit_ring_lutable.init.mac':
+        if macro == PETALODIR + '/macros/PETit_ring_lutable.init.mac':
             n = 1
         else:
             n = 20
-        nexus_exe  = NEXUSDIR + '/bin/petalo'
-        command = [nexus_exe, '-b', '-n', str(n), init_macro]
+        petalo_exe  = PETALODIR + '/bin/petalo'
+        command = [petalo_exe, '-b', '-n', str(n), init_macro]
         with capsys.disabled():
             print(f'Running {macro}')
         p  = subprocess.run(command, check=True, env=my_env)

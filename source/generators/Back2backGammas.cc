@@ -10,8 +10,8 @@
 // ----------------------------------------------------------------------------
 
 #include "Back2backGammas.h"
-#include "RandomUtils.h"
 
+#include "nexus/RandomUtils.h"
 #include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 #include "nexus/FactoryBase.h"
@@ -83,7 +83,7 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
 
   auto p = 510.999 * keV * (
            (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
-           Direction(costheta_min_, costheta_max_, phi_min_, phi_max_)                          :
+           RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_)                          :
            G4RandomDirection());
 
   G4ThreeVector position = geom_->GenerateVertex(region_);

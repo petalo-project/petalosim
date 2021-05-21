@@ -5,7 +5,7 @@ import subprocess
 
 
 @pytest.mark.order(1)
-def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_full_body):
+def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALODIR, base_name_full_body):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -68,13 +68,13 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/petalo'
-     command   = [nexus_exe, '-b', '-n', '20', init_path]
+     petalo_exe = PETALODIR + '/bin/petalo'
+     command   = [petalo_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
 
 @pytest.mark.order(2)
-def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_ring_tiles):
+def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETALODIR, base_name_ring_tiles):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -132,15 +132,15 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/petalo'
-     command   = [nexus_exe, '-b', '-n', '20', init_path]
+     petalo_exe = PETALODIR + '/bin/petalo'
+     command   = [petalo_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
 
 @pytest.mark.order(3)
-def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, NEXUSDIR, nexus_pet_box_basenames):
+def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_basenames):
 
-     tile_type = nexus_pet_box_basenames.split("_")[-3]
+     tile_type = petalosim_pet_box_basenames.split("_")[-3]
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -164,9 +164,9 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
 
-/nexus/RegisterMacro {config_tmpdir}/{nexus_pet_box_basenames}.config.mac
+/nexus/RegisterMacro {config_tmpdir}/{petalosim_pet_box_basenames}.config.mac
 """
-     init_path = os.path.join(config_tmpdir, nexus_pet_box_basenames+'.init.mac')
+     init_path = os.path.join(config_tmpdir, petalosim_pet_box_basenames+'.init.mac')
      init_file = open(init_path,'w')
      init_file.write(init_text)
      init_file.close()
@@ -183,17 +183,17 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
 
 /Generator/Back2back/region CENTER
 
-/nexus/persistency/outputFile {output_tmpdir}/{nexus_pet_box_basenames}
+/nexus/persistency/outputFile {output_tmpdir}/{petalosim_pet_box_basenames}
 
 /nexus/random_seed 23102020
 """
 
-     config_path = os.path.join(config_tmpdir, nexus_pet_box_basenames+'.config.mac')
+     config_path = os.path.join(config_tmpdir, petalosim_pet_box_basenames+'.config.mac')
      config_file = open(config_path,'w')
      config_file.write(config_text)
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/petalo'
-     command   = [nexus_exe, '-b', '-n', '20', init_path]
+     petalo_exe = PETALODIR + '/bin/petalo'
+     command   = [petalo_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
