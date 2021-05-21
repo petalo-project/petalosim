@@ -8,8 +8,8 @@
 
 #include "SiPMHamamatsuVUV.h"
 #include "ToFSD.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
 
@@ -59,7 +59,7 @@ void SiPMHamamatsuVUV::Construct()
 
   G4Box *sipm_solid = new G4Box("SiPMHmtsuVUV", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *plastic = MaterialsList::FR4();
+  G4Material *plastic = PetMaterialsList::FR4();
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, plastic, "SiPMHmtsuVUV");
 

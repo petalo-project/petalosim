@@ -7,10 +7,10 @@
 // ----------------------------------------------------------------------------
 
 #include "PetLXeCell.h"
-#include "MaterialsList.h"
+#include "PetMaterialsList.h"
 #include "SiPMpetVUV.h"
 #include "PetPlainDice.h"
-#include "OpticalMaterialProperties.h"
+#include "PetOpticalMaterialProperties.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/BoxPointSampler.h"
@@ -120,13 +120,13 @@ void PetLXeCell::Construct()
   if (phys_)
   {
     G4cout << "LXe used with optical properties" << G4endl;
-    lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
-    //lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_window());
+    lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+    //lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe_window());
   }
   else
   {
     G4cout << "LXe used with constant refraction index = 1.7" << G4endl;
-    lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_nconst());
+    lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe_nconst());
   }
 
   //    BuildDetector();
@@ -143,7 +143,7 @@ void PetLXeCell::Construct()
 //     z_size_+ 2.*sipm_->GetDimensions().z() + 2.*det_thickness_;
 //   G4Box* det_solid =
 //     new G4Box("WALL", det_size/2., det_size/2., det_size_z/2.);
-//   G4Material* steel = MaterialsList::Steel();
+//   G4Material* steel = PetMaterialsList::Steel();
 
 //   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
 //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);

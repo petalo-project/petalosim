@@ -14,8 +14,8 @@
 #include "PetLXeCell.h"
 //#include "PetLYSObox.h"
 #include "PetLYSOCell.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"

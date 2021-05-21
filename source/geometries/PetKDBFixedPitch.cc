@@ -7,11 +7,11 @@
 // ----------------------------------------------------------------------------
 
 #include "PetKDBFixedPitch.h"
-
 #include "SiPMpetVUV.h"
 #include "nexus/PmtSD.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
+
 #include "nexus/Visibilities.h"
 
 #include <G4Box.hh>
@@ -100,7 +100,7 @@ void PetKDBFixedPitch::Construct()
   dimensions_.setZ(out_z);
 
   G4Material *out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  out_material->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+  out_material->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
 
   //   std::cout << "Border = " << border << G4endl;
   //std::cout << "LXe_volume, x: " << out_x << ", y: " << out_y << ", z: " << out_z << std::endl;
@@ -131,8 +131,8 @@ void PetKDBFixedPitch::Construct()
   db_opsur->SetFinish(ground);
   db_opsur->SetSigmaAlpha(0.1);
 
-  //db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-  db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(refl_));
+  //db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::PTFE_with_TPB());
+  db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(refl_));
 
   new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
@@ -141,8 +141,8 @@ void PetKDBFixedPitch::Construct()
   // G4Box* coating_solid =
   //   new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
-  // G4Material* TPB = MaterialsList::TPB();
-  // TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
+  // G4Material* TPB = PetMaterialsList::TPB();
+  // TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe());
 
   // G4LogicalVolume* coating_logic =
   //   new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");

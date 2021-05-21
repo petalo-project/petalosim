@@ -8,8 +8,8 @@
 
 #include "PetPlainDice.h"
 #include "nexus/Visibilities.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>
@@ -123,8 +123,8 @@ void PetPlainDice::Construct()
   db_opsur->SetSigmaAlpha(0.1);
 
   // G4cout << refl_ << G4endl;
-  // db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-  db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(refl_));
+  // db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::PTFE_with_TPB());
+  db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(refl_));
 
   new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
@@ -133,8 +133,8 @@ void PetPlainDice::Construct()
     G4Box* coating_solid =
       new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
-    G4Material* TPB = MaterialsList::TPB();
-    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
+    G4Material* TPB = PetMaterialsList::TPB();
+    TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe());
 
     G4LogicalVolume* coating_logic =
       new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");

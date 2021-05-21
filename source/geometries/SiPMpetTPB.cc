@@ -10,8 +10,8 @@
 #include "SiPMpetTPB.h"
 #include "nexus/PmtSD.h"
 #include "ToFSD.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 #include "nexus/Visibilities.h"
 
 #include <G4Box.hh>
@@ -81,9 +81,9 @@ void SiPMpetTPB::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = MaterialsList::Epoxy();
+  G4Material *epoxy = PetMaterialsList::Epoxy();
   G4cout << "Epoxy in SiPMTPB used with constant refraction index = " << refr_index_ << G4endl;
-  epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
@@ -93,16 +93,16 @@ void SiPMpetTPB::Construct()
   // TPB coating
   G4double tpb_z = 0.001 * mm;
   G4Box *tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
-  G4Material *TPB = MaterialsList::TPB();
+  G4Material *TPB = PetMaterialsList::TPB();
   if (phys_)
   {
     G4cout << "TPB with refraction index equal to LXe" << G4endl;
-    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe(decay_time_));
+    TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe(decay_time_));
   }
   else
   {
     G4cout << "TPB with constant refraction index equal to 1.7 " << G4endl;
-    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe_nconst(decay_time_));
+    TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe_nconst(decay_time_));
   }
 
   G4LogicalVolume *tpb_logic =

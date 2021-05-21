@@ -9,10 +9,10 @@
 // ----------------------------------------------------------------------------
 
 #include "LXeScintillationGenerator.h"
+#include "PetOpticalMaterialProperties.h"
 
 #include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
-#include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -66,7 +66,7 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
 
   // Energy is sampled from integral (like it is
   // done in G4Scintillation)
-  G4MaterialPropertiesTable* mpt = OpticalMaterialProperties::LXe();
+  G4MaterialPropertiesTable* mpt = PetOpticalMaterialProperties::LXe();
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
   G4MaterialPropertyVector* spectrum = mpt->GetProperty("FASTCOMPONENT");

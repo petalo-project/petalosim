@@ -7,10 +7,10 @@
 // ----------------------------------------------------------------------------
 
 #include "PetLYSOCell.h"
-#include "MaterialsList.h"
+#include "PetMaterialsList.h"
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
-#include "OpticalMaterialProperties.h"
+#include "PetOpticalMaterialProperties.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
 
@@ -113,16 +113,16 @@ void PetLYSOCell::Construct()
   // lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
   // this->SetLogicalVolume(lab_logic_);
 
-  lyso_ = MaterialsList::LYSO();
+  lyso_ = PetMaterialsList::LYSO();
   if (phys_)
   {
     G4cout << "LYSO used with optical properties" << G4endl;
-    lyso_->SetMaterialPropertiesTable(OpticalMaterialProperties::LYSO());
+    lyso_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LYSO());
   }
   else
   {
     G4cout << "LYSO used with constant refraction index = 1.8" << G4endl;
-    lyso_->SetMaterialPropertiesTable(OpticalMaterialProperties::LYSO_nconst());
+    lyso_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LYSO_nconst());
   }
 
   BuildDetector();
@@ -139,7 +139,7 @@ void PetLYSOCell::BuildDetector()
   G4Box *det_solid =
       //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
       new G4Box("WALL", det_size / 2., det_size / 2., det_size2 / 2.);
-  G4Material *steel = MaterialsList::Steel();
+  G4Material *steel = PetMaterialsList::Steel();
 
   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);

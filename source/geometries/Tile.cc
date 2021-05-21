@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 
 #include "Tile.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 #include "nexus/Visibilities.h"
 #include "SiPMpetFBK.h"
 
@@ -84,9 +84,9 @@ void Tile::Construct()
 
   G4Box *tile_solid = new G4Box("TILE", tile_x_ / 2., tile_y_ / 2., tile_z_ / 2);
 
-  G4Material *epoxy = MaterialsList::Epoxy();
+  G4Material *epoxy = PetMaterialsList::Epoxy();
   // G4cout << "Epoxy used with constant refraction index = " <<  refr_index_ << G4endl;
-  //epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  //epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *tile_logic =
       new G4LogicalVolume(tile_solid, epoxy, "TILE");
@@ -135,8 +135,8 @@ void Tile::Construct()
 
   G4Box *quartz_solid = new G4Box("TILE_WINDOW", quartz_x / 2., quartz_y / 2., quartz_z / 2);
 
-  G4Material *quartz = MaterialsList::FusedSilica();
-  quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
+  G4Material *quartz = PetMaterialsList::FusedSilica();
+  quartz->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FusedSilica());
   G4LogicalVolume *quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_WINDOW");
 

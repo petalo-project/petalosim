@@ -12,8 +12,8 @@
 #include "PetLXeCell.h"
 //#include "PetLYSObox.h"
 #include "PetLYSOCell.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
@@ -86,7 +86,7 @@ void Lab::Construct()
   G4double det_size_z = 1. * mm;
   G4Box *det_solid =
       new G4Box("WALL", det_size / 2., det_size / 2., det_size_z / 2.);
-  G4Material *steel = MaterialsList::Steel();
+  G4Material *steel = PetMaterialsList::Steel();
 
   G4LogicalVolume *det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
   //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);

@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 
 #include "TileHamamatsuVUV.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 #include "nexus/Visibilities.h"
 #include "SiPMHamamatsuVUV.h"
 #include "nexus/IonizationSD.h"
@@ -55,7 +55,7 @@ void TileHamamatsuVUV::Construct()
 
   G4Box *tile_solid = new G4Box("TILE_PLASTIC", tile_x_ / 2., tile_y_ / 2., tile_z_ / 2);
 
-  G4Material *fr4 = MaterialsList::FR4();
+  G4Material *fr4 = PetMaterialsList::FR4();
   G4LogicalVolume *tile_logic =
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
@@ -64,7 +64,7 @@ void TileHamamatsuVUV::Construct()
   // OPTICAL SURFACE FOR REFLECTION
   G4OpticalSurface *fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-  fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(GetTileReflectivity()));
+  fr4_opsurf->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(GetTileReflectivity()));
 
   new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
@@ -88,7 +88,7 @@ void TileHamamatsuVUV::Construct()
   G4Box *lxe_solid = new G4Box("TILE_LXE", lxe_x / 2., lxe_y / 2., lxe_z / 2.);
 
   G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+  LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
   G4LogicalVolume *lxe_logic =
       new G4LogicalVolume(lxe_solid, LXe, "TILE_LXE");
 
@@ -103,8 +103,8 @@ void TileHamamatsuVUV::Construct()
   G4Box *quartz_solid = new G4Box("TILE_QUARTZ_WINDOW", quartz_x / 2., quartz_y / 2.,
                                   quartz_thick_ / 2);
 
-  G4Material *quartz = MaterialsList::FusedSilica();
-  quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(quartz_rindex_));
+  G4Material *quartz = PetMaterialsList::FusedSilica();
+  quartz->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FakeGenericMaterial(quartz_rindex_));
 
   G4LogicalVolume *quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");

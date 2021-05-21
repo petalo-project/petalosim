@@ -9,7 +9,7 @@
 // ----------------------------------------------------------------------------
 
 #include "CalibrationSource.h"
-#include "MaterialsList.h"
+#include "PetMaterialsList.h"
 #include "nexus/Visibilities.h"
 
 #include <G4Tubs.hh>

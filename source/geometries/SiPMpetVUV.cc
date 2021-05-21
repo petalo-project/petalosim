@@ -8,10 +8,10 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMpetVUV.h"
-#include "nexus/PmtSD.h"
 #include "ToFSD.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
+
 #include "nexus/Visibilities.h"
 
 #include <G4GenericMessenger.hh>
@@ -72,13 +72,13 @@ void SiPMpetVUV::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *sipm_mat = MaterialsList::FR4();
+  G4Material *sipm_mat = PetMaterialsList::FR4();
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, sipm_mat, "SIPMpet");
 
-  G4Material *window_mat = MaterialsList::FusedSilica();
+  G4Material *window_mat = PetMaterialsList::FusedSilica();
   G4cout << "Quartz used with constant refraction index = " << refr_index_ << G4endl;
-  window_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(refr_index_));
+  window_mat->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FakeGenericMaterial(refr_index_));
 
   this->SetLogicalVolume(sipm_logic);
 

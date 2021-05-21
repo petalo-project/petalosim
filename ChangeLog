@@ -341,7 +341,7 @@ tag v4_04_05 - 19 Jun 2015
 	- macro added that shows how to stop a decay chain at any point
 	- Vertex generator added for the quartz plate.
 tag v4_04_04 - 5 May 2015
-	- More values of pressure added to calculate density of gaseous xenon in MaterialsList
+	- More values of pressure added to calculate density of gaseous xenon in PetMaterialsList
 
 tag v4_04_03 - 4 Apr 2015
 	- EL table generation scheme changed to generation of the whole statistics

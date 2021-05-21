@@ -9,12 +9,12 @@
 
 #include "FullRingInfinity.h"
 #include "SiPMpetVUV.h"
-#include "nexus/SpherePointSampler.h"
-#include "MaterialsList.h"
-#include "nexus/IonizationSD.h"
-#include "OpticalMaterialProperties.h"
-#include "nexus/Visibilities.h"
+#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
 
+#include "nexus/SpherePointSampler.h"
+#include "nexus/IonizationSD.h"
+#include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -207,7 +207,7 @@ void FullRingInfinity::BuildCryostat()
 
   G4Tubs *cryostat_solid =
       new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_ / 2., 0, twopi);
-  G4Material *steel = MaterialsList::Steel();
+  G4Material *steel = PetMaterialsList::Steel();
   G4LogicalVolume *cryostat_logic =
       new G4LogicalVolume(cryostat_solid, steel, "CRYOSTAT");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
@@ -218,7 +218,7 @@ void FullRingInfinity::BuildCryostat()
       new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
                  (axial_length_ + 2. * kapton_thickn_) / 2., 0, twopi);
   G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+  LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
@@ -276,7 +276,7 @@ void FullRingInfinity::BuildCryostat()
   db_opsur->SetModel(unified);
   db_opsur->SetFinish(ground);
   db_opsur->SetSigmaAlpha(0.1);
-  db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(0.));
+  db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(0.));
   new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
   new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
   new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
@@ -402,7 +402,7 @@ void FullRingInfinity::BuildPhantom()
 
   G4Orb *phantom_solid = new G4Orb("PHANTOM", phantom_diam_ / 2.);
   G4LogicalVolume *phantom_logic =
-      new G4LogicalVolume(phantom_solid, MaterialsList::PEEK(), "PHANTOM");
+      new G4LogicalVolume(phantom_solid, PetMaterialsList::PEEK(), "PHANTOM");
   G4ThreeVector phantom_origin =
       G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
   new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);

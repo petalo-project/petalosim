@@ -10,8 +10,8 @@
 #include "TileHamamatsuVUV.h"
 #include "TileHamamatsuBlue.h"
 #include "TileFBK.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
 
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
@@ -148,7 +148,7 @@ void PetBox::BuildBox()
       new G4Box("LXe", LXe_size / 2., LXe_size / 2., LXe_size / 2.);
 
   G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+  LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
@@ -187,7 +187,7 @@ void PetBox::BuildBox()
       new G4Box("VACUUM_HAT", vacuum_hat_xsize / 2., vacuum_hat_ysize / 2., vacuum_hat_zsize / 2.);
 
   G4Material *vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-  vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+  vacuum->SetMaterialPropertiesTable(PetOpticalMaterialProperties::Vacuum());
   G4LogicalVolume *vacuum_hat_logic =
       new G4LogicalVolume(vacuum_hat_solid, vacuum, "VACUUM_HAT");
 
@@ -200,7 +200,7 @@ void PetBox::BuildBox()
   G4Tubs *source_tube_solid =
       new G4Tubs("SOURCE_TUBE", 0, source_tube_ext_radius, source_tube_length / 2., 0, twopi);
 
-  G4Material *carbon_fiber = MaterialsList::CarbonFiber();
+  G4Material *carbon_fiber = PetMaterialsList::CarbonFiber();
   G4LogicalVolume *source_tube_logic =
       new G4LogicalVolume(source_tube_solid, carbon_fiber, "SOURCE_TUBE");
 
@@ -303,7 +303,7 @@ void PetBox::BuildBox()
       new G4Box("ENTRY_PANEL", entry_panel_x_size_ / 2., entry_panel_y_size_ / 2., panel_thickness_ / 2.);
 
   G4Material *pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
-  pyrex->SetMaterialPropertiesTable(OpticalMaterialProperties::Pyrex_vidrasa());
+  pyrex->SetMaterialPropertiesTable(PetOpticalMaterialProperties::Pyrex_vidrasa());
 
   G4LogicalVolume *entry_panel_logic =
       new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
@@ -371,7 +371,7 @@ void PetBox::BuildBox()
   panel_opsur->SetModel(unified);
   panel_opsur->SetFinish(ground);
   panel_opsur->SetSigmaAlpha(0.1);
-  panel_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
+  panel_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(reflectivity_));
   new G4LogicalSkinSurface("OP_PANEL", entry_panel_logic, panel_opsur);
   new G4LogicalSkinSurface("OP_PANEL_H", horiz_lat_panel_logic, panel_opsur);
   new G4LogicalSkinSurface("OP_PANEL_V", vert_lat_panel_logic, panel_opsur);
@@ -389,8 +389,8 @@ void PetBox::BuildBox()
     G4Box *wls_solid =
         new G4Box("WLS", panel_sipm_xy_size_ / 2., panel_sipm_xy_size_ / 2., wls_depth_ / 2);
 
-    G4Material *wls = MaterialsList::TPB();
-    wls->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    G4Material *wls = PetMaterialsList::TPB();
+    wls->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB());
 
     G4LogicalVolume *wls_logic =
         new G4LogicalVolume(wls_solid, wls, "WLS");

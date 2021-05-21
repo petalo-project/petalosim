@@ -1,15 +1,17 @@
 // ----------------------------------------------------------------------------
-// petalosim | OpticalMaterialProperties.cc
+// petalosim | PetOpticalMaterialProperties.cc
 //
 // Optical properties of relevant materials.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
-#include "OpticalMaterialProperties.h"
+#include "PetOpticalMaterialProperties.h"
+
 #include "XenonGasProperties.h"
 #include "XenonLiquidProperties.h"
-#include "SellmeierEquation.h"
+
+#include "nexus/SellmeierEquation.h"
 
 #include <G4MaterialPropertiesTable.hh>
 
@@ -19,7 +21,7 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::Vacuum()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -40,7 +42,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::Epoxy()
 {
   // Optical properties of Epoxy adhesives.
   // Obtained from
@@ -70,7 +72,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyFixedRefr(G4double n)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyFixedRefr(G4double n)
 {
   // Costum refractive index.
 
@@ -92,7 +94,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyFixedRefr(G4double n)
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyLXeRefr()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyLXeRefr()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -125,7 +127,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyLXeRefr()
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::FusedSilica()
 {
   // Optical properties of Suprasil 311/312(c) synthetic fused silica.
   // Obtained from http://heraeus-quarzglas.com.
@@ -194,7 +196,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double transparency, G4double thickness)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::FakeFusedSilica(G4double transparency, G4double thickness)
 {
   // Optical properties of Suprasil 311/312(c) synthetic fused silica.
   // Obtained from http://heraeus-quarzglas.com
@@ -253,7 +255,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4double quartz_rindex)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::FakeGenericMaterial(G4double quartz_rindex)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -275,7 +277,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4doub
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::GlassEpoxy()
 {
  // WARNING: This is a deprecated optical property, it is kept for code consistency, but it
  // will be removed in the future.
@@ -323,7 +325,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::GAr(G4double sc_yield)
 {
   // WARNING: before using GAr properties, check that we know the
   // properties of the rest of materials at its scintillation wavelengths.
@@ -396,7 +398,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::LAr()
 {
  // WARNING: before using LAr properties, check that we know the
  // properties of the rest of materials at its scintillation wavelengths.
@@ -479,7 +481,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::GXe(G4double pressure,
 							  G4double temperature,
 							  G4int sc_yield)
 {
@@ -538,7 +540,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   return GXe_mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::LXe()
 {
   /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
   XenonLiquidProperties LXe_prop;
@@ -599,7 +601,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_nconst()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::LXe_nconst()
 {
   XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
@@ -647,7 +649,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_nconst()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::PTFE()
 {
   G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
 
@@ -682,7 +684,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::Pyrex_vidrasa()
 {
   G4MaterialPropertiesTable* pyrex_mpt = new G4MaterialPropertiesTable();
 
@@ -717,7 +719,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay_time)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB(G4double decay_time)
 {
 
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
@@ -817,7 +819,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay_time)
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay_time)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe(G4double decay_time)
 {
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -931,7 +933,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay_tim
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double decay_time)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe_nconst(G4double decay_time)
 {
     /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -1032,7 +1034,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double de
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::LYSO()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -1106,7 +1108,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO_nconst()
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::LYSO_nconst()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -1171,7 +1173,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO_nconst()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::ReflectantSurface(G4double reflectivity)
+G4MaterialPropertiesTable* PetOpticalMaterialProperties::ReflectantSurface(G4double reflectivity)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
