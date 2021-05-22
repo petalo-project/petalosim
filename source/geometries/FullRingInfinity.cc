@@ -85,15 +85,9 @@ FullRingInfinity::FullRingInfinity() : GeometryBase(),
   inner_r_cmd.SetParameterName("inner_radius", false);
   inner_r_cmd.SetRange("inner_radius>0.");
 
-    // G4GenericMessenger::Command& cryo_width_cmd =
-    //   msg_->DeclareProperty("cryostat_width", lxe_container_width_, "Width of cryostat in z");
-    // cryo_width_cmd.SetUnitCategory("Length");
-    // cryo_width_cmd.SetParameterName("cryostat_width", false);
-    // cryo_width_cmd.SetRange("cryostat_width>0.");
-
-  msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
-  msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
-  msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
+    msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
+    msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
+    msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
 
   G4GenericMessenger::Command &specific_vertex_X_cmd =
       msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
