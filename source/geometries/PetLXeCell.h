@@ -79,9 +79,9 @@ private:
   PetPlainDice *pdb_;
 
   SiPMpetVUV *sipm_;
-  /* SiPMpetVUV* sipmVUV_; */
-  /* SiPMpetTPB* sipmTPB_; */
-  /* SiPMpetPlots* sipmPlots_; */
+  /* SiPMpetVUV *sipmVUV_; */
+  /* SiPMpetTPB *sipmTPB_; */
+  /* SiPMpetPlots *sipmPlots_; */
   /* SiPMHamamatsuBlue* sipmBlue_; */
 
   G4double pdb_z_;
