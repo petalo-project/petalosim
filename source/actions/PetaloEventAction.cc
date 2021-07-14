@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | PetaloEventAction.cc
 //
-// This is the default event action of the NEXT simulations. Only events with
+// This is the default event action of the PETALO simulations. Only events with
 // deposited energy larger than 0 are saved in the nexus output file.
 //
 // The PETALO Collaboration

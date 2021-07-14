@@ -4,7 +4,7 @@
 // This class produces histograms of the wavelengths and the time of production
 // of the optical photons.
 //
-// The  NEXT Collaboration
+// The  PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetAnalysisTrackingAction.h"

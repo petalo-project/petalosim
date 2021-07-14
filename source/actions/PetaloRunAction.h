@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | PetaloRunAction.h
 //
-// This is the default run action of the NEXT simulations.
+// This is the default run action of the PETALO simulations.
 // A message at the beginning and at the end of the simulation is printed.
 //
 // The PETALO Collaboration

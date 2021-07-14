@@ -7,7 +7,7 @@
 // It also shows examples of information that can be accessed at the stepping
 // level, so it is useful for debugging.
 //
-// The  NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetAnalysisSteppingAction.h"
