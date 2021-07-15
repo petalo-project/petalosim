@@ -39,30 +39,34 @@ using namespace nexus;
 
 REGISTER_CLASS(FullRingInfinity, GeometryBase)
 
-FullRingInfinity::FullRingInfinity() : GeometryBase(),
-                                       // Detector dimensions
-                                       sipm_pitch_(4. * mm),
-                                       n_sipm_rows_(16),
-                                       instr_faces_(2),
-                                       kapton_thickn_(0.3 * mm),
-                                       depth_(5. * cm),
-                                       inner_radius_(15. * cm),
-                                       cryo_width_(12. * cm),
-                                       cryo_thickn_(1. * mm),
-                                       max_step_size_(1. * mm),
-                                       phantom_(false),
-                                       pt_Lx_(0.),
-                                       pt_Ly_(0.),
-                                       pt_Lz_(0.),
-                                       sensitivity_(false),
-                                       events_per_point_(1),
-                                       sensitivity_point_id_(0),
-                                       sensitivity_index_(0),
-                                       sensitivity_binning_(1 * mm),
-                                       sens_x_min_(-inner_radius_),
-                                       sens_x_max_(inner_radius_),
-                                       sens_y_min_(-inner_radius_),
-                                       sens_y_max_(inner_radius_)
+FullRingInfinity::FullRingInfinity() :
+  GeometryBase(),
+  // Detector dimensions
+  sipm_pitch_(4. * mm),
+  n_sipm_rows_(16),
+  instr_faces_(2),
+  kapton_thickn_(0.3 * mm),
+  depth_(5. * cm),
+  inner_radius_(15. * cm),
+  lxe_container_int_thickn_(1.*mm),
+  lxe_container_ext_thickn_(2.*cm),
+  vessel_int_thickn_(3.*mm),
+  vessel_ext_thickn_(1.*cm),
+  vacuum_thickn_(10.*cm),
+  max_step_size_(1. * mm),
+  phantom_(false),
+  pt_Lx_(0.),
+  pt_Ly_(0.),
+  pt_Lz_(0.),
+  sensitivity_(false),
+  events_per_point_(1),
+  sensitivity_point_id_(0),
+  sensitivity_index_(0),
+  sensitivity_binning_(1 * mm),
+  sens_x_min_(-inner_radius_),
+  sens_x_max_(inner_radius_),
+  sens_y_min_(-inner_radius_),
+  sens_y_max_(inner_radius_)
 {
   // Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
@@ -187,12 +191,6 @@ void FullRingInfinity::Construct()
   BuildCryostat();
   BuildSensors();
 
-  external_radius_ = inner_radius_ + depth_;
-  G4cout << "Radial dimensions (mm): " << inner_radius_ / mm << ", "
-         << external_radius_ / mm << G4endl;
-  BuildCryostat();
-  BuildSensors();
-
   if (phantom_)
     BuildPhantom();
 
@@ -223,7 +221,7 @@ void FullRingInfinity::BuildCryostat()
     G4Tubs* vessel_solid =
       new G4Tubs("VACUUM_VESSEL", vessel_int_radius, vessel_ext_radius,
                  vessel_width/2., 0, twopi);
-    G4Material* steel = MaterialsList::Steel();
+    G4Material* steel = PetMaterialsList::Steel();
         G4LogicalVolume* vessel_logic =
           new G4LogicalVolume(vessel_solid, steel, "VACUUM_VESSEL");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
@@ -254,7 +252,7 @@ void FullRingInfinity::BuildCryostat()
       new G4Tubs("LXE", lxe_int_radius, lxe_ext_radius,
                  lxe_width/2., 0, twopi);
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-    LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+    LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
