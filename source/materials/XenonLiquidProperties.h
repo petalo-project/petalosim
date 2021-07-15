@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | XenonLiquidProperties.cc
+// petalosim | XenonLiquidProperties.cc
 //
 // This class collects the relevant physical properties of liquid xenon.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef XENON_LIQUID_PROPERTIES_H

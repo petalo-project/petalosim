@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | Back2backGammas.h
+// petalosim | Back2backGammas.h
 //
 // This generator simulates two gammas of 510.999 keV back to back, with
 // random direction. It is possible to specify a limited solid angle.
 // Control histograms of the solid angle where gammas are generated
 // are produced.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef BACK2BACK_H
@@ -22,8 +22,8 @@ class TH1F;
 
 namespace nexus {
 
-  class BaseGeometry;
-  
+  class GeometryBase;
+
   class Back2backGammas: public G4VPrimaryGenerator
   {
   public:
@@ -37,7 +37,7 @@ namespace nexus {
   private:
 
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
 
     G4String region_;
 

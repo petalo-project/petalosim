@@ -1,97 +1,99 @@
 // ----------------------------------------------------------------------------
-// nexus | FullRingInfinity.h
+// petalosim | FullRingInfinity.h
 //
 // This class implements the geometry of a cylindric ring of LXe,
 // of configurable length and diameter.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef FULL_RING_INF_H
 #define FULL_RING_INF_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <vector>
 
 class G4GenericMessenger;
 class G4LogicalVolume;
-namespace nexus {
-  class SiPMpetVUV;
+
+class SiPMpetVUV;
+
+namespace nexus
+{
   class SpherePointSampler;
 }
 
-namespace nexus {
-  class FullRingInfinity : public BaseGeometry {
+using namespace nexus;
 
-  public:
-    // Constructor
-    FullRingInfinity();
-    //Destructor
-    ~FullRingInfinity();
+class FullRingInfinity : public GeometryBase
+{
 
-    /// Generate a vertex within a given region of the geometry
-    G4ThreeVector GenerateVertex(const G4String& region) const;
+public:
+  // Constructor
+  FullRingInfinity();
+  //Destructor
+  ~FullRingInfinity();
 
-    private:
-    void Construct();
-    void BuildCryostat();
-    void BuildQuadSensors();
-    void BuildSensors();
-    void BuildPhantom();
-    void BuildPointfile(G4String pointFile);
-    G4int binarySearchPt(G4int low, G4int high, G4double rnd) const;
-    G4ThreeVector RandomPointVertex() const;
-    void CalculateSensitivityVertices(G4double binning);
+  /// Generate a vertex within a given region of the geometry
+  G4ThreeVector GenerateVertex(const G4String &region) const;
 
-    SiPMpetVUV* sipm_;
+private:
+  void Construct();
+  void BuildCryostat();
+  void BuildQuadSensors();
+  void BuildSensors();
+  void BuildPhantom();
+  void BuildPointfile(G4String pointFile);
+  G4int binarySearchPt(G4int low, G4int high, G4double rnd) const;
+  G4ThreeVector RandomPointVertex() const;
+  void CalculateSensitivityVertices(G4double binning);
 
-    G4LogicalVolume* lab_logic_;
-    G4LogicalVolume* LXe_logic_;
-    G4LogicalVolume* active_logic_;
+  SiPMpetVUV *sipm_;
 
-    /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
+  G4LogicalVolume *lab_logic_;
+  G4LogicalVolume *LXe_logic_;
+  G4LogicalVolume *active_logic_;
 
-    G4double axial_length_;
-    G4double sipm_pitch_;
-    G4int n_sipm_rows_;
-    G4int instr_faces_; ///< number of instrumented faces
-    G4double kapton_thickn_;
-    G4double depth_;
+  /// Messenger for the definition of control commands
+  G4GenericMessenger *msg_;
 
-    G4double inner_radius_, external_radius_;
-    G4double cryo_width_, cryo_thickn_;
+  G4double axial_length_;
+  G4double sipm_pitch_;
+  G4int n_sipm_rows_;
+  G4int instr_faces_; ///< number of instrumented faces
+  G4double kapton_thickn_;
+  G4double depth_;
 
-    G4double phantom_diam_;
-    G4double phantom_length_;
+  G4double inner_radius_, external_radius_;
+  G4double cryo_width_, cryo_thickn_;
 
-    G4double max_step_size_;
+  G4double phantom_diam_;
+  G4double phantom_length_;
 
-    SpherePointSampler* spheric_gen_;
+  G4double max_step_size_;
 
-    G4double specific_vertex_X_;
-    G4double specific_vertex_Y_;
-    G4double specific_vertex_Z_;
+  SpherePointSampler *spheric_gen_;
 
-    G4bool phantom_;
+  G4double specific_vertex_X_;
+  G4double specific_vertex_Y_;
+  G4double specific_vertex_Z_;
 
-    // Variables for the point generator.
-    G4int pt_Nx_, pt_Ny_, pt_Nz_;
-    G4float pt_Lx_, pt_Ly_, pt_Lz_;
-    G4float *pt_;
+  G4bool phantom_;
 
-    G4bool sensitivity_;
-    G4int events_per_point_;
-    G4int sensitivity_point_id_;
-    mutable G4int sensitivity_index_;
-    mutable std::vector<G4ThreeVector> sensitivity_vertices_;
-    G4double sensitivity_binning_;
-    G4double sens_x_min_, sens_x_max_;
-    G4double sens_y_min_, sens_y_max_;
-    G4double sens_z_min_, sens_z_max_;
+  // Variables for the point generator.
+  G4int pt_Nx_, pt_Ny_, pt_Nz_;
+  G4float pt_Lx_, pt_Ly_, pt_Lz_;
+  G4float *pt_;
 
+  G4bool sensitivity_;
+  G4int events_per_point_;
+  G4int sensitivity_point_id_;
+  mutable G4int sensitivity_index_;
+  mutable std::vector<G4ThreeVector> sensitivity_vertices_;
+  G4double sensitivity_binning_;
+  G4double sens_x_min_, sens_x_max_;
+  G4double sens_y_min_, sens_y_max_;
+  G4double sens_z_min_, sens_z_max_;
+};
 
-
-  };
-}
 #endif

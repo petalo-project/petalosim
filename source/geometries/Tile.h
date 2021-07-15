@@ -1,23 +1,23 @@
 // ----------------------------------------------------------------------------
-// nexus | Tile.h
+// petalosim | Tile.h
 //
 // Geometry of a basic tile.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef TILE_H
 #define TILE_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-namespace nexus {class SiPMpetFBK;}
+class SiPMpetFBK;
 
-namespace nexus {
+using namespace nexus;
 
-  class Tile: public BaseGeometry
+  class Tile: public GeometryBase
   {
   public:
     /// Constructor
@@ -50,8 +50,5 @@ namespace nexus {
     SiPMpetFBK* sipm_;
 
   };
-
-
-} // end namespace nexus
 
 #endif

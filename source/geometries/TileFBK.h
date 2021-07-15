@@ -1,24 +1,24 @@
 // ----------------------------------------------------------------------------
-// nexus | TileFBK.h
+// petalosim | TileFBK.h
 //
 // Geometry of a FBK sensor tile.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef TILE_FBK_H
 #define TILE_FBK_H
 
-#include "TileBaseGeometry.h"
+#include "TileGeometryBase.h"
 
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-namespace nexus {class SiPMFBKVUV;}
+class SiPMFBKVUV;
 
-namespace nexus {
+using namespace nexus;
 
-  class TileFBK: public TileBaseGeometry
+  class TileFBK: public TileGeometryBase
   {
   public:
     /// Constructor
@@ -46,7 +46,5 @@ namespace nexus {
     SiPMFBKVUV* sipm_;
 
   };
-
-} // end namespace nexus
 
 #endif

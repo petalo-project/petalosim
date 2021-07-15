@@ -1,17 +1,17 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetFBK.cc
+// petalosim | SiPMpetFBK.cc
 //
 // Basic SiPM geometry without TPB coating.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SiPMpetFBK.h"
-#include "PmtSD.h"
+#include "nexus/PmtSD.h"
 #include "ToFSD.h"
-#include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
-#include "Visibilities.h"
+#include "PetMaterialsList.h"
+#include "PetOpticalMaterialProperties.h"
+#include "nexus/Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -27,151 +27,150 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
+using namespace nexus;
 
-namespace nexus {
+using namespace CLHEP;
 
-  using namespace CLHEP;
+SiPMpetFBK::SiPMpetFBK() : GeometryBase(),
+                           visibility_(0),
+                           refr_index_(1.54),
+                           eff_(1.),
+                           time_binning_(200. * nanosecond),
+                           sipm_size_(3. * mm),
+                           sensor_depth_(-1),
+                           mother_depth_(0),
+                           naming_order_(0)
 
-  SiPMpetFBK::SiPMpetFBK(): BaseGeometry(),
-			    visibility_(0),
-			    refr_index_(1.54),
-                            eff_(1.),
-                            time_binning_(200.*nanosecond),
-                            sipm_size_(3.*mm),
-                            sensor_depth_(-1),
-			    mother_depth_(0),
-                            naming_order_(0)
+{
+  /// Messenger
+  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
+  msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
+  msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
+  msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
 
-  {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-    msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
-    msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
-    msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
-
-    G4GenericMessenger::Command& time_cmd =
+  G4GenericMessenger::Command &time_cmd =
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
-    time_cmd.SetUnitCategory("Time");
-    time_cmd.SetParameterName("time_binning", false);
-    time_cmd.SetRange("time_binning>0.");
+  time_cmd.SetUnitCategory("Time");
+  time_cmd.SetParameterName("time_binning", false);
+  time_cmd.SetRange("time_binning>0.");
 
-    G4GenericMessenger::Command& size_cmd =
+  G4GenericMessenger::Command &size_cmd =
       msg_->DeclareProperty("size", sipm_size_, "Size of SiPMs");
-    size_cmd.SetUnitCategory("Length");
-    size_cmd.SetParameterName("size", false);
-    size_cmd.SetRange("size>0.");
+  size_cmd.SetUnitCategory("Length");
+  size_cmd.SetParameterName("size", false);
+  size_cmd.SetRange("size>0.");
+}
+
+SiPMpetFBK::~SiPMpetFBK()
+{
+}
+
+void SiPMpetFBK::Construct()
+{
+
+  // PACKAGE ///////////////////////////////////////////////////////
+  G4double offset = 0.1 * mm;
+
+  G4double sipm_x = sipm_size_;
+  G4double sipm_y = sipm_size_;
+  G4double sipm_z = 0.6 * mm;
+
+  SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
+
+  G4Box *sipm_solid = new G4Box("SiPMpetFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
+
+  G4Material *epoxy = PetMaterialsList::Epoxy();
+  if (refr_index_ > 0)
+  {
+    epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  }
+  else
+  {
+    epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyLXeRefr());
   }
 
-  SiPMpetFBK::~SiPMpetFBK()
-  {
-  }
-
-  void SiPMpetFBK::Construct()
-  {
-
-    // PACKAGE ///////////////////////////////////////////////////////
-    G4double offset = 0.1 * mm;
-
-    G4double sipm_x = sipm_size_;
-    G4double sipm_y = sipm_size_;
-    G4double sipm_z = 0.6 * mm;
-
-    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
-
-    G4Box* sipm_solid = new G4Box("SiPMpetFBK", sipm_x/2., sipm_y/2., sipm_z/2);
-
-    G4Material* epoxy = MaterialsList::Epoxy();
-    if (refr_index_ > 0) {
-      epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
-    } else {
-       epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyLXeRefr());
-    }
-
-    G4LogicalVolume* sipm_logic =
+  G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMpetFBK");
 
-    this->SetLogicalVolume(sipm_logic);
+  this->SetLogicalVolume(sipm_logic);
 
-    // ACTIVE WINDOW /////////////////////////////////////////////////
+  // ACTIVE WINDOW /////////////////////////////////////////////////
 
-    G4double active_x = sipm_x;
-    G4double active_y = sipm_y;
-    G4double active_depth = 0.01 * mm;
+  G4double active_x = sipm_x;
+  G4double active_y = sipm_y;
+  G4double active_depth = 0.01 * mm;
 
-    G4Box* active_solid =
-      new G4Box("PHOTODIODES", active_x/2., active_y/2., active_depth/2);
+  G4Box *active_solid =
+      new G4Box("PHOTODIODES", active_x / 2., active_y / 2., active_depth / 2);
 
-    G4Material* silicon =
+  G4Material *silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
-    G4LogicalVolume* active_logic =
+  G4LogicalVolume *active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - offset),
-                      active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
+  new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z / 2. - active_depth / 2. - offset),
+                    active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
 
-    // OPTICAL SURFACES /////////////////////////////////////////////
+  // OPTICAL SURFACES /////////////////////////////////////////////
 
-    const G4int entries = 12;
+  const G4int entries = 12;
 
+  G4double energies[entries] = {1.5 * eV, 6.19919 * eV, 6.35814 * eV, 6.52546 * eV,
+                                6.70182 * eV, 6.88799 * eV, 7.08479 * eV,
+                                7.29316 * eV, 7.51417 * eV, 7.74898 * eV,
+                                7.99895 * eV, 8.26558 * eV};
+  G4double reflectivity[entries] = {0., 0., 0., 0.,
+                                    0., 0., 0.,
+                                    0., 0., 0.,
+                                    0., 0.};
+  G4double efficiency[entries] = {eff_, eff_, eff_,
+                                  eff_, eff_, eff_,
+                                  eff_, eff_, eff_,
+                                  eff_, eff_};
 
-    G4double energies[entries] = {1.5*eV, 6.19919*eV, 6.35814*eV, 6.52546*eV,
-				   6.70182*eV, 6.88799*eV, 7.08479*eV,
-				   7.29316*eV, 7.51417*eV, 7.74898*eV,
-				   7.99895*eV, 8.26558*eV};
-    G4double reflectivity[entries] = {0., 0., 0., 0.,
-				      0., 0., 0.,
-                                      0., 0., 0.,
-				      0., 0.};
-    G4double efficiency[entries]   = {eff_, eff_, eff_,
-                                      eff_, eff_, eff_,
-                                      eff_, eff_, eff_,
-                                      eff_, eff_};
+  G4MaterialPropertiesTable *sipm_mt = new G4MaterialPropertiesTable();
+  sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
+  sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-
-    G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
-    sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
-    sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
-
-    G4OpticalSurface* sipm_opsurf =
+  G4OpticalSurface *sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
-    sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
+  sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
-    new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
+  new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
 
+  // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    // SENSITIVE DETECTOR ////////////////////////////////////////////
+  G4String sdname = "/SIPM/SiPMpetFBK";
+  G4SDManager *sdmgr = G4SDManager::GetSDMpointer();
 
-    G4String sdname = "/SIPM/SiPMpetFBK";
-    G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+  if (!sdmgr->FindSensitiveDetector(sdname, false))
+  {
+    ToFSD *sipmsd = new ToFSD(sdname);
 
-    if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      ToFSD* sipmsd = new ToFSD(sdname);
-
-      if (sensor_depth_ == -1) 
-        G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
-                    "Sensor depth must be set before constructing");
-      sipmsd->SetDetectorVolumeDepth(sensor_depth_);
-      sipmsd->SetMotherVolumeDepth(mother_depth_);
-      sipmsd->SetDetectorNamingOrder(naming_order_);
-      sipmsd->SetTimeBinning(time_binning_);
-      G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-      active_logic->SetSensitiveDetector(sipmsd);
-    }
-
-    // Visibilities
-    if (visibility_) {
-      G4VisAttributes sipm_col = nexus::Yellow();
-      sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes active_col = nexus::Blue();
-      active_col.SetForceSolid(true);
-      active_logic->SetVisAttributes(active_col);
-    }
-    else {
-      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      active_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
+    if (sensor_depth_ == -1)
+      G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
+                  "Sensor depth must be set before constructing");
+    sipmsd->SetDetectorVolumeDepth(sensor_depth_);
+    sipmsd->SetMotherVolumeDepth(mother_depth_);
+    sipmsd->SetDetectorNamingOrder(naming_order_);
+    sipmsd->SetTimeBinning(time_binning_);
+    G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
+    active_logic->SetSensitiveDetector(sipmsd);
   }
 
-
-} // end namespace nexus
+  // Visibilities
+  if (visibility_)
+  {
+    G4VisAttributes sipm_col = nexus::Yellow();
+    sipm_logic->SetVisAttributes(sipm_col);
+    G4VisAttributes active_col = nexus::Blue();
+    active_col.SetForceSolid(true);
+    active_logic->SetVisAttributes(active_col);
+  }
+  else
+  {
+    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+}

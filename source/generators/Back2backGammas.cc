@@ -1,21 +1,22 @@
 // ----------------------------------------------------------------------------
-// nexus | Back2backGammas.cc
+// petalosim | Back2backGammas.cc
 //
 // This generator simulates two gammas of 510.999 keV back to back, with
 // random direction. It is possible to specify a limited solid angle.
 // Control histograms of the solid angle where gammas are generated
 // are produced.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Back2backGammas.h"
 
-#include "G4Event.hh"
-#include "DetectorConstruction.h"
-#include "BaseGeometry.h"
-#include "RandomUtils.h"
+#include "nexus/RandomUtils.h"
+#include "nexus/DetectorConstruction.h"
+#include "nexus/GeometryBase.h"
+#include "nexus/FactoryBase.h"
 
+#include <G4Event.hh>
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
@@ -31,6 +32,8 @@
 
 using namespace CLHEP;
 using namespace nexus;
+
+REGISTER_CLASS(Back2backGammas, G4VPrimaryGenerator)
 
 Back2backGammas::Back2backGammas() : geom_(0), costheta_min_(-1.),
                                      costheta_max_(1.),
@@ -80,7 +83,7 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
 
   auto p = 510.999 * keV * (
            (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
-           Direction(costheta_min_, costheta_max_, phi_min_, phi_max_)                          :
+           RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_)                          :
            G4RandomDirection());
 
   G4ThreeVector position = geom_->GenerateVertex(region_);

@@ -22,7 +22,6 @@ MIN_G4VERSION_NUMBER = 1051
 
 ## petalosim source code directories
 SRCDIR = ['actions',
-          'base',
           'generators',
           'geometries',
           'materials',

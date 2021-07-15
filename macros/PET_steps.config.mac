@@ -22,9 +22,9 @@
 /Generator/Back2back/region CENTER
 #/Generator/Back2back/region CUSTOM
 
-#/Actions/DefaultEventAction/energy_threshold .511 MeV
+#/Actions/PetaloEventAction/energy_threshold .511 MeV
 
-/Actions/SaveAllSteppingAction/select_particle opticalphoton
+/Actions/PetSaveAllSteppingAction/select_particle opticalphoton
 
 ### VERBOSITIES
 /run/verbose 1

@@ -1,23 +1,23 @@
 // ----------------------------------------------------------------------------
-// nexus | CalibrationSource.h
+// petalosim | CalibrationSource.h
 //
 // This class describes a source of configurable size.
 // The isotope is also configurable. It is used to simulate the small sources,
 // shaped as capsules, used in Canfranc.
 //
-// The NEXT Collaboration
+// The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef CAL_SOURCE_H
 #define CAL_SOURCE_H
 
-#include "BaseGeometry.h"
+#include "nexus/GeometryBase.h"
 
 class G4GenericMessenger;
 
 namespace nexus {
 
-  class CalibrationSource: public BaseGeometry {
+  class CalibrationSource: public GeometryBase {
   public:
     /// Constructor
     CalibrationSource();
@@ -26,10 +26,10 @@ namespace nexus {
     ~CalibrationSource();
 
     void Construct();
-   
-    G4double GetSourceDiameter(); 
+
+    G4double GetSourceDiameter();
     G4double GetSourceThickness();
-    
+
     G4double GetCapsuleDiameter();
     G4double GetCapsuleThickness();
 
@@ -38,8 +38,8 @@ namespace nexus {
   private:
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
-    
+    G4GenericMessenger* msg_;
+
     // Dimension of the Na22 source itself
     G4double source_diam_;
     G4double source_thick_;
@@ -53,7 +53,7 @@ namespace nexus {
 
     // Radioactive source being used
     G4String source_;
-    
+
 
   };
 }
