@@ -42,7 +42,7 @@ PetaloTrackingAction::~PetaloTrackingAction()
 
 void PetaloTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  // Do nothing if the track is an optical photon or an ionization electron
+  // Do nothing if the track is an optical photon
   if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
       fpTrackingManager->SetStoreTrajectory(false);
       return;
@@ -64,7 +64,7 @@ void PetaloTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 void PetaloTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-  // Do nothing if the track is an optical photon or an ionization electron
+  // Do nothing if the track is an optical photon
   if (track->GetDefinition() == G4OpticalPhoton::Definition()) return;
 
   Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());
