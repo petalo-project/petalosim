@@ -4,7 +4,7 @@ import os
 
 @pytest.fixture(scope = 'session')
 def PETALODIR():
-    return os.environ['NEXUSDIR']
+    return os.environ['PETALODIR']
 
 
 @pytest.fixture(scope = 'session')
