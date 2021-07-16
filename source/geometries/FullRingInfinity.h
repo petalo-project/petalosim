@@ -64,6 +64,9 @@ private:
   G4double kapton_thickn_;
   G4double lxe_depth_;
 
+  G4ThreeVector sipm_dim_;
+  G4double offset_;
+
   G4double inner_radius_, external_radius_;
   G4double lxe_container_int_thickn_, lxe_container_ext_thickn_;
   G4double vessel_int_thickn_, vessel_ext_thickn_;

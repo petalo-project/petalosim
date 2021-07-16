@@ -47,6 +47,7 @@ FullRingInfinity::FullRingInfinity() :
   instr_faces_(2),
   kapton_thickn_(0.3 * mm),
   lxe_depth_(5. * cm),
+  offset_(0.1 * mm),
   inner_radius_(15. * cm),
   lxe_container_int_thickn_(1.*mm),
   lxe_container_ext_thickn_(2.*cm),
@@ -188,6 +189,12 @@ void FullRingInfinity::Construct()
   external_radius_ = inner_radius_ + lxe_depth_;
   G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", "
 	  << external_radius_/mm << G4endl;
+
+  sipm_->SetSensorDepth(1);
+  sipm_->Construct();
+  sipm_dim_ = sipm_->GetDimensions();
+  G4cout << "SiPM size = " << sipm_dim_ << G4endl;
+
   BuildCryostat();
   BuildSensors();
 
@@ -258,8 +265,10 @@ void FullRingInfinity::BuildCryostat()
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
 		      "LXE", lxe_container_logic, false, 0, true);
 
+
+    G4double wide_active_depth = lxe_depth_ + sipm_dim_.z() + offset_;
     G4Tubs* active_solid =
-      new G4Tubs("ACTIVE", inner_radius_, external_radius_,
+      new G4Tubs("ACTIVE", inner_radius_, inner_radius_ + wide_active_depth,
                  axial_length_/2., 0, twopi);
     active_logic_ =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
@@ -283,26 +292,26 @@ void FullRingInfinity::BuildCryostat()
     G4LogicalVolume *kapton_int_logic =
         new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
-                      "KAPTON", LXe_logic_, false, 0, true);
+                      "KAPTON_INT", LXe_logic_, false, 0, true);
 
     G4Tubs* kapton_ext_solid =
-      new G4Tubs("KAPTON", external_radius_, external_radius_ + kapton_thickn_,
+      new G4Tubs("KAPTON", inner_radius_ + wide_active_depth, inner_radius_ + wide_active_depth + kapton_thickn_,
                  axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
-                    "KAPTON", LXe_logic_, false, 0, true);
+                    "KAPTON_EXT", LXe_logic_, false, 0, true);
 
     G4Tubs* kapton_lat_solid =
-      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, external_radius_ + kapton_thickn_,
+      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_ + wide_active_depth + kapton_thickn_,
                  kapton_thickn_/2., 0, twopi);
     G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
     G4double z_pos = axial_length_ / 2. + kapton_thickn_ / 2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
-                      "KAPTON", LXe_logic_, false, 0, true);
+                      "KAPTON_LAT_POS", LXe_logic_, false, 0, true);
     new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
-                      "KAPTON", LXe_logic_, false, 1, true);
+                      "KAPTON_LAT_NEG", LXe_logic_, false, 1, true);
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
@@ -318,7 +327,7 @@ void FullRingInfinity::BuildCryostat()
     // G4cout << (external_radius_  - kapton_thickn_) / cm << G4endl;
 
     G4VisAttributes kapton_col = nexus::CopperBrown();
-    kapton_col.SetForceSolid(true);
+    //kapton_col.SetForceSolid(true);
     kapton_int_logic->SetVisAttributes(kapton_col);
     kapton_ext_logic->SetVisAttributes(kapton_col);
     kapton_lat_logic->SetVisAttributes(kapton_col);
@@ -329,12 +338,7 @@ void FullRingInfinity::BuildCryostat()
 
 void FullRingInfinity::BuildSensors()
 {
-  sipm_->SetSensorDepth(1);
-  sipm_->Construct();
-
-  G4LogicalVolume *sipm_logic = sipm_->GetLogicalVolume();
-  G4ThreeVector sipm_dim = sipm_->GetDimensions();
-  G4cout << "SiPM size = " << sipm_dim << G4endl;
+  G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
   //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
 
   G4int n_sipm_int = 2 * pi * inner_radius_ / sipm_pitch_;
@@ -343,7 +347,7 @@ void FullRingInfinity::BuildSensors()
     G4cout << "Number of sipms in inner face: " << n_sipm_int * n_sipm_rows_ << G4endl;
   }
   G4double step = 2. * pi / n_sipm_int;
-  G4double radius = inner_radius_ + sipm_dim.z() / 2.;
+  G4double radius = inner_radius_ + sipm_dim_.z() / 2.;
 
   G4RotationMatrix rot;
   rot.rotateX(-pi / 2.);
@@ -381,10 +385,11 @@ void FullRingInfinity::BuildSensors()
   }
 
   //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
-  G4double offset = 0.1 * mm;
+  //G4double offset = 0.1 * mm;
   G4int n_sipm_ext = 2 * pi * external_radius_ / sipm_pitch_;
   G4cout << "Number of sipms in external face: " << n_sipm_ext * n_sipm_rows_ << G4endl;
-  radius = external_radius_ - sipm_dim.z() / 2. - offset;
+  //radius = external_radius_ - sipm_dim_.z() / 2. - offset_;
+  radius = inner_radius_ + lxe_depth_ + sipm_dim_.z()/2.;
 
   rot.rotateZ(step);
   rot.rotateX(pi);
