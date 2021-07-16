@@ -46,7 +46,7 @@ FullRingInfinity::FullRingInfinity() :
   n_sipm_rows_(16),
   instr_faces_(2),
   kapton_thickn_(0.3 * mm),
-  depth_(5. * cm),
+  lxe_depth_(5. * cm),
   inner_radius_(15. * cm),
   lxe_container_int_thickn_(1.*mm),
   lxe_container_ext_thickn_(2.*cm),
@@ -72,7 +72,7 @@ FullRingInfinity::FullRingInfinity() :
   msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
                                 "Control commands of geometry FullRingInfinity.");
   G4GenericMessenger::Command &depth_cmd =
-      msg_->DeclareProperty("depth", depth_, "Dimension in DOI");
+      msg_->DeclareProperty("depth", lxe_depth_, "Dimension in DOI");
   depth_cmd.SetUnitCategory("Length");
   depth_cmd.SetParameterName("depth", false);
   depth_cmd.SetRange("depth>0.");
@@ -185,7 +185,7 @@ void FullRingInfinity::Construct()
   axial_length_ = sipm_pitch_ *  n_sipm_rows_;
   G4cout << "Axial dimensions (mm) = " << axial_length_/mm << G4endl;
 
-  external_radius_ = inner_radius_ + depth_;
+  external_radius_ = inner_radius_ + lxe_depth_;
   G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", "
 	  << external_radius_/mm << G4endl;
   BuildCryostat();
