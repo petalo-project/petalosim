@@ -39,36 +39,41 @@ using namespace nexus;
 
 REGISTER_CLASS(FullRingInfinity, GeometryBase)
 
-FullRingInfinity::FullRingInfinity() : GeometryBase(),
-                                       // Detector dimensions
-                                       sipm_pitch_(4. * mm),
-                                       n_sipm_rows_(16),
-                                       instr_faces_(2),
-                                       kapton_thickn_(0.3 * mm),
-                                       depth_(5. * cm),
-                                       inner_radius_(15. * cm),
-                                       cryo_width_(12. * cm),
-                                       cryo_thickn_(1. * mm),
-                                       max_step_size_(1. * mm),
-                                       phantom_(false),
-                                       pt_Lx_(0.),
-                                       pt_Ly_(0.),
-                                       pt_Lz_(0.),
-                                       sensitivity_(false),
-                                       events_per_point_(1),
-                                       sensitivity_point_id_(0),
-                                       sensitivity_index_(0),
-                                       sensitivity_binning_(1 * mm),
-                                       sens_x_min_(-inner_radius_),
-                                       sens_x_max_(inner_radius_),
-                                       sens_y_min_(-inner_radius_),
-                                       sens_y_max_(inner_radius_)
+FullRingInfinity::FullRingInfinity() :
+  GeometryBase(),
+  // Detector dimensions
+  sipm_pitch_(4. * mm),
+  n_sipm_rows_(16),
+  instr_faces_(2),
+  kapton_thickn_(0.3 * mm),
+  lxe_depth_(5. * cm),
+  offset_(0.1 * mm),
+  inner_radius_(15. * cm),
+  lxe_container_int_thickn_(1.*mm),
+  lxe_container_ext_thickn_(2.*cm),
+  vessel_int_thickn_(3.*mm),
+  vessel_ext_thickn_(1.*cm),
+  vacuum_thickn_(10.*cm),
+  max_step_size_(1. * mm),
+  phantom_(false),
+  pt_Lx_(0.),
+  pt_Ly_(0.),
+  pt_Lz_(0.),
+  sensitivity_(false),
+  events_per_point_(1),
+  sensitivity_point_id_(0),
+  sensitivity_index_(0),
+  sensitivity_binning_(1 * mm),
+  sens_x_min_(-inner_radius_),
+  sens_x_max_(inner_radius_),
+  sens_y_min_(-inner_radius_),
+  sens_y_max_(inner_radius_)
 {
   // Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
                                 "Control commands of geometry FullRingInfinity.");
   G4GenericMessenger::Command &depth_cmd =
-      msg_->DeclareProperty("depth", depth_, "Dimension in DOI");
+      msg_->DeclareProperty("depth", lxe_depth_, "Dimension in DOI");
   depth_cmd.SetUnitCategory("Length");
   depth_cmd.SetParameterName("depth", false);
   depth_cmd.SetRange("depth>0.");
@@ -85,15 +90,9 @@ FullRingInfinity::FullRingInfinity() : GeometryBase(),
   inner_r_cmd.SetParameterName("inner_radius", false);
   inner_r_cmd.SetRange("inner_radius>0.");
 
-  G4GenericMessenger::Command &cryo_width_cmd =
-      msg_->DeclareProperty("cryostat_width", cryo_width_, "Width of cryostat in z");
-  cryo_width_cmd.SetUnitCategory("Length");
-  cryo_width_cmd.SetParameterName("cryostat_width", false);
-  cryo_width_cmd.SetRange("cryostat_width>0.");
-
-  msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
-  msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
-  msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
+    msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
+    msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
+    msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
 
   G4GenericMessenger::Command &specific_vertex_X_cmd =
       msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
@@ -179,16 +178,23 @@ void FullRingInfinity::Construct()
   G4Box *lab_solid = new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
   lab_logic_ =
-      new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+      new G4LogicalVolume(lab_solid,
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
   lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
   this->SetLogicalVolume(lab_logic_);
 
-  axial_length_ = sipm_pitch_ * n_sipm_rows_;
-  G4cout << "Axial dimensions (mm) = " << axial_length_ / mm << G4endl;
+  axial_length_ = sipm_pitch_ *  n_sipm_rows_;
+  G4cout << "Axial dimensions (mm) = " << axial_length_/mm << G4endl;
 
-  external_radius_ = inner_radius_ + depth_;
-  G4cout << "Radial dimensions (mm): " << inner_radius_ / mm << ", "
-         << external_radius_ / mm << G4endl;
+  external_radius_ = inner_radius_ + lxe_depth_;
+  G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", "
+	  << external_radius_/mm << G4endl;
+
+  sipm_->SetSensorDepth(1);
+  sipm_->Construct();
+  sipm_dim_ = sipm_->GetDimensions();
+  G4cout << "SiPM size = " << sipm_dim_ << G4endl;
+
   BuildCryostat();
   BuildSensors();
 
@@ -197,110 +203,142 @@ void FullRingInfinity::Construct()
 
   if (sensitivity_)
     CalculateSensitivityVertices(sensitivity_binning_);
-}
+  }
 
 void FullRingInfinity::BuildCryostat()
 {
-  const G4double space_for_elec = 2. * cm;
-  const G4double int_radius_cryo = inner_radius_ - cryo_thickn_ - space_for_elec;
-  const G4double ext_radius_cryo = external_radius_ + cryo_thickn_ + space_for_elec;
+    const G4double extra_int_space = 2. * mm;
+    const G4double elec_ext_space  = 2. * cm;
 
-  G4Tubs *cryostat_solid =
-      new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_ / 2., 0, twopi);
-  G4Material *steel = PetMaterialsList::Steel();
-  G4LogicalVolume *cryostat_logic =
-      new G4LogicalVolume(cryostat_solid, steel, "CRYOSTAT");
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
-                    "CRYOSTAT", lab_logic_, false, 0, true);
+    const G4double lxe_int_radius = inner_radius_ - extra_int_space;
+    const G4double lxe_ext_radius = external_radius_ + elec_ext_space;
+    const G4double lxe_width      = axial_length_ + 2.*kapton_thickn_;
 
-  G4double ext_offset = 0. * mm;
-  G4Tubs *LXe_solid =
-      new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
-                 (axial_length_ + 2. * kapton_thickn_) / 2., 0, twopi);
-  G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
-  LXe_logic_ =
+    const G4double lxe_container_int_radius = lxe_int_radius - lxe_container_int_thickn_;
+    const G4double lxe_container_ext_radius = lxe_ext_radius + lxe_container_ext_thickn_;
+    const G4double lxe_container_width      = lxe_width + 2.*lxe_container_ext_thickn_;
+
+    const G4double vacuum_int_radius = lxe_container_int_radius - vacuum_thickn_;
+    const G4double vacuum_ext_radius = lxe_container_ext_radius + vacuum_thickn_ ;
+
+    const G4double vessel_int_radius = vacuum_int_radius - vessel_int_thickn_;
+    const G4double vessel_ext_radius = vacuum_ext_radius + vessel_ext_thickn_;
+    const G4double vessel_width      = lxe_container_width + 2.*vessel_ext_thickn_;
+
+    G4Tubs* vessel_solid =
+      new G4Tubs("VACUUM_VESSEL", vessel_int_radius, vessel_ext_radius,
+                 vessel_width/2., 0, twopi);
+    G4Material* steel = PetMaterialsList::Steel();
+        G4LogicalVolume* vessel_logic =
+          new G4LogicalVolume(vessel_solid, steel, "VACUUM_VESSEL");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
+		      "VACUUM_VESSEL", lab_logic_, false, 0, true);
+
+
+    G4Tubs* vacuum_solid =
+      new G4Tubs("VACUUM", vacuum_int_radius, vacuum_ext_radius,
+                 lxe_container_width/2., 0, twopi);
+    G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    G4LogicalVolume* vacuum_logic =
+          new G4LogicalVolume(vacuum_solid, vacuum, "VACUUM");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vacuum_logic,
+		      "VACUUM", vessel_logic, false, 0, true);
+
+    G4Tubs* lxe_container_solid =
+      new G4Tubs("CONTAINER", lxe_container_int_radius, lxe_container_ext_radius,
+                 lxe_container_width/2., 0, twopi);
+
+    G4Material* aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    G4LogicalVolume* lxe_container_logic =
+      new G4LogicalVolume(lxe_container_solid, aluminum, "CONTAINER");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), lxe_container_logic,
+		      "CONTAINER", vacuum_logic, false, 0, true);
+
+
+    G4Tubs* LXe_solid =
+      new G4Tubs("LXE", lxe_int_radius, lxe_ext_radius,
+                 lxe_width/2., 0, twopi);
+    G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+    LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
-                    "LXE", cryostat_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
+		      "LXE", lxe_container_logic, false, 0, true);
 
-  G4Tubs *active_solid =
-      new G4Tubs("ACTIVE", inner_radius_, external_radius_ + ext_offset,
-                 axial_length_ / 2., 0, twopi);
-  active_logic_ =
+
+    G4double wide_active_depth = lxe_depth_ + sipm_dim_.z() + offset_;
+    G4Tubs* active_solid =
+      new G4Tubs("ACTIVE", inner_radius_, inner_radius_ + wide_active_depth,
+                 axial_length_/2., 0, twopi);
+    active_logic_ =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
-                    "ACTIVE", LXe_logic_, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
+                      "ACTIVE", LXe_logic_, false, 0, true);
 
-  // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
-  active_logic_->SetSensitiveDetector(ionisd);
-  G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+    // Set the ACTIVE volume as an ionization sensitive det
+    IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
+    active_logic_->SetSensitiveDetector(ionisd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
-  // Limit the step size in ACTIVE volume for better tracking precision
-  active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
+    // Limit the step size in ACTIVE volume for better tracking precision
+    active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
 
-  G4Material *kapton =
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    G4Material *kapton =
+        G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
 
-  G4Tubs *kapton_int_solid =
-      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
-                 axial_length_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_int_logic =
-      new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
-                    "KAPTON", LXe_logic_, false, 0, true);
+    G4Tubs *kapton_int_solid =
+        new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
+                    axial_length_ / 2., 0, twopi);
+    G4LogicalVolume *kapton_int_logic =
+        new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
+                      "KAPTON_INT", LXe_logic_, false, 0, true);
 
-  G4Tubs *kapton_ext_solid =
-      new G4Tubs("KAPTON", external_radius_ + ext_offset, external_radius_ + ext_offset + kapton_thickn_,
-                 axial_length_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_ext_logic =
+    G4Tubs* kapton_ext_solid =
+      new G4Tubs("KAPTON", inner_radius_ + wide_active_depth, inner_radius_ + wide_active_depth + kapton_thickn_,
+                 axial_length_/2., 0, twopi);
+    G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
-                    "KAPTON", LXe_logic_, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
+                    "KAPTON_EXT", LXe_logic_, false, 0, true);
 
-  G4Tubs *kapton_lat_solid =
-      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
-                 kapton_thickn_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_lat_logic =
+    G4Tubs* kapton_lat_solid =
+      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_ + wide_active_depth + kapton_thickn_,
+                 kapton_thickn_/2., 0, twopi);
+    G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
-  G4double z_pos = axial_length_ / 2. + kapton_thickn_ / 2.;
-  new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
-                    "KAPTON", LXe_logic_, false, 0, true);
-  new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
-                    "KAPTON", LXe_logic_, false, 1, true);
+    G4double z_pos = axial_length_ / 2. + kapton_thickn_ / 2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
+                      "KAPTON_LAT_POS", LXe_logic_, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
+                      "KAPTON_LAT_NEG", LXe_logic_, false, 1, true);
 
-  // OPTICAL SURFACE FOR REFLECTION
-  G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
-  db_opsur->SetType(dielectric_metal);
-  db_opsur->SetModel(unified);
-  db_opsur->SetFinish(ground);
-  db_opsur->SetSigmaAlpha(0.1);
-  db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(0.));
-  new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
-  new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
-  new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
+    // OPTICAL SURFACE FOR REFLECTION
+    G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
+    db_opsur->SetType(dielectric_metal);
+    db_opsur->SetModel(unified);
+    db_opsur->SetFinish(ground);
+    db_opsur->SetSigmaAlpha(0.1);
+    db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(0.));
+    new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
+    new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
+    new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
 
-  // G4cout << (external_radius_  - kapton_thickn_) / cm << G4endl;
+    // G4cout << (external_radius_  - kapton_thickn_) / cm << G4endl;
 
-  G4VisAttributes kapton_col = nexus::CopperBrown();
-  kapton_col.SetForceSolid(true);
-  kapton_int_logic->SetVisAttributes(kapton_col);
-  kapton_ext_logic->SetVisAttributes(kapton_col);
-  kapton_lat_logic->SetVisAttributes(kapton_col);
-  // G4VisAttributes active_col = nexus::Blue();
-  // active_col.SetForceSolid(true);
-  // active_logic->SetVisAttributes(active_col);
+    G4VisAttributes kapton_col = nexus::CopperBrown();
+    //kapton_col.SetForceSolid(true);
+    kapton_int_logic->SetVisAttributes(kapton_col);
+    kapton_ext_logic->SetVisAttributes(kapton_col);
+    kapton_lat_logic->SetVisAttributes(kapton_col);
+    // G4VisAttributes active_col = nexus::Blue();
+    // active_col.SetForceSolid(true);
+    // active_logic->SetVisAttributes(active_col);
 }
 
 void FullRingInfinity::BuildSensors()
 {
-  sipm_->SetSensorDepth(1);
-  sipm_->Construct();
-
-  G4LogicalVolume *sipm_logic = sipm_->GetLogicalVolume();
-  G4ThreeVector sipm_dim = sipm_->GetDimensions();
-  G4cout << "SiPM size = " << sipm_dim << G4endl;
+  G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
   //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
 
   G4int n_sipm_int = 2 * pi * inner_radius_ / sipm_pitch_;
@@ -309,7 +347,7 @@ void FullRingInfinity::BuildSensors()
     G4cout << "Number of sipms in inner face: " << n_sipm_int * n_sipm_rows_ << G4endl;
   }
   G4double step = 2. * pi / n_sipm_int;
-  G4double radius = inner_radius_ + sipm_dim.z() / 2.;
+  G4double radius = inner_radius_ + sipm_dim_.z() / 2.;
 
   G4RotationMatrix rot;
   rot.rotateX(-pi / 2.);
@@ -347,10 +385,11 @@ void FullRingInfinity::BuildSensors()
   }
 
   //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
-  G4double offset = 0.1 * mm;
+  //G4double offset = 0.1 * mm;
   G4int n_sipm_ext = 2 * pi * external_radius_ / sipm_pitch_;
   G4cout << "Number of sipms in external face: " << n_sipm_ext * n_sipm_rows_ << G4endl;
-  radius = external_radius_ - sipm_dim.z() / 2. - offset;
+  //radius = external_radius_ - sipm_dim_.z() / 2. - offset_;
+  radius = inner_radius_ + lxe_depth_ + sipm_dim_.z()/2.;
 
   rot.rotateZ(step);
   rot.rotateX(pi);
