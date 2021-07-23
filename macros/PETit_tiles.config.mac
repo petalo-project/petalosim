@@ -14,13 +14,15 @@
 ### GENERATOR
 /Generator/Back2back/region CENTER
 
+/process/optical/processActivation Cerenkov false
+
 
 ### VERBOSITIES
 /run/verbose 1
 /event/verbose 0
-/tracking/verbose 0
+/tracking/verbose 1
 
-/nexus/random_seed 132313
+/nexus/random_seed 132345
 
 ### OUTPUT FILE
 /nexus/persistency/start_id 10
