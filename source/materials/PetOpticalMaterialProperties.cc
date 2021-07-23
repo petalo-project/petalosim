@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 
 #include "PetOpticalMaterialProperties.h"
-#include "XenonLiquidProperties.h"
 
+#include "nexus/XenonProperties.h"
 #include "nexus/SellmeierEquation.h"
 #include "nexus/OpticalMaterialProperties.h"
 
@@ -76,8 +76,6 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyLXeRefr()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  XenonLiquidProperties LXe_prop;
-
   const G4int ri_entries = 200;
   G4double eWidth = (opticalprops::optPhotMaxE_ - opticalprops::optPhotMinE_) / ri_entries;
 
@@ -86,9 +84,10 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyLXeRefr()
     ri_energy.push_back(opticalprops::optPhotMinE_ + i*eWidth);
   }
 
+  G4double density = LXeDensity();
   std::vector<G4double> ri_index;
   for (G4int i=0; i<ri_entries; i++) {
-    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
+    ri_index.push_back(XenonRefractiveIndex(ri_energy[i], density));
   }
 
   assert(ri_energy.size() == ri_index.size());
@@ -178,7 +177,6 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::GlassEpoxy()
 
 G4MaterialPropertiesTable* PetOpticalMaterialProperties::LXe_nconst()
 {
-  XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
   std::vector<G4double> ri_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
@@ -200,7 +198,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::LXe_nconst()
     sc_energy.push_back(minE + j * eWidth);
   }
   std::vector<G4double> intensity;
-  LXe_prop.Scintillation(sc_energy, intensity);
+  XenonScintillation(sc_energy, intensity);
 
   assert(sc_energy.size() == intensity.size());
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
@@ -372,9 +370,6 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe(G4double decay_
   // Data from https://doi.org/10.1140/epjc/s10052-018-5807-z
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-  // REFRACTIVE INDEX
-  XenonLiquidProperties LXe_prop;
-
   const G4int ri_entries = 200;
   G4double eWidth = (opticalprops::optPhotMaxE_ - opticalprops::optPhotMinE_) / ri_entries;
 
@@ -383,10 +378,11 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe(G4double decay_
     ri_energy.push_back(opticalprops::optPhotMinE_ + i * eWidth);
   }
 
+  G4double density = LXeDensity();
   std::vector<G4double> ri_index;
 
   for (G4int i=0; i<ri_entries; i++) {
-    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
+    ri_index.push_back(XenonRefractiveIndex(ri_energy[i], density));
   }
 
   assert(ri_energy.size() == ri_index.size());
