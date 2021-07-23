@@ -82,7 +82,7 @@ void SiPMpetTPB::Construct()
 
   G4Material *epoxy = materials::Epoxy();
   G4cout << "Epoxy in SiPMTPB used with constant refraction index = " << refr_index_ << G4endl;
-  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
@@ -96,12 +96,12 @@ void SiPMpetTPB::Construct()
   if (phys_)
   {
     G4cout << "TPB with refraction index equal to LXe" << G4endl;
-    TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe(decay_time_));
+    TPB->SetMaterialPropertiesTable(petopticalprops::TPB_LXe(decay_time_));
   }
   else
   {
     G4cout << "TPB with constant refraction index equal to 1.7 " << G4endl;
-    TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe_nconst(decay_time_));
+    TPB->SetMaterialPropertiesTable(petopticalprops::TPB_LXe_nconst(decay_time_));
   }
 
   G4LogicalVolume *tpb_logic =

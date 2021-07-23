@@ -122,12 +122,12 @@ void PetLXeCell::Construct()
   {
     G4cout << "LXe used with optical properties" << G4endl;
     lXe_->SetMaterialPropertiesTable(opticalprops::LXe());
-    //lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe_window());
+    //lXe_->SetMaterialPropertiesTable(petopticalprops::LXe_window());
   }
   else
   {
     G4cout << "LXe used with constant refraction index = 1.7" << G4endl;
-    lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe_nconst());
+    lXe_->SetMaterialPropertiesTable(petopticalprops::LXe_nconst());
   }
 
   //    BuildDetector();

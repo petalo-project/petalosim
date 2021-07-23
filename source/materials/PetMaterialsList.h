@@ -16,29 +16,18 @@
 
 class G4Material;
 
-using namespace CLHEP;
+namespace petmaterials {
 
-/// Definition of materials of common use.
-/// (This is a stateless class. All methods must be defined as static.)
-
-class PetMaterialsList
-{
-public:
+  using namespace CLHEP;
 
   // Carbon Fiber
-  static G4Material *CarbonFiber();
+  G4Material* CarbonFiber();
 
   //LYSO
-  static G4Material *LYSO();
+  G4Material* LYSO();
 
   // FR4
-  static G4Material *FR4();
-
-private:
-  /// Constructor (hidden)
-  PetMaterialsList();
-  /// Destructor (hidden)
-  ~PetMaterialsList();
-};
+  G4Material* FR4();
+}
 
 #endif

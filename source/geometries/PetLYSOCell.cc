@@ -113,16 +113,16 @@ void PetLYSOCell::Construct()
   // lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
   // this->SetLogicalVolume(lab_logic_);
 
-  lyso_ = PetMaterialsList::LYSO();
+  lyso_ = petmaterials::LYSO();
   if (phys_)
   {
     G4cout << "LYSO used with optical properties" << G4endl;
-    lyso_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LYSO());
+    lyso_->SetMaterialPropertiesTable(petopticalprops::LYSO());
   }
   else
   {
     G4cout << "LYSO used with constant refraction index = 1.8" << G4endl;
-    lyso_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LYSO_nconst());
+    lyso_->SetMaterialPropertiesTable(petopticalprops::LYSO_nconst());
   }
 
   BuildDetector();

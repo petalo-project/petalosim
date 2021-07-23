@@ -73,13 +73,13 @@ void SiPMpetVUV::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *sipm_mat = PetMaterialsList::FR4();
+  G4Material *sipm_mat = petmaterials::FR4();
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, sipm_mat, "SIPMpet");
 
   G4Material *window_mat = materials::FusedSilica();
   G4cout << "Quartz used with constant refraction index = " << refr_index_ << G4endl;
-  window_mat->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FakeGenericMaterial(refr_index_));
+  window_mat->SetMaterialPropertiesTable(petopticalprops::FakeGenericMaterial(refr_index_));
 
   this->SetLogicalVolume(sipm_logic);
 

@@ -126,8 +126,8 @@ void PetKDBFixedPitch::Construct()
   db_opsur->SetFinish(ground);
   db_opsur->SetSigmaAlpha(0.1);
 
-  //db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::PTFE_with_TPB());
-  db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(refl_));
+  //db_opsur->SetMaterialPropertiesTable(petopticalprops::PTFE_with_TPB());
+  db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(refl_));
 
   new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
@@ -137,7 +137,7 @@ void PetKDBFixedPitch::Construct()
   //   new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
   // G4Material* TPB = PetMaterialsList::TPB();
-  // TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB_LXe());
+  // TPB->SetMaterialPropertiesTable(petopticalprops::TPB_LXe());
 
   // G4LogicalVolume* coating_logic =
   //   new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");

@@ -81,11 +81,11 @@ void SiPMpetFBK::Construct()
   G4Material *epoxy = materials::Epoxy();
   if (refr_index_ > 0)
   {
-    epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+    epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
   }
   else
   {
-    epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyLXeRefr());
+    epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyLXeRefr());
   }
 
   G4LogicalVolume *sipm_logic =

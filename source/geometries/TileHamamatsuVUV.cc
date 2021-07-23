@@ -56,7 +56,7 @@ void TileHamamatsuVUV::Construct()
 
   G4Box *tile_solid = new G4Box("TILE_PLASTIC", tile_x_ / 2., tile_y_ / 2., tile_z_ / 2);
 
-  G4Material *fr4 = PetMaterialsList::FR4();
+  G4Material *fr4 = petmaterials::FR4();
   G4LogicalVolume *tile_logic =
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
@@ -65,7 +65,7 @@ void TileHamamatsuVUV::Construct()
   // OPTICAL SURFACE FOR REFLECTION
   G4OpticalSurface *fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-  fr4_opsurf->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(GetTileReflectivity()));
+  fr4_opsurf->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(GetTileReflectivity()));
 
   new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
@@ -105,7 +105,7 @@ void TileHamamatsuVUV::Construct()
                                   quartz_thick_ / 2);
 
   G4Material *quartz = materials::FusedSilica();
-  quartz->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FakeGenericMaterial(quartz_rindex_));
+  quartz->SetMaterialPropertiesTable(petopticalprops::FakeGenericMaterial(quartz_rindex_));
 
   G4LogicalVolume *quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");

@@ -68,7 +68,7 @@ void SiPMquadFBK::Construct()
   G4Box *sipm_solid = new G4Box("SiPMquadFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
   G4Material *epoxy = materials::Epoxy();
-  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMquadFBK");

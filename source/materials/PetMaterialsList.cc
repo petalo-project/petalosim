@@ -13,9 +13,9 @@
 #include <G4NistManager.hh>
 
 
+namespace petmaterials {
 
-
-G4Material* PetMaterialsList::CarbonFiber()
+G4Material* CarbonFiber()
 {
   G4String name = "CarbonFiber";
 
@@ -35,7 +35,7 @@ G4Material* PetMaterialsList::CarbonFiber()
 
 
 
-G4Material* PetMaterialsList::LYSO()
+G4Material* LYSO()
 {
   G4String name = "LYSO";
 
@@ -61,7 +61,7 @@ G4Material* PetMaterialsList::LYSO()
 }
 
 
-G4Material* PetMaterialsList::FR4()
+G4Material* FR4()
 {
   // Material widely used for printed circuit boards
 
@@ -85,4 +85,5 @@ G4Material* PetMaterialsList::FR4()
   }
 
   return mat;
+}
 }

@@ -56,7 +56,7 @@ void SiPMFBKVUV::Construct()
 
   G4Box *sipm_solid = new G4Box("SiPMFBKVUV", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *plastic = PetMaterialsList::FR4();
+  G4Material *plastic = petmaterials::FR4();
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, plastic, "SiPMFBKVUV");
 

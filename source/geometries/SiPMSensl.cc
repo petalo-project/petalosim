@@ -70,7 +70,7 @@ void SiPMSensl::Construct()
   G4Box *sipm_solid = new G4Box("SIPMSensl", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
   G4Material *epoxy = materials::Epoxy();
-  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::GlassEpoxy());
+  epoxy->SetMaterialPropertiesTable(petopticalprops::GlassEpoxy());
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMSensl");

@@ -19,8 +19,9 @@
 using namespace nexus;
 using namespace CLHEP;
 
+namespace petopticalprops {
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::Epoxy()
+G4MaterialPropertiesTable* Epoxy()
 {
   // Optical properties of Epoxy adhesives.
   // Obtained from
@@ -50,7 +51,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::Epoxy()
   return mpt;
 }
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyFixedRefr(G4double n)
+G4MaterialPropertiesTable* EpoxyFixedRefr(G4double n)
 {
   // Costum refractive index.
 
@@ -72,7 +73,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyFixedRefr(G4double
   return mpt;
 }
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyLXeRefr()
+G4MaterialPropertiesTable* EpoxyLXeRefr()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -105,7 +106,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::EpoxyLXeRefr()
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::FakeGenericMaterial(G4double quartz_rindex)
+G4MaterialPropertiesTable* FakeGenericMaterial(G4double quartz_rindex)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -127,7 +128,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::FakeGenericMaterial(G4d
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::GlassEpoxy()
+G4MaterialPropertiesTable* GlassEpoxy()
 {
  // WARNING: This is a deprecated optical property, it is kept for code consistency, but it
  // will be removed in the future.
@@ -175,7 +176,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::GlassEpoxy()
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::LXe_nconst()
+G4MaterialPropertiesTable* LXe_nconst()
 {
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
@@ -223,7 +224,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::LXe_nconst()
 
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::Pyrex_vidrasa()
+G4MaterialPropertiesTable* Pyrex_vidrasa()
 {
   G4MaterialPropertiesTable* pyrex_mpt = new G4MaterialPropertiesTable();
 
@@ -258,7 +259,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::Pyrex_vidrasa()
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB(G4double decay_time)
+G4MaterialPropertiesTable* TPB(G4double decay_time)
 {
 
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
@@ -358,7 +359,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB(G4double decay_time
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe(G4double decay_time)
+G4MaterialPropertiesTable* TPB_LXe(G4double decay_time)
 {
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -470,7 +471,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe(G4double decay_
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe_nconst(G4double decay_time)
+G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay_time)
 {
     /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -571,7 +572,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::TPB_LXe_nconst(G4double
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::LYSO()
+G4MaterialPropertiesTable* LYSO()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -645,7 +646,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::LYSO()
   return mpt;
 }
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::LYSO_nconst()
+G4MaterialPropertiesTable* LYSO_nconst()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -710,7 +711,7 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::LYSO_nconst()
 }
 
 
-G4MaterialPropertiesTable* PetOpticalMaterialProperties::ReflectantSurface(G4double reflectivity)
+G4MaterialPropertiesTable* ReflectantSurface(G4double reflectivity)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -734,4 +735,6 @@ G4MaterialPropertiesTable* PetOpticalMaterialProperties::ReflectantSurface(G4dou
   mpt->AddProperty("BACKSCATTERCONSTANT", ENERGIES.data(), backscatter.data(), ENERGIES.size());
 
   return mpt;
+}
+
 }
