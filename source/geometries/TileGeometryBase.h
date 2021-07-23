@@ -11,7 +11,7 @@
 
 #include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
-//#include <CLHEP/Units/SystemOfUnits.h>
+
 
 class G4VPhysicalVolume;
 using namespace nexus;

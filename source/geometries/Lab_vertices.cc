@@ -12,14 +12,10 @@
 
 #include "Pet2boxes.h"
 #include "PetLXeCell.h"
-//#include "PetLYSObox.h"
 #include "PetLYSOCell.h"
-//#include "PetMaterialsList.h"
-//include "PetOpticalMaterialProperties.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
-
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -28,10 +24,6 @@
 #include <G4SDManager.hh>
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 #include <TTree.h>
 

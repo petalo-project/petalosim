@@ -10,7 +10,6 @@
 #include "FullRingInfinity.h"
 #include "SiPMpetVUV.h"
 #include "PetOpticalMaterialProperties.h"
-#include "PetMaterialsList.h"
 
 #include "nexus/SpherePointSampler.h"
 #include "nexus/IonizationSD.h"
@@ -34,8 +33,6 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <Randomize.hh>
-
-#include <stdexcept>
 
 using namespace nexus;
 

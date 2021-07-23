@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 
 #include "Tile.h"
-#include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
 #include "SiPMpetFBK.h"
 
 #include "nexus/Visibilities.h"
@@ -25,9 +23,6 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4PhysicalConstants.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 using namespace nexus;
 
@@ -89,7 +84,6 @@ void Tile::Construct()
 
   G4Material *epoxy = materials::Epoxy();
   // G4cout << "Epoxy used with constant refraction index = " <<  refr_index_ << G4endl;
-  //epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *tile_logic =
       new G4LogicalVolume(tile_solid, epoxy, "TILE");

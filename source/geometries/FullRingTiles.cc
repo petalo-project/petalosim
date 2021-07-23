@@ -11,7 +11,6 @@
 #include "SiPMpetFBK.h"
 #include "Tile.h"
 #include "PetOpticalMaterialProperties.h"
-#include "PetMaterialsList.h"
 
 #include "nexus/CylinderPointSampler.h"
 #include "nexus/IonizationSD.h"
@@ -34,7 +33,6 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 
-#include <stdexcept>
 
 using namespace nexus;
 

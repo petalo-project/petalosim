@@ -7,10 +7,8 @@
 // ----------------------------------------------------------------------------
 
 #include "Pet2boxes.h"
-#include "PetMaterialsList.h"
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
-#include "PetOpticalMaterialProperties.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/BoxPointSampler.h"

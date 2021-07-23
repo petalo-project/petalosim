@@ -27,8 +27,6 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
 using namespace nexus;
 
 using namespace CLHEP;

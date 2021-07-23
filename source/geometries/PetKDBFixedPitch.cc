@@ -8,9 +8,9 @@
 
 #include "PetKDBFixedPitch.h"
 #include "SiPMpetVUV.h"
-#include "nexus/PmtSD.h"
 #include "PetOpticalMaterialProperties.h"
 
+#include "nexus/PmtSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/OpticalMaterialProperties.h"
 
@@ -23,11 +23,6 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4GenericMessenger.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include <sstream>
 
 using namespace nexus;
 

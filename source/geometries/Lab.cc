@@ -23,10 +23,6 @@
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
-
 #include <TTree.h>
 
 using namespace nexus;
