@@ -7,11 +7,13 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMSensl.h"
-#include "nexus/PmtSD.h"
 #include "PetMaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/PmtSD.h"
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -70,7 +72,7 @@ void SiPMSensl::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMSensl", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
+  G4Material *epoxy = materials::Epoxy();
   epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::GlassEpoxy());
 
   G4LogicalVolume *sipm_logic =

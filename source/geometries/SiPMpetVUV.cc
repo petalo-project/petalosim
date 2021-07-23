@@ -13,6 +13,7 @@
 #include "PetOpticalMaterialProperties.h"
 
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -76,7 +77,7 @@ void SiPMpetVUV::Construct()
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, sipm_mat, "SIPMpet");
 
-  G4Material *window_mat = PetMaterialsList::FusedSilica();
+  G4Material *window_mat = materials::FusedSilica();
   G4cout << "Quartz used with constant refraction index = " << refr_index_ << G4endl;
   window_mat->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FakeGenericMaterial(refr_index_));
 

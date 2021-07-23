@@ -14,11 +14,12 @@
 #include "PetLXeCell.h"
 //#include "PetLYSObox.h"
 #include "PetLYSOCell.h"
-#include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+//#include "PetMaterialsList.h"
+//include "PetOpticalMaterialProperties.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
+
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

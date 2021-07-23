@@ -8,11 +8,13 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMpetTPB.h"
-#include "nexus/PmtSD.h"
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/PmtSD.h"
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -81,7 +83,7 @@ void SiPMpetTPB::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
+  G4Material *epoxy = materials::Epoxy();
   G4cout << "Epoxy in SiPMTPB used with constant refraction index = " << refr_index_ << G4endl;
   epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
@@ -93,7 +95,7 @@ void SiPMpetTPB::Construct()
   // TPB coating
   G4double tpb_z = 0.001 * mm;
   G4Box *tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
-  G4Material *TPB = PetMaterialsList::TPB();
+  G4Material *TPB = materials::TPB();
   if (phys_)
   {
     G4cout << "TPB with refraction index equal to LXe" << G4endl;

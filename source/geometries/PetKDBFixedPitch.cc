@@ -9,10 +9,10 @@
 #include "PetKDBFixedPitch.h"
 #include "SiPMpetVUV.h"
 #include "nexus/PmtSD.h"
-#include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 
 #include "nexus/Visibilities.h"
+#include "nexus/OpticalMaterialProperties.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>
@@ -100,7 +100,7 @@ void PetKDBFixedPitch::Construct()
   dimensions_.setZ(out_z);
 
   G4Material *out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  out_material->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+  out_material->SetMaterialPropertiesTable(opticalprops::LXe());
 
   //   std::cout << "Border = " << border << G4endl;
   //std::cout << "LXe_volume, x: " << out_x << ", y: " << out_y << ", z: " << out_z << std::endl;

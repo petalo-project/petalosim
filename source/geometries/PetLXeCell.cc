@@ -15,6 +15,7 @@
 #include "nexus/IonizationSD.h"
 #include "nexus/BoxPointSampler.h"
 #include "nexus/Visibilities.h"
+#include "nexus/OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -120,7 +121,7 @@ void PetLXeCell::Construct()
   if (phys_)
   {
     G4cout << "LXe used with optical properties" << G4endl;
-    lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+    lXe_->SetMaterialPropertiesTable(opticalprops::LXe());
     //lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe_window());
   }
   else

@@ -9,9 +9,11 @@
 #include "TileHamamatsuBlue.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
-#include "nexus/Visibilities.h"
 #include "SiPMHamamatsuBlue.h"
+
+#include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -88,7 +90,7 @@ void TileHamamatsuBlue::Construct()
   G4Box *epoxy_solid =
       new G4Box("Epoxy", tile_x_ / 2., tile_y_ / 2., epoxy_depth / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
+  G4Material *epoxy = materials::Epoxy();
   epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *epoxy_logic =

@@ -14,6 +14,8 @@
 
 #include "nexus/IonizationSD.h"
 #include "nexus/BoxPointSampler.h"
+#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -98,7 +100,7 @@ void Pet2boxes::Construct()
   // this->SetLogicalVolume(lab_logic_);
 
   lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  lXe_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+  lXe_->SetMaterialPropertiesTable(opticalprops::LXe());
 
   BuildDetector();
   BuildLXe();
@@ -113,7 +115,7 @@ void Pet2boxes::BuildDetector()
   G4Box *det_solid =
       //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
       new G4Box("WALL", det_size / 2., det_size / 2., det_size2 / 2.);
-  G4Material *steel = PetMaterialsList::Steel();
+  G4Material *steel = materials::Steel();
 
   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);

@@ -7,9 +7,10 @@
 // ----------------------------------------------------------------------------
 
 #include "PetPlainDice.h"
-#include "nexus/Visibilities.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>

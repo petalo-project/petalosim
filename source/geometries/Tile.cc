@@ -9,8 +9,11 @@
 #include "Tile.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
-#include "nexus/Visibilities.h"
 #include "SiPMpetFBK.h"
+
+#include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
+#include "nexus/OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -84,7 +87,7 @@ void Tile::Construct()
 
   G4Box *tile_solid = new G4Box("TILE", tile_x_ / 2., tile_y_ / 2., tile_z_ / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
+  G4Material *epoxy = materials::Epoxy();
   // G4cout << "Epoxy used with constant refraction index = " <<  refr_index_ << G4endl;
   //epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
@@ -135,8 +138,8 @@ void Tile::Construct()
 
   G4Box *quartz_solid = new G4Box("TILE_WINDOW", quartz_x / 2., quartz_y / 2., quartz_z / 2);
 
-  G4Material *quartz = PetMaterialsList::FusedSilica();
-  quartz->SetMaterialPropertiesTable(PetOpticalMaterialProperties::FusedSilica());
+  G4Material *quartz = materials::FusedSilica();
+  quartz->SetMaterialPropertiesTable(opticalprops::FusedSilica());
   G4LogicalVolume *quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_WINDOW");
 

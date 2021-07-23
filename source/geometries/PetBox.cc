@@ -16,6 +16,8 @@
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
+#include "nexus/MaterialsList.h"
+#include "nexus/OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -148,7 +150,7 @@ void PetBox::BuildBox()
       new G4Box("LXe", LXe_size / 2., LXe_size / 2., LXe_size / 2.);
 
   G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+  LXe->SetMaterialPropertiesTable(opticalprops::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
@@ -187,7 +189,7 @@ void PetBox::BuildBox()
       new G4Box("VACUUM_HAT", vacuum_hat_xsize / 2., vacuum_hat_ysize / 2., vacuum_hat_zsize / 2.);
 
   G4Material *vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-  vacuum->SetMaterialPropertiesTable(PetOpticalMaterialProperties::Vacuum());
+  vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
   G4LogicalVolume *vacuum_hat_logic =
       new G4LogicalVolume(vacuum_hat_solid, vacuum, "VACUUM_HAT");
 
@@ -389,7 +391,7 @@ void PetBox::BuildBox()
     G4Box *wls_solid =
         new G4Box("WLS", panel_sipm_xy_size_ / 2., panel_sipm_xy_size_ / 2., wls_depth_ / 2);
 
-    G4Material *wls = PetMaterialsList::TPB();
+    G4Material *wls = materials::TPB();
     wls->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB());
 
     G4LogicalVolume *wls_logic =

@@ -16,6 +16,8 @@
 #include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
+#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -228,7 +230,7 @@ void FullRingInfinity::BuildCryostat()
     G4Tubs* vessel_solid =
       new G4Tubs("VACUUM_VESSEL", vessel_int_radius, vessel_ext_radius,
                  vessel_width/2., 0, twopi);
-    G4Material* steel = PetMaterialsList::Steel();
+    G4Material* steel = materials::Steel();
         G4LogicalVolume* vessel_logic =
           new G4LogicalVolume(vessel_solid, steel, "VACUUM_VESSEL");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
@@ -259,7 +261,7 @@ void FullRingInfinity::BuildCryostat()
       new G4Tubs("LXE", lxe_int_radius, lxe_ext_radius,
                  lxe_width/2., 0, twopi);
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-    LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+    LXe->SetMaterialPropertiesTable(opticalprops::LXe());
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
@@ -441,7 +443,7 @@ void FullRingInfinity::BuildPhantom()
 
   G4Orb *phantom_solid = new G4Orb("PHANTOM", phantom_diam_ / 2.);
   G4LogicalVolume *phantom_logic =
-      new G4LogicalVolume(phantom_solid, PetMaterialsList::PEEK(), "PHANTOM");
+      new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
   G4ThreeVector phantom_origin =
       G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
   new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);

@@ -7,8 +7,9 @@
 // ----------------------------------------------------------------------------
 
 #include "Na22Source.h"
-#include "PetMaterialsList.h"
+
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4Tubs.hh>
 #include <G4NistManager.hh>
@@ -46,7 +47,7 @@ namespace nexus {
     G4Tubs* support_solid =
       new G4Tubs("SUPPORT", 0., support_diam_/2., support_thick_/2., 0., twopi);
 
-    G4Material* plastic = PetMaterialsList::PS();
+    G4Material* plastic = materials::PS();
     G4LogicalVolume* support_logic =
       new G4LogicalVolume(support_solid, plastic, "NA22_SOURCE_SUPPORT");
 

@@ -7,11 +7,13 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMpetFBK.h"
-#include "nexus/PmtSD.h"
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/PmtSD.h"
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -79,7 +81,7 @@ void SiPMpetFBK::Construct()
 
   G4Box *sipm_solid = new G4Box("SiPMpetFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
+  G4Material *epoxy = materials::Epoxy();
   if (refr_index_ > 0)
   {
     epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
