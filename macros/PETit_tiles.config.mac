@@ -20,7 +20,7 @@
 ### VERBOSITIES
 /run/verbose 1
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 /nexus/random_seed 132345
 
