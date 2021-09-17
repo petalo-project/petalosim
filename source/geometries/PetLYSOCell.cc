@@ -16,10 +16,10 @@
 
 #include "nexus/BoxPointSampler.h"
 #include "nexus/IonizationSD.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
-
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -113,16 +113,16 @@ void PetLYSOCell::Construct()
   // lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
   // this->SetLogicalVolume(lab_logic_);
 
-  lyso_ = PetMaterialsList::LYSO();
+  lyso_ = petmaterials::LYSO();
   if (phys_)
   {
     G4cout << "LYSO used with optical properties" << G4endl;
-    lyso_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LYSO());
+    lyso_->SetMaterialPropertiesTable(petopticalprops::LYSO());
   }
   else
   {
     G4cout << "LYSO used with constant refraction index = 1.8" << G4endl;
-    lyso_->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LYSO_nconst());
+    lyso_->SetMaterialPropertiesTable(petopticalprops::LYSO_nconst());
   }
 
   BuildDetector();
@@ -139,7 +139,7 @@ void PetLYSOCell::BuildDetector()
   G4Box *det_solid =
       //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
       new G4Box("WALL", det_size / 2., det_size / 2., det_size2 / 2.);
-  G4Material *steel = PetMaterialsList::Steel();
+  G4Material *steel = materials::Steel();
 
   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);

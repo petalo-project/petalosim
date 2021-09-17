@@ -56,6 +56,8 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALO
 
 /Generator/Back2back/region CENTER
 
+/process/optical/processActivation Cerenkov false
+
 /nexus/persistency/outputFile {output_tmpdir}/{base_name_full_body}
 /nexus/random_seed 16062020
 
@@ -120,6 +122,8 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 /Generator/Back2back/region CENTER
 
+/process/optical/processActivation Cerenkov false
+
 /nexus/persistency/outputFile {output_tmpdir}/{base_name_ring_tiles}
 /nexus/random_seed 16062020
 
@@ -181,6 +185,8 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /Geometry/PetBox/sipm_pde 0.5
 
 /Generator/Back2back/region CENTER
+
+/process/optical/processActivation Cerenkov false
 
 /nexus/persistency/outputFile {output_tmpdir}/{petalosim_pet_box_basenames}
 

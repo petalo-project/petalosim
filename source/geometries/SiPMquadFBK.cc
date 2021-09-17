@@ -7,11 +7,13 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMquadFBK.h"
-#include "nexus/PmtSD.h"
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/PmtSD.h"
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -23,9 +25,6 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4PhysicalConstants.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 using namespace nexus;
 
@@ -68,8 +67,8 @@ void SiPMquadFBK::Construct()
 
   G4Box *sipm_solid = new G4Box("SiPMquadFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
-  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+  G4Material *epoxy = materials::Epoxy();
+  epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMquadFBK");

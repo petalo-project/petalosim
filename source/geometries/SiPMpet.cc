@@ -7,11 +7,13 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMpet.h"
-#include "nexus/PmtSD.h"
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/MaterialsList.h"
 #include "nexus/Visibilities.h"
+#include "nexus/PmtSD.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -69,8 +71,8 @@ void SiPMpet::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
-  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::GlassEpoxy());
+  G4Material *epoxy = materials::Epoxy();
+  epoxy->SetMaterialPropertiesTable(petopticalprops::GlassEpoxy());
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
@@ -80,8 +82,8 @@ void SiPMpet::Construct()
   // TPB coating
   G4double tpb_z = 0.001 * mm;
   G4Box *tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
-  G4Material *TPB = PetMaterialsList::TPB();
-  TPB->SetMaterialPropertiesTable(PetOpticalMaterialProperties::TPB());
+  G4Material *TPB = materials::TPB();
+  TPB->SetMaterialPropertiesTable(petopticalprops::TPB());
   G4LogicalVolume *tpb_logic =
       new G4LogicalVolume(tpb_solid, TPB, "TPB");
 

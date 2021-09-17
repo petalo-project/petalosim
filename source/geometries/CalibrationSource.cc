@@ -9,7 +9,7 @@
 // ----------------------------------------------------------------------------
 
 #include "CalibrationSource.h"
-#include "PetMaterialsList.h"
+
 #include "nexus/Visibilities.h"
 
 #include <G4Tubs.hh>
@@ -19,8 +19,6 @@
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4GenericMessenger.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
 

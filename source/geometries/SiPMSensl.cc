@@ -7,11 +7,13 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPMSensl.h"
-#include "nexus/PmtSD.h"
 #include "PetMaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include "PetOpticalMaterialProperties.h"
+
+#include "nexus/PmtSD.h"
 #include "nexus/Visibilities.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -22,9 +24,6 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4PhysicalConstants.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 using namespace nexus;
 using namespace CLHEP;
@@ -70,8 +69,8 @@ void SiPMSensl::Construct()
 
   G4Box *sipm_solid = new G4Box("SIPMSensl", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = PetMaterialsList::Epoxy();
-  epoxy->SetMaterialPropertiesTable(PetOpticalMaterialProperties::GlassEpoxy());
+  G4Material *epoxy = materials::Epoxy();
+  epoxy->SetMaterialPropertiesTable(petopticalprops::GlassEpoxy());
 
   G4LogicalVolume *sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMSensl");

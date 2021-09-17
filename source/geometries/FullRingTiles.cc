@@ -11,12 +11,13 @@
 #include "SiPMpetFBK.h"
 #include "Tile.h"
 #include "PetOpticalMaterialProperties.h"
-#include "PetMaterialsList.h"
 
 #include "nexus/CylinderPointSampler.h"
 #include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
+#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -32,7 +33,6 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 
-#include <stdexcept>
 
 using namespace nexus;
 
@@ -115,7 +115,7 @@ void FullRingTiles::BuildCryostat()
 
   G4Tubs *cryostat_solid =
       new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_ / 2., 0, twopi);
-  G4Material *steel = PetMaterialsList::Steel();
+  G4Material *steel = materials::Steel();
   G4LogicalVolume *cryostat_logic =
       new G4LogicalVolume(cryostat_solid, steel, "CRYOSTAT");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
@@ -126,7 +126,7 @@ void FullRingTiles::BuildCryostat()
       new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
                  (lat_dimension_cell_ + 2. * kapton_thickn_) / 2., 0, twopi);
   G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(PetOpticalMaterialProperties::LXe());
+  LXe->SetMaterialPropertiesTable(opticalprops::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
@@ -184,7 +184,7 @@ void FullRingTiles::BuildCryostat()
   db_opsur->SetModel(unified);
   db_opsur->SetFinish(ground);
   db_opsur->SetSigmaAlpha(0.1);
-  db_opsur->SetMaterialPropertiesTable(PetOpticalMaterialProperties::ReflectantSurface(0.));
+  db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(0.));
   new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
   new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
   new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
@@ -267,7 +267,7 @@ void FullRingTiles::BuildPhantom()
   G4Tubs *phantom_solid = new G4Tubs("PHANTOM", 0., phantom_diam_ / 2.,
                                      phantom_length_ / 2., 0, twopi);
   G4LogicalVolume *phantom_logic =
-      new G4LogicalVolume(phantom_solid, PetMaterialsList::PEEK(), "PHANTOM");
+      new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), phantom_logic,
                     "PAHNTOM", lab_logic_, false, 0, true);
 }
