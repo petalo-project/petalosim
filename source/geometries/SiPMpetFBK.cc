@@ -11,7 +11,7 @@
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 
-#include "nexus/PmtSD.h"
+#include "nexus/SensorSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/MaterialsList.h"
 

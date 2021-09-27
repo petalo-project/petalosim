@@ -13,7 +13,7 @@
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
 #include "nexus/IonizationSD.h"
-#include "nexus/PmtSD.h"
+#include "nexus/SensorSD.h"
 #include "nexus/NexusApp.h"
 #include "nexus/DetectorConstruction.h"
 #include "nexus/SaveAllSteppingAction.h"
@@ -258,8 +258,8 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
 	StoreIonizationHits(hits);
       }
     }
-    else if (hcname == PmtSD::GetCollectionUniqueName())
-      StorePmtHits(hits);
+    else if (hcname == SensorSD::GetCollectionUniqueName())
+      StoreSensorHits(hits);
     else {
       G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
@@ -297,17 +297,17 @@ void PetaloPersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
 
 
-void PetaloPersistencyManager::StorePmtHits(G4VHitsCollection* hc)
+void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 {
-  std::map<G4int, PmtHit*> mapOfHits;
+  std::map<G4int, SensorHit*> mapOfHits;
 
-  PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
+  SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(hc);
   if (!hits) return;
 
   std::vector<G4int > sensor_ids;
   for (G4int i=0; i<hits->entries(); i++) {
 
-    PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
+    SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
     if (!hit) continue;
 
     int s_id  = hit->GetPmtID();
@@ -337,7 +337,7 @@ void PetaloPersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   for (G4int s_id: sensor_ids){
     std::string sdname = hits->GetSDname();
 
-    PmtHit* hit = mapOfHits[s_id];
+    SensorHit* hit = mapOfHits[s_id];
     G4ThreeVector xyz = hit->GetPosition();
     double binsize = hit->GetBinSize();
 
@@ -368,7 +368,7 @@ void PetaloPersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
 
     // TOF
-    PmtHit* hitTof = mapOfHits[-s_id];
+    SensorHit* hitTof = mapOfHits[-s_id];
     const std::map<G4double, G4int>& wvfmTof = hitTof->GetHistogram();
 
     double binsize_tof = hitTof->GetBinSize();
