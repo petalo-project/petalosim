@@ -75,7 +75,7 @@ public:
 private:
   G4bool ProcessHits(G4Step *, G4TouchableHistory *);
 
-  G4int FindPmtID(const G4VTouchable *);
+  G4int FindID(const G4VTouchable *);
 
   G4int naming_order_;      ///< Order of the naming scheme
   G4int sensor_depth_;      ///< Depth of the SD in the geometry tree

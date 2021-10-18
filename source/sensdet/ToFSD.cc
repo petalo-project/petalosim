@@ -83,7 +83,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
       const G4VTouchable *touchable =
           step->GetPostStepPoint()->GetTouchable();
 
-      G4int pmt_id = FindPmtID(touchable);
+      G4int pmt_id = FindID(touchable);
 
       SensorHit *hit = 0;
       SensorHit *hit_tof = 0;
@@ -131,7 +131,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
   return true;
 }
 
-G4int ToFSD::FindPmtID(const G4VTouchable *touchable)
+G4int ToFSD::FindID(const G4VTouchable *touchable)
 {
   G4int pmtid = touchable->GetCopyNumber(sensor_depth_);
   if (naming_order_ != 0)
