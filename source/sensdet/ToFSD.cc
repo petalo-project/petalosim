@@ -18,8 +18,6 @@
 #include <G4OpBoundaryProcess.hh>
 #include <G4RunManager.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
 using namespace CLHEP;
 
 ToFSD::ToFSD(G4String sdname) : G4VSensitiveDetector(sdname),

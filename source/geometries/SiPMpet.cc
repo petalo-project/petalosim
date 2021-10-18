@@ -27,7 +27,7 @@
 #include <G4PhysicalConstants.hh>
 #include <G4GenericMessenger.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
+
 
 using namespace nexus;
 
