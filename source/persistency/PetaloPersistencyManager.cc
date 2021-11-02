@@ -79,24 +79,6 @@ PetaloPersistencyManager::~PetaloPersistencyManager()
 }
 
 
-/* void PetaloPersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
-                                    std::vector<G4String>& delayed_macros)
-{
-
-  // Get a pointer to the current singleton instance of the persistency
-  // manager using the method of the base class
-  PetaloPersistencyManager* current = dynamic_cast<PetaloPersistencyManager*>
-    (G4VPersistencyManager::GetPersistencyManager());
-
-  // If no instance exists yet, create a new one.
-  // (Notice that the above dynamic cast would also return 0 if an instance
-  // of another G4VPersistencyManager-derived was previously set, resulting
-  // in the leak of that object since the pointer will no longer be
-  // accessible.)
-  if (!current) current =
-                  new PetaloPersistencyManager(init_macro, macros, delayed_macros);
-} */
-
 
 void PetaloPersistencyManager::OpenFile(G4String filename)
 {
@@ -343,17 +325,17 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    std::vector< std::pair<unsigned int, float> > data;
+    //std::vector< std::pair<unsigned int, float> > data;
 
-    G4double amplitude = 0.;
     if (save_tot_charge_ == true) {
+      G4double charge = 0.;
       for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-        amplitude = amplitude + (*it).second;
-        unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
-        unsigned int charge = (unsigned int)((*it).second+0.5);
-        data.push_back(std::make_pair(time_bin, charge));
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), time_bin, charge);
+        charge = charge + (*it).second;
+        //unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
+        //unsigned int charge = (unsigned int)((*it).second+0.5);
       }
+        //data.push_back(std::make_pair(0, charge));
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), 0, charge);
     }
 
     if (hit->GetPmtID() >= 0) {
