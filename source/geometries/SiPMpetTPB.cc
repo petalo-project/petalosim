@@ -12,7 +12,7 @@
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 
-#include "nexus/PmtSD.h"
+#include "nexus/SensorSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/MaterialsList.h"
 
@@ -215,7 +215,7 @@ void SiPMpetTPB::Construct()
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
-    //     PmtSD* sipmsd = new PmtSD(sdname);
+    //     SensorSD* sipmsd = new SensorSD(sdname);
     ToFSD *sipmsd = new ToFSD(sdname);
     sipmsd->SetDetectorVolumeDepth(0);
     sipmsd->SetDetectorNamingOrder(1000.);

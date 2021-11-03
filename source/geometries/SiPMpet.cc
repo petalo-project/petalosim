@@ -13,7 +13,7 @@
 
 #include "nexus/MaterialsList.h"
 #include "nexus/Visibilities.h"
-#include "nexus/PmtSD.h"
+#include "nexus/SensorSD.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -27,7 +27,7 @@
 #include <G4PhysicalConstants.hh>
 #include <G4GenericMessenger.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
+
 
 using namespace nexus;
 
@@ -171,7 +171,7 @@ void SiPMpet::Construct()
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
-    //      PmtSD* sipmsd = new PmtSD(sdname);
+    //      SensorSD* sipmsd = new SensorSD(sdname);
     ToFSD *sipmsd = new ToFSD(sdname);
     sipmsd->SetDetectorVolumeDepth(0);
     sipmsd->SetDetectorNamingOrder(1000.);

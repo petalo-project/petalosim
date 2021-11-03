@@ -10,7 +10,7 @@
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
 
-#include "nexus/PmtSD.h"
+#include "nexus/SensorSD.h"
 #include "nexus/Visibilities.h"
 
 #include <G4GenericMessenger.hh>

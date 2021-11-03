@@ -25,8 +25,6 @@
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
 
 using namespace nexus;
 using namespace CLHEP;

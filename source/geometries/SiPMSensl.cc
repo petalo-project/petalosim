@@ -11,7 +11,7 @@
 #include <G4GenericMessenger.hh>
 #include "PetOpticalMaterialProperties.h"
 
-#include "nexus/PmtSD.h"
+#include "nexus/SensorSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/MaterialsList.h"
 
@@ -178,7 +178,7 @@ void SiPMSensl::Construct()
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
-    PmtSD *sipmsd = new PmtSD(sdname);
+    SensorSD *sipmsd = new SensorSD(sdname);
     sipmsd->SetDetectorVolumeDepth(0);
     sipmsd->SetDetectorNamingOrder(1000.);
     sipmsd->SetTimeBinning(binning_);

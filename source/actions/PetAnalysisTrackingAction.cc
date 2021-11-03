@@ -21,9 +21,6 @@
 #include <G4Electron.hh>
 #include <G4GenericMessenger.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
 #include "TH1F.h"
 #include "TFile.h"
 

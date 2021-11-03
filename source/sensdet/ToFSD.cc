@@ -2,7 +2,7 @@
 // petalosim | ToFSD.cc
 //
 // This class is the sensitive detector used for PETALO.
-// Each time a photoelectron is detected by a sensor, two PmtHit instances
+// Each time a photoelectron is detected by a sensor, two SensorHit instances
 // are created (if needed): one to store the full response with large time
 // binning and the other one with a fine time binning, which stores only
 // the first part of the waveform.
@@ -17,8 +17,6 @@
 #include <G4ProcessManager.hh>
 #include <G4OpBoundaryProcess.hh>
 #include <G4RunManager.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 using namespace CLHEP;
 
@@ -36,13 +34,13 @@ ToFSD::~ToFSD()
 
 G4String ToFSD::GetCollectionUniqueName()
 {
-  return "PmtHitsCollection";
+  return "SensorHitsCollection";
 }
 
 void ToFSD::Initialize(G4HCofThisEvent *HCE)
 {
   // Create a new collection of PMT hits
-  HC_ = new PmtHitsCollection(this->GetName(), this->GetCollectionName(0));
+  HC_ = new SensorHitsCollection(this->GetName(), this->GetCollectionName(0));
 
   G4int HCID = G4SDManager::GetSDMpointer()->GetCollectionID(this->GetName() + "/" + this->GetCollectionName(0));
 
@@ -83,10 +81,10 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
       const G4VTouchable *touchable =
           step->GetPostStepPoint()->GetTouchable();
 
-      G4int pmt_id = FindPmtID(touchable);
+      G4int pmt_id = FindID(touchable);
 
-      PmtHit *hit = 0;
-      PmtHit *hit_tof = 0;
+      SensorHit *hit = 0;
+      SensorHit *hit_tof = 0;
       for (G4int i = 0; i < HC_->entries(); i++)
       {
         if ((*HC_)[i]->GetPmtID() == pmt_id)
@@ -109,13 +107,13 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
       // create it and set main properties
       if (!hit)
       {
-        hit = new PmtHit();
+        hit = new SensorHit();
         hit->SetPmtID(pmt_id);
         hit->SetBinSize(timebinning_);
         hit->SetPosition(touchable->GetTranslation());
         HC_->insert(hit);
 
-        hit_tof = new PmtHit();
+        hit_tof = new SensorHit();
         hit_tof->SetPmtID(-pmt_id);
         hit_tof->SetBinSize(5 * picosecond);
         hit_tof->SetPosition(touchable->GetTranslation());
@@ -131,7 +129,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
   return true;
 }
 
-G4int ToFSD::FindPmtID(const G4VTouchable *touchable)
+G4int ToFSD::FindID(const G4VTouchable *touchable)
 {
   G4int pmtid = touchable->GetCopyNumber(sensor_depth_);
   if (naming_order_ != 0)

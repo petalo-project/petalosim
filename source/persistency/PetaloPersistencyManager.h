@@ -53,7 +53,7 @@ private:
   void StoreTrajectories(G4TrajectoryContainer *);
   void StoreHits(G4HCofThisEvent *);
   void StoreIonizationHits(G4VHitsCollection *);
-  void StorePmtHits(G4VHitsCollection *);
+  void StoreSensorHits(G4VHitsCollection *);
   void StoreSteps();
 
   void SaveConfigurationInfo(G4String history);
@@ -61,9 +61,6 @@ private:
 private:
   G4GenericMessenger *msg_; ///< User configuration messenger
 
-  G4String init_macro_;
-  std::vector<G4String> macros_;
-  std::vector<G4String> delayed_macros_;
   std::vector<G4String> secondary_macros_;
 
   G4bool ready_;           ///< Is the PetaloPersistencyManager ready to go?

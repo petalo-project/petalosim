@@ -2,7 +2,7 @@
 // petalosim | ToFSD.h
 //
 // This class is the sensitive detector used for PETALO.
-// Each time a photoelectron is detected by a sensor, two PmtHit instances
+// Each time a photoelectron is detected by a sensor, two SensorHit instances
 // are created (if needed): one to store the full response with large time
 // binning and the other one with a fine time binning, which stores only
 // the first part of the waveform.
@@ -14,7 +14,7 @@
 #define TOF_SD_H
 
 #include <G4VSensitiveDetector.hh>
-#include "nexus/PmtHit.h"
+#include "nexus/SensorHit.h"
 
 class G4Step;
 class G4HCofThisEvent;
@@ -75,7 +75,7 @@ public:
 private:
   G4bool ProcessHits(G4Step *, G4TouchableHistory *);
 
-  G4int FindPmtID(const G4VTouchable *);
+  G4int FindID(const G4VTouchable *);
 
   G4int naming_order_;      ///< Order of the naming scheme
   G4int sensor_depth_;      ///< Depth of the SD in the geometry tree
@@ -88,7 +88,7 @@ private:
 
   G4int box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
 
-  PmtHitsCollection *HC_; ///< Pointer to the collection of hits
+  SensorHitsCollection *HC_; ///< Pointer to the collection of hits
 };
 
 // INLINE METHODS //////////////////////////////////////////////////
