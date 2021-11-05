@@ -47,6 +47,7 @@ PetBox::PetBox() : GeometryBase(),
                    source_pos_z_(0. * mm),
                    tile_type_d_("HamamatsuVUV"),
                    tile_type_c_("HamamatsuVUV"),
+                   single_tile_coinc_plane_(0),
                    box_size_(194.4 * mm),
                    box_thickness_(2. * cm),
                    ih_x_size_(6. * cm),
@@ -105,6 +106,8 @@ PetBox::PetBox() : GeometryBase(),
 
   msg_->DeclareProperty("tile_type_d", tile_type_d_, "Type of the tile in the detection plane");
   msg_->DeclareProperty("tile_type_c", tile_type_c_, "Type of the tile in the coincidence plane");
+
+  msg_->DeclareProperty("single_tile_coinc_plane", single_tile_coinc_plane_, "If 1, one tile centered in coinc plane");
 
   G4GenericMessenger::Command &time_cmd =
       msg_->DeclareProperty("sipm_time_binning", time_binning_, "Time binning for the sensor");
@@ -546,28 +549,33 @@ void PetBox::BuildSensors()
 
   G4double z_pos2 = -box_size_/2. + box_thickness_ + dist_dice_flange2_ + tile2_thickn_/2.;
 
-
   G4RotationMatrix rot;
   rot.rotateY(pi);
 
-  /// ASYMMETRIC GEOMETRY
-  vol_name = "TILE_" + std::to_string(copy_no);
-  G4double x_pos = full_row_size_ / 2. - tile_size_x / 2.;
-  G4double y_pos = full_col_size_ / 2. - tile_size_y / 2.;
-  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)), tile2_logic,
+
+  if (single_tile_coinc_plane_) {
+
+    /// SINGLE TILE CENTERED IN X AND Y (COINCIDENCE PLANE)
+    vol_name = "TILE_" + std::to_string(copy_no);
+    G4double x_pos = 0.;
+    G4double y_pos = 0.;
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)), tile2_logic,
                     vol_name, LXe_logic_, false, copy_no, false);
 
-  /// SYMMETRIC GEOMETRY
-  // for (G4int j=0; j<n_tile_rows_; j++) {
-  //   G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
-  //   for (G4int i=0; i<n_tile_columns_; i++) {
-  //     G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
-  //     vol_name = "TILE_" + std::to_string(copy_no);
-  //     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)), tile_logic,
-  //                       vol_name, LXe_logic_, false, copy_no, false);
-  //     copy_no += 1;
-  //   }
-  // }
+  } else {
+
+    /// 4 TILES
+    for (G4int j=0; j<n_tile_rows_; j++) {
+      G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+      for (G4int i=0; i<n_tile_columns_; i++) {
+        G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
+        vol_name = "TILE_" + std::to_string(copy_no);
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)), tile2_logic,
+                          vol_name, LXe_logic_, false, copy_no, false);
+        copy_no += 1;
+      }
+    }
+  }
 }
 
 G4ThreeVector PetBox::GenerateVertex(const G4String &region) const
