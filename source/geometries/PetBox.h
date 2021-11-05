@@ -52,7 +52,7 @@ private:
 
   G4double source_pos_x_, source_pos_y_, source_pos_z_;
 
-  G4String tile_type_;
+  G4String tile_type_d_, tile_type_c_;
   G4double time_binning_;
 
   G4double box_size_, box_thickness_;

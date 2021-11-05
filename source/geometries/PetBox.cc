@@ -45,7 +45,8 @@ PetBox::PetBox() : GeometryBase(),
                    source_pos_x_(0. * mm),
                    source_pos_y_(0. * mm),
                    source_pos_z_(0. * mm),
-                   tile_type_("HamamatsuVUV"),
+                   tile_type_d_("HamamatsuVUV"),
+                   tile_type_c_("HamamatsuVUV"),
                    box_size_(194.4 * mm),
                    box_thickness_(2. * cm),
                    ih_x_size_(6. * cm),
@@ -102,7 +103,8 @@ PetBox::PetBox() : GeometryBase(),
   source_pos_z_cmd.SetUnitCategory("Length");
   source_pos_z_cmd.SetParameterName("source_pos_z", false);
 
-  msg_->DeclareProperty("tile_type", tile_type_, "Type of the tile we want to use");
+  msg_->DeclareProperty("tile_type_d", tile_type_d_, "Type of the tile in the detection plane");
+  msg_->DeclareProperty("tile_type_c", tile_type_c_, "Type of the tile in the coincidence plane");
 
   G4GenericMessenger::Command &time_cmd =
       msg_->DeclareProperty("sipm_time_binning", time_binning_, "Time binning for the sensor");
@@ -240,27 +242,20 @@ void PetBox::BuildBox()
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_box_logic,
                     "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, false);
 
-  // TILE TYPE
-  if (tile_type_ == "HamamatsuVUV")
-  {
+  // TILE TYPE DETECTION PLANE
+  if (tile_type_d_ == "HamamatsuVUV") {
     tile_ = new TileHamamatsuVUV();
-    dist_dice_flange_ = 20. * mm;
-  }
-  else if (tile_type_ == "HamamatsuBlue")
-  {
+    dist_dice_flange_ = 20.*mm;
+  } else if (tile_type_d_ == "HamamatsuBlue") {
     tile_ = new TileHamamatsuBlue();
-    dist_dice_flange_ = 19.35 * mm;
-  }
-  else if (tile_type_ == "FBK")
-  {
+    dist_dice_flange_ = 19.35*mm;
+  } else if (tile_type_d_ == "FBK") {
     tile_ = new TileFBK();
     tile_->SetPDE(sipm_pde_);
-    dist_dice_flange_ = 21.05 * mm;
-  }
-  else
-  {
+    dist_dice_flange_ = 21.05*mm;
+  } else {
     G4Exception("[PetBox]", "BuildBox()", FatalException,
-                "Unknown tile type!");
+                "Unknown tile type for the detection plane!");
   }
 
   tile_->SetBoxGeom(1);
