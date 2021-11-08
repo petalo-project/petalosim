@@ -141,9 +141,9 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 
 @pytest.mark.order(3)
-def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_basenames):
+def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_params):
 
-     tile_type = petalosim_pet_box_basenames.split("_")[-3]
+     _, base_name, tile_type1, tile_type2, _, _, _, _ = petalosim_pet_box_params
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -167,9 +167,9 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
 
-/nexus/RegisterMacro {config_tmpdir}/{petalosim_pet_box_basenames}.config.mac
+/nexus/RegisterMacro {config_tmpdir}/{base_name}.config.mac
 """
-     init_path = os.path.join(config_tmpdir, petalosim_pet_box_basenames+'.init.mac')
+     init_path = os.path.join(config_tmpdir, base_name+'.init.mac')
      init_file = open(init_path,'w')
      init_file.write(init_text)
      init_file.close()
@@ -179,7 +179,9 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /event/verbose 0
 /tracking/verbose 0
 
-/Geometry/PetBox/tile_type {tile_type}
+/Geometry/PetBox/tile_type_d {tile_type1}
+/Geometry/PetBox/tile_type_c {tile_type2}
+/Geometry/PetBox/single_tile_coinc_plane 0
 /Geometry/PetBox/tile_refl 0.
 /Geometry/PetBox/sipm_time_binning 1. microsecond
 /Geometry/PetBox/sipm_pde 0.5
@@ -188,12 +190,12 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{petalosim_pet_box_basenames}
+/nexus/persistency/outputFile {output_tmpdir}/{base_name}
 
 /nexus/random_seed 23102020
 """
 
-     config_path = os.path.join(config_tmpdir, petalosim_pet_box_basenames+'.config.mac')
+     config_path = os.path.join(config_tmpdir, base_name+'.config.mac')
      config_file = open(config_path,'w')
      config_file.write(config_text)
      config_file.close()

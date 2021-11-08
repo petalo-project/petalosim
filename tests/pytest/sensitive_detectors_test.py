@@ -31,7 +31,7 @@ def test_sensor_ids_pet_box(petalosim_pet_box_params):
      """
      Check that sensors are correctly numbered for the PetBox geometry.
      """
-     filename, nsipms, sipms_per_tile, init_sns_id, sensor_name = petalosim_pet_box_params
+     filename, _, _, _, nsipms, sipms_per_tile, init_sns_id, sensor_name = petalosim_pet_box_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
@@ -42,7 +42,11 @@ def test_sensor_ids_pet_box(petalosim_pet_box_params):
      sns_positions = pd.read_hdf(filename, 'MC/sns_positions')
      assert len(sns_positions) == len(sns_positions.sensor_id.unique())
      assert min(sipm_ids) >= init_sns_id
-     assert sns_positions.sensor_name.unique() == sensor_name
+
+     if len(sensor_name) == 2:
+         assert sns_positions.sensor_name.nunique() == 2
+     else:
+         assert sns_positions.sensor_name.unique() == sensor_name
 
      first_id_second_plane = 111
      sns_z_pos_left  = sns_positions[ sns_positions.sensor_id<first_id_second_plane].z.values
