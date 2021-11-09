@@ -177,7 +177,7 @@ void PetaloPersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
       std::string key, value;
       std::getline(init_read, key, ' ');
       std::getline(init_read, value);
-      if ((key == "/Actions/RegisterTrackingAction") && (value == "OPTICAL")) {
+      if ((key == "/nexus/RegisterTrackingAction") && (value == "PetOpticalTrackingAction")) {
         save_opt_phot = true;
         break;
       }
