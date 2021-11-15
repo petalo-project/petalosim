@@ -325,16 +325,12 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    //std::vector< std::pair<unsigned int, float> > data;
 
     if (save_tot_charge_ == true) {
       G4double charge = 0.;
       for (it = wvfm.begin(); it != wvfm.end(); ++it) {
         charge = charge + (*it).second;
-        //unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
-        //unsigned int charge = (unsigned int)((*it).second+0.5);
       }
-        //data.push_back(std::make_pair(0, charge));
         h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), charge);
     }
 
