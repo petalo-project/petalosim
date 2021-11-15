@@ -23,7 +23,6 @@
   typedef struct{
     int32_t event_id;
     unsigned int sensor_id;
-    uint64_t time_bin;
     unsigned int charge;
   } sns_data_t;
 

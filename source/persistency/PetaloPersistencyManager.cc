@@ -335,7 +335,7 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
         //unsigned int charge = (unsigned int)((*it).second+0.5);
       }
         //data.push_back(std::make_pair(0, charge));
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), 0, charge);
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), charge);
     }
 
     if (hit->GetPmtID() >= 0) {

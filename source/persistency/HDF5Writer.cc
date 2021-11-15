@@ -91,12 +91,11 @@ void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
   irun_++;
 }
 
-void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
+void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int charge)
 {
   sns_data_t snsData;
   snsData.event_id = evt_number;
   snsData.sensor_id = sensor_id;
-  snsData.time_bin = time_bin;
   snsData.charge = charge;
   writeSnsData(&snsData, snsDataTable_, memtypeSnsData_, ismp_);
 
