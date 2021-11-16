@@ -36,7 +36,7 @@ SiPMpetTPB::SiPMpetTPB() : GeometryBase(),
                            refr_index_(1.),
                            decay_time_(2.2 * nanosecond),
                            phys_(1),
-                           time_binning_(1. * microsecond)
+                           time_binning_(5. * picosecond)
 {
   /// Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");

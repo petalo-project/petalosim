@@ -31,7 +31,7 @@ using namespace CLHEP;
 
 SiPMHamamatsuVUV::SiPMHamamatsuVUV() : GeometryBase(),
                                        visibility_(1),
-                                       time_binning_(200. * nanosecond),
+                                       time_binning_(5. * picosecond),
                                        sensor_depth_(-1),
                                        mother_depth_(0),
                                        naming_order_(0),

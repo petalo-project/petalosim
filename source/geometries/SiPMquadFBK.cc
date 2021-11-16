@@ -34,7 +34,7 @@ SiPMquadFBK::SiPMquadFBK() : GeometryBase(),
                              visibility_(0),
                              refr_index_(1.54),
                              eff_(1.),
-                             time_binning_(200. * nanosecond)
+                             time_binning_(5. * picosecond)
 {
   /// Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
