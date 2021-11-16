@@ -64,7 +64,6 @@ def test_hdf5_structure(petalosim_files):
 
          assert 'event_id'  in scolumns
          assert 'sensor_id' in scolumns
-         assert 'time_bin'  in scolumns
          assert 'charge'    in scolumns
 
 
