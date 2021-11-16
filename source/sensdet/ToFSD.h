@@ -82,7 +82,7 @@ private:
   G4int mother_depth_;      ///< Depth of the SD's mother in the geometry tree
   G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-  G4double timebinning_; ///< Time bin width
+  G4double timebinning_; ///< Time bin width for TOF table
 
   G4OpBoundaryProcess *boundary_; ///< Pointer to the optical boundary process
 
