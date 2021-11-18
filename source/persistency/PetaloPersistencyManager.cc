@@ -297,7 +297,6 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    double binsize = hit->GetBinSize();
 
     G4double amplitude = 0.;
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
@@ -311,7 +310,7 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
         sensor_ids.push_back(sens_id);
       }
     } else if (hit->GetPmtID()<0) {
-      tof_bin_size_ = binsize;
+      tof_bin_size_ = hit->GetBinSize();
     }
   }
 
