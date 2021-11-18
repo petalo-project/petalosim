@@ -306,7 +306,6 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
     if (hit->GetPmtID() >= 0) {
       G4int sens_id;
       sens_id = hit->GetPmtID();
-      bin_size_ = binsize;
 
       if (amplitude > thr_charge_){
         sensor_ids.push_back(sens_id);
@@ -434,8 +433,6 @@ G4bool PetaloPersistencyManager::Store(const G4Run*)
   h5writer_->WriteRunInfo(key, std::to_string(num_events).c_str());
   key = "saved_events";
   h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
-  key = "bin_size";
-  h5writer_->WriteRunInfo(key, (std::to_string(bin_size_/microsecond)+" mus").c_str());
   key = "tof_bin_size";
   h5writer_->WriteRunInfo(key, (std::to_string(tof_bin_size_/picosecond)+" ps").c_str());
   key = "interacting_events";
