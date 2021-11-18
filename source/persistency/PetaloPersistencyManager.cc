@@ -321,7 +321,6 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
     SensorHit* hit = mapOfHits[s_id];
     G4ThreeVector xyz = hit->GetPosition();
-    double binsize = hit->GetBinSize();
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
