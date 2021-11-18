@@ -125,5 +125,4 @@ def test_sensor_binning_is_saved(petalosim_files):
      conf = pd.read_hdf(filename, 'MC/configuration')
      parameters = conf.param_key.values
 
-     assert any('bin_size' in p for p in parameters)
      assert any('tof_bin_size' in p for p in parameters)
