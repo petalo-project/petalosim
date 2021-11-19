@@ -16,7 +16,7 @@
 /Geometry/FullRingInfinity/sens_z_max  90. mm
 
 /Geometry/SiPMpet/efficiency 0.2
-/Geometry/SiPMpet/time_binning 1. microsecond
+/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 

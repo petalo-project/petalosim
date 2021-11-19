@@ -30,7 +30,7 @@ using namespace CLHEP;
 
 SiPMSensl::SiPMSensl() : GeometryBase(),
                          visibility_(1),
-                         binning_(1. * microsecond)
+                         binning_(5. * picosecond)
 
 {
   /// Messenger

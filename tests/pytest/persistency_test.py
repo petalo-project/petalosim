@@ -64,7 +64,6 @@ def test_hdf5_structure(petalosim_files):
 
          assert 'event_id'  in scolumns
          assert 'sensor_id' in scolumns
-         assert 'time_bin'  in scolumns
          assert 'charge'    in scolumns
 
 
@@ -126,5 +125,4 @@ def test_sensor_binning_is_saved(petalosim_files):
      conf = pd.read_hdf(filename, 'MC/configuration')
      parameters = conf.param_key.values
 
-     assert any('bin_size' in p for p in parameters)
      assert any('tof_bin_size' in p for p in parameters)

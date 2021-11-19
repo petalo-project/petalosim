@@ -13,7 +13,6 @@
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 1. microsecond
 /Geometry/SiPMpet/size 6. mm
 
 

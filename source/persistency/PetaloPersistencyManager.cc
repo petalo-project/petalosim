@@ -79,24 +79,6 @@ PetaloPersistencyManager::~PetaloPersistencyManager()
 }
 
 
-/* void PetaloPersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
-                                    std::vector<G4String>& delayed_macros)
-{
-
-  // Get a pointer to the current singleton instance of the persistency
-  // manager using the method of the base class
-  PetaloPersistencyManager* current = dynamic_cast<PetaloPersistencyManager*>
-    (G4VPersistencyManager::GetPersistencyManager());
-
-  // If no instance exists yet, create a new one.
-  // (Notice that the above dynamic cast would also return 0 if an instance
-  // of another G4VPersistencyManager-derived was previously set, resulting
-  // in the leak of that object since the pointer will no longer be
-  // accessible.)
-  if (!current) current =
-                  new PetaloPersistencyManager(init_macro, macros, delayed_macros);
-} */
-
 
 void PetaloPersistencyManager::OpenFile(G4String filename)
 {
@@ -315,7 +297,6 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    double binsize = hit->GetBinSize();
 
     G4double amplitude = 0.;
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
@@ -324,13 +305,12 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
     if (hit->GetPmtID() >= 0) {
       G4int sens_id;
       sens_id = hit->GetPmtID();
-      bin_size_ = binsize;
 
       if (amplitude > thr_charge_){
         sensor_ids.push_back(sens_id);
       }
     } else if (hit->GetPmtID()<0) {
-      tof_bin_size_ = binsize;
+      tof_bin_size_ = hit->GetBinSize();
     }
   }
 
@@ -339,21 +319,16 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
     SensorHit* hit = mapOfHits[s_id];
     G4ThreeVector xyz = hit->GetPosition();
-    double binsize = hit->GetBinSize();
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    std::vector< std::pair<unsigned int, float> > data;
 
-    G4double amplitude = 0.;
     if (save_tot_charge_ == true) {
+      G4double charge = 0.;
       for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-        amplitude = amplitude + (*it).second;
-        unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
-        unsigned int charge = (unsigned int)((*it).second+0.5);
-        data.push_back(std::make_pair(time_bin, charge));
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), time_bin, charge);
+        charge = charge + (*it).second;
       }
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), charge);
     }
 
     if (hit->GetPmtID() >= 0) {
@@ -457,8 +432,6 @@ G4bool PetaloPersistencyManager::Store(const G4Run*)
   h5writer_->WriteRunInfo(key, std::to_string(num_events).c_str());
   key = "saved_events";
   h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
-  key = "bin_size";
-  h5writer_->WriteRunInfo(key, (std::to_string(bin_size_/microsecond)+" mus").c_str());
   key = "tof_bin_size";
   h5writer_->WriteRunInfo(key, (std::to_string(tof_bin_size_/picosecond)+" ps").c_str());
   key = "interacting_events";
