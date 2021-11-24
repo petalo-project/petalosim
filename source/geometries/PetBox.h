@@ -80,6 +80,7 @@ private:
   G4double vert_lat_panel_z_size_;
 
   G4double dist_dice_flange_, dist_dice_flange2_;
+  G4double dist_ham_vuv_, dist_ham_blue_, dist_fbk_;
   G4double panel_sipm_xy_size_, dist_sipms_panel_sipms_;
   G4double wls_depth_;
 

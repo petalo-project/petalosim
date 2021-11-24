@@ -73,7 +73,9 @@ PetBox::PetBox() : GeometryBase(),
                    horiz_lat_panel_z_size_(42. * mm),
                    horiz_lat_panel_y_pos_(40.95 * mm),
                    vert_lat_panel_z_size_(46.7 * mm),
-                   dist_dice_flange_(20. * mm),
+                   dist_ham_vuv_(20. * mm),
+                   dist_ham_blue_(19.35 * mm),
+                   dist_fbk_(21.05 * mm),
                    panel_sipm_xy_size_(66. * mm),
                    dist_sipms_panel_sipms_(0.3 * mm),
                    wls_depth_(0.001 * mm),
@@ -248,14 +250,14 @@ void PetBox::BuildBox()
   // TILE TYPE DETECTION PLANE
   if (tile_type_d_ == "HamamatsuVUV") {
     tile_ = new TileHamamatsuVUV();
-    dist_dice_flange_ = 20.*mm;
+    dist_dice_flange_ = dist_ham_vuv_;
   } else if (tile_type_d_ == "HamamatsuBlue") {
     tile_ = new TileHamamatsuBlue();
-    dist_dice_flange_ = 19.35*mm;
+    dist_dice_flange_ = dist_ham_blue_;
   } else if (tile_type_d_ == "FBK") {
     tile_ = new TileFBK();
     tile_->SetPDE(sipm_pde_);
-    dist_dice_flange_ = 21.05*mm;
+    dist_dice_flange_ = dist_fbk_;
   } else {
     G4Exception("[PetBox]", "BuildBox()", FatalException,
                 "Unknown tile type for the detection plane!");
@@ -274,14 +276,14 @@ void PetBox::BuildBox()
   // TILE TYPE COINCIDENCE PLANE
   if (tile_type_c_ == "HamamatsuVUV") {
     tile2_ = new TileHamamatsuVUV();
-    dist_dice_flange2_ = 20.*mm;
+    dist_dice_flange2_ = dist_ham_vuv_;
   } else if (tile_type_c_ == "HamamatsuBlue") {
     tile2_ = new TileHamamatsuBlue();
-    dist_dice_flange2_ = 19.35*mm;
+    dist_dice_flange2_ = dist_ham_blue_;
   } else if (tile_type_c_ == "FBK") {
     tile2_ = new TileFBK();
     tile2_->SetPDE(sipm_pde_);
-    dist_dice_flange2_ = 21.05*mm;
+    dist_dice_flange2_ = dist_fbk_;
   } else {
     G4Exception("[PetBox]", "BuildBox()", FatalException,
                 "Unknown tile type for the coincidence plane!");
