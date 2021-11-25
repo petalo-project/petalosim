@@ -45,7 +45,9 @@ PetBox::PetBox() : GeometryBase(),
                    source_pos_x_(0. * mm),
                    source_pos_y_(0. * mm),
                    source_pos_z_(0. * mm),
-                   tile_type_("HamamatsuVUV"),
+                   tile_type_d_("HamamatsuVUV"),
+                   tile_type_c_("HamamatsuVUV"),
+                   single_tile_coinc_plane_(0),
                    box_size_(194.4 * mm),
                    box_thickness_(2. * cm),
                    ih_x_size_(6. * cm),
@@ -71,7 +73,9 @@ PetBox::PetBox() : GeometryBase(),
                    horiz_lat_panel_z_size_(42. * mm),
                    horiz_lat_panel_y_pos_(40.95 * mm),
                    vert_lat_panel_z_size_(46.7 * mm),
-                   dist_dice_flange_(20. * mm),
+                   dist_ham_vuv_(20. * mm),
+                   dist_ham_blue_(19.35 * mm),
+                   dist_fbk_(21.05 * mm),
                    panel_sipm_xy_size_(66. * mm),
                    dist_sipms_panel_sipms_(0.3 * mm),
                    wls_depth_(0.001 * mm),
@@ -102,7 +106,10 @@ PetBox::PetBox() : GeometryBase(),
   source_pos_z_cmd.SetUnitCategory("Length");
   source_pos_z_cmd.SetParameterName("source_pos_z", false);
 
-  msg_->DeclareProperty("tile_type", tile_type_, "Type of the tile we want to use");
+  msg_->DeclareProperty("tile_type_d", tile_type_d_, "Type of the tile in the detection plane");
+  msg_->DeclareProperty("tile_type_c", tile_type_c_, "Type of the tile in the coincidence plane");
+
+  msg_->DeclareProperty("single_tile_coinc_plane", single_tile_coinc_plane_, "If 1, one tile centered in coinc plane");
 
   G4GenericMessenger::Command &time_cmd =
       msg_->DeclareProperty("sipm_time_binning", time_binning_, "Time binning for the sensor");
@@ -240,27 +247,20 @@ void PetBox::BuildBox()
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_box_logic,
                     "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, false);
 
-  // TILE TYPE
-  if (tile_type_ == "HamamatsuVUV")
-  {
+  // TILE TYPE DETECTION PLANE
+  if (tile_type_d_ == "HamamatsuVUV") {
     tile_ = new TileHamamatsuVUV();
-    dist_dice_flange_ = 20. * mm;
-  }
-  else if (tile_type_ == "HamamatsuBlue")
-  {
+    dist_dice_flange_ = dist_ham_vuv_;
+  } else if (tile_type_d_ == "HamamatsuBlue") {
     tile_ = new TileHamamatsuBlue();
-    dist_dice_flange_ = 19.35 * mm;
-  }
-  else if (tile_type_ == "FBK")
-  {
+    dist_dice_flange_ = dist_ham_blue_;
+  } else if (tile_type_d_ == "FBK") {
     tile_ = new TileFBK();
     tile_->SetPDE(sipm_pde_);
-    dist_dice_flange_ = 21.05 * mm;
-  }
-  else
-  {
+    dist_dice_flange_ = dist_fbk_;
+  } else {
     G4Exception("[PetBox]", "BuildBox()", FatalException,
-                "Unknown tile type!");
+                "Unknown tile type for the detection plane!");
   }
 
   tile_->SetBoxGeom(1);
@@ -272,10 +272,35 @@ void PetBox::BuildBox()
   tile_->Construct();
   tile_thickn_ = tile_->GetDimensions().z();
 
+
+  // TILE TYPE COINCIDENCE PLANE
+  if (tile_type_c_ == "HamamatsuVUV") {
+    tile2_ = new TileHamamatsuVUV();
+    dist_dice_flange2_ = dist_ham_vuv_;
+  } else if (tile_type_c_ == "HamamatsuBlue") {
+    tile2_ = new TileHamamatsuBlue();
+    dist_dice_flange2_ = dist_ham_blue_;
+  } else if (tile_type_c_ == "FBK") {
+    tile2_ = new TileFBK();
+    tile2_->SetPDE(sipm_pde_);
+    dist_dice_flange2_ = dist_fbk_;
+  } else {
+    G4Exception("[PetBox]", "BuildBox()", FatalException,
+                "Unknown tile type for the coincidence plane!");
+  }
+
+  tile2_->SetBoxGeom(1);
+  tile2_->SetTileVisibility(tile_vis_);
+  tile2_->SetTileReflectivity(tile_refl_);
+  tile2_->SetTimeBinning(time_binning_);
+
+  tile2_->Construct();
+  tile2_thickn_ = tile2_->GetDimensions().z();
+
+
   // 2 ACTIVE REGIONS
   G4double active_z_pos_max = box_size_ / 2. - box_thickness_ - dist_dice_flange_ - tile_thickn_;
-  if (tile_type_ == "HamamatsuBlue")
-  {
+  if (tile_type_d_ == "HamamatsuBlue"){
     active_z_pos_max = box_size_ / 2. - box_thickness_ - dist_dice_flange_ - tile_thickn_ - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
   }
 
@@ -283,22 +308,44 @@ void PetBox::BuildBox()
   G4double active_depth = active_z_pos_max - active_z_pos_min;
   G4double active_z_pos = active_z_pos_min + active_depth / 2.;
 
+
+  // Coincidence plane
+  G4double active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_;
+  if (tile_type_c_ == "HamamatsuBlue") {
+    active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_
+                        - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
+  }
+  G4double active_depth2 = active_z_pos_max2 - active_z_pos_min;
+  G4double active_z_pos2 = active_z_pos_min + active_depth2/2.;
+
+
   G4Box *active_solid =
-      new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
-  G4LogicalVolume *active_logic =
-      new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+    new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
+
+  G4Box* active_solid2 =
+    new G4Box("ACTIVE", dist_lat_panels_/2., dist_lat_panels_/2., active_depth2/2.);
+
+  G4LogicalVolume* active_logic =
+    new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+
+  G4LogicalVolume* active_logic2 =
+    new G4LogicalVolume(active_solid2, LXe, "ACTIVE");
+
   new G4PVPlacement(0, G4ThreeVector(0., 0., -active_z_pos), active_logic,
                     "ACTIVE", LXe_logic_, false, 1, false);
-  new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos), active_logic,
+  new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos2), active_logic2,
                     "ACTIVE", LXe_logic_, false, 2, false);
 
   // Set the ACTIVE volume as an ionization sensitive det
   IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
   active_logic->SetSensitiveDetector(ionisd);
+  active_logic2->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
   // Limit the step size in ACTIVE volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
+  active_logic2->SetUserLimits(new G4UserLimits(max_step_size_));
+
 
   // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
   G4Box *entry_panel_solid =
@@ -379,57 +426,66 @@ void PetBox::BuildBox()
   new G4LogicalSkinSurface("OP_PANEL_V", vert_lat_panel_logic, panel_opsur);
 
   // Panel in front of the sensors just for the Hamamatsu Blue SiPMs
-  if (tile_type_ == "HamamatsuBlue")
-  {
-    G4Box *panel_sipms_solid =
-        new G4Box("PANEL_SiPMs", panel_sipm_xy_size_ / 2., panel_sipm_xy_size_ / 2., (panel_thickness_ + wls_depth_) / 2.);
 
-    G4LogicalVolume *panel_sipms_logic =
-        new G4LogicalVolume(panel_sipms_solid, pyrex, "PANEL_SiPMs");
+  G4Box *panel_sipms_solid =
+    new G4Box("PANEL_SiPMs", panel_sipm_xy_size_ / 2., panel_sipm_xy_size_ / 2., (panel_thickness_ + wls_depth_) / 2.);
 
-    // WAVELENGTH SHIFTER LAYER ON THE PANEL /////////////////////////////////
-    G4Box *wls_solid =
-        new G4Box("WLS", panel_sipm_xy_size_ / 2., panel_sipm_xy_size_ / 2., wls_depth_ / 2);
+  G4LogicalVolume *panel_sipms_logic =
+    new G4LogicalVolume(panel_sipms_solid, pyrex, "PANEL_SiPMs");
 
-    G4Material *wls = materials::TPB();
-    wls->SetMaterialPropertiesTable(petopticalprops::TPB());
+  // WAVELENGTH SHIFTER LAYER ON THE PANEL /////////////////////////////////
+  G4Box *wls_solid =
+    new G4Box("WLS", panel_sipm_xy_size_ / 2., panel_sipm_xy_size_ / 2., wls_depth_ / 2);
 
-    G4LogicalVolume *wls_logic =
-        new G4LogicalVolume(wls_solid, wls, "WLS");
+  G4Material *wls = materials::TPB();
+  wls->SetMaterialPropertiesTable(petopticalprops::TPB());
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., panel_thickness_ / 2.), wls_logic,
+  G4LogicalVolume *wls_logic =
+    new G4LogicalVolume(wls_solid, wls, "WLS");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., panel_thickness_ / 2.), wls_logic,
                       "WLS", panel_sipms_logic, false, 0, false);
 
-    // Optical surface for WLS
-    G4OpticalSurface *wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
-                                                         glisur, ground,
-                                                         dielectric_dielectric, .01);
-    new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
+  // Optical surface for WLS
+  G4OpticalSurface *wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
+                                                       glisur, ground,
+                                                       dielectric_dielectric, .01);
+  new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
 
-    // PLACEMENT OF THE PANEL
+  // PLACEMENT OF THE PANEL
+  if (tile_type_d_ == "HamamatsuBlue") {
     G4double panel_sipms_zpos = box_size_ / 2. - box_thickness_ - dist_dice_flange_ - tile_thickn_ - dist_sipms_panel_sipms_ - (panel_thickness_ + wls_depth_) / 2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., -panel_sipms_zpos),
                       panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 1, false);
 
-    G4RotationMatrix rot_panel;
-    rot_panel.rotateY(pi);
-    new G4PVPlacement(G4Transform3D(rot_panel, G4ThreeVector(0., 0., panel_sipms_zpos)),
-                      panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
-
-    if (visibility_)
-    {
+    if (visibility_){
       G4VisAttributes panel_col = nexus::Red();
-      //panel_col.SetForceSolid(true);
       panel_sipms_logic->SetVisAttributes(panel_col);
       G4VisAttributes wls_col = nexus::LightBlue();
-      //wls_col.SetForceSolid(true);
+      wls_logic->SetVisAttributes(wls_col);
+    }
+  }
+
+  if (tile_type_c_ == "HamamatsuBlue") {
+    G4RotationMatrix rot_panel;
+    rot_panel.rotateY(pi);
+
+    G4double panel_sipms_zpos2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_
+                                 - dist_sipms_panel_sipms_ - (panel_thickness_+wls_depth_)/2.;
+
+    new G4PVPlacement(G4Transform3D(rot_panel, G4ThreeVector(0., 0., panel_sipms_zpos2)),
+                      panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
+
+    if (visibility_) {
+      G4VisAttributes panel_col = nexus::Red();
+      panel_sipms_logic->SetVisAttributes(panel_col);
+      G4VisAttributes wls_col = nexus::LightBlue();
       wls_logic->SetVisAttributes(wls_col);
     }
   }
 
   // Visibilities
-  if (visibility_)
-  {
+  if (visibility_) {
     G4VisAttributes box_col = nexus::White();
     box_logic->SetVisAttributes(box_col);
     G4VisAttributes al_cyl_col = nexus::DarkGrey();
@@ -491,27 +547,37 @@ void PetBox::BuildSensors()
     }
   }
 
+  G4LogicalVolume* tile2_logic = tile2_->GetLogicalVolume();
+
+  G4double z_pos2 = -box_size_/2. + box_thickness_ + dist_dice_flange2_ + tile2_thickn_/2.;
+
   G4RotationMatrix rot;
   rot.rotateY(pi);
 
-  /// ASYMMETRIC GEOMETRY
-  vol_name = "TILE_" + std::to_string(copy_no);
-  G4double x_pos = full_row_size_ / 2. - tile_size_x / 2.;
-  G4double y_pos = full_col_size_ / 2. - tile_size_y / 2.;
-  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)), tile_logic,
+
+  if (single_tile_coinc_plane_) {
+
+    /// SINGLE TILE CENTERED IN X AND Y (COINCIDENCE PLANE)
+    vol_name = "TILE_" + std::to_string(copy_no);
+    G4double x_pos = 0.;
+    G4double y_pos = 0.;
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)), tile2_logic,
                     vol_name, LXe_logic_, false, copy_no, false);
 
-  /// SYMMETRIC GEOMETRY
-  // for (G4int j=0; j<n_tile_rows_; j++) {
-  //   G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
-  //   for (G4int i=0; i<n_tile_columns_; i++) {
-  //     G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
-  //     vol_name = "TILE_" + std::to_string(copy_no);
-  //     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)), tile_logic,
-  //                       vol_name, LXe_logic_, false, copy_no, false);
-  //     copy_no += 1;
-  //   }
-  // }
+  } else {
+
+    /// 4 TILES
+    for (G4int j=0; j<n_tile_rows_; j++) {
+      G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+      for (G4int i=0; i<n_tile_columns_; i++) {
+        G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
+        vol_name = "TILE_" + std::to_string(copy_no);
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)), tile2_logic,
+                          vol_name, LXe_logic_, false, copy_no, false);
+        copy_no += 1;
+      }
+    }
+  }
 }
 
 G4ThreeVector PetBox::GenerateVertex(const G4String &region) const

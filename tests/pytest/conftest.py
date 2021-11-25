@@ -57,45 +57,62 @@ def base_name_pet_box_HamamatsuBlue():
 def base_name_pet_box_FBK():
     return 'PET_box_FBK_sd_test'
 
+@pytest.fixture(scope = 'session')
+def base_name_pet_box_mix_Ham_FBK():
+    return 'PET_box_mix_Ham_FBK_sd_test'
+
 
 @pytest.fixture(scope = 'session')
-def petalosim_params_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_HamamatsuVUV):
+def petalosim_params_pet_box_HamamatsuVUV(output_tmpdir):
+    base_name      = 'PET_box_HamamatsuVUV_sd_test'
+    tile_type1     = 'HamamatsuVUV'
+    tile_type2     = 'HamamatsuVUV'
     n_sipm         = 128
     sipms_per_tile = 16
     init_sns_id    = 11
     sensor_name    = 'SiPMHmtsuVUV'
-    return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuVUV+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
 @pytest.fixture(scope = 'session')
-def petalosim_params_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_HamamatsuBlue):
+def petalosim_params_pet_box_HamamatsuBlue(output_tmpdir):
+    base_name      = 'PET_box_HamamatsuBlue_sd_test'
+    tile_type1     = 'HamamatsuBlue'
+    tile_type2     = 'HamamatsuBlue'
     n_sipm         = 128
     sipms_per_tile = 16
     init_sns_id    = 11
     sensor_name    = 'SiPMHmtsuBlue'
-    return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuBlue+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
 @pytest.fixture(scope = 'session')
-def petalosim_params_pet_box_FBK(output_tmpdir, base_name_pet_box_FBK):
+def petalosim_params_pet_box_FBK(output_tmpdir):
+    base_name      = 'PET_box_FBK_sd_test'
+    tile_type1     = 'FBK'
+    tile_type2     = 'FBK'
     n_sipm         = 512
     sipms_per_tile = 64
     init_sns_id    = 11
     sensor_name    = 'SiPMFBKVUV'
-    return os.path.join(output_tmpdir, base_name_pet_box_FBK+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
+
+@pytest.fixture(scope = 'session')
+def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
+    base_name      = 'PET_box_mix_Ham_FBK_sd_test'
+    tile_type1     = 'HamamatsuVUV'
+    tile_type2     = 'FBK'
+    n_sipm         = 320
+    sipms_per_tile = 64
+    init_sns_id    = 11
+    sensor_name    = 'SiPMFBKVUV', 'SiPMHmtsuVUV'
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
 
 @pytest.fixture(scope="module",
                 params=["base_name_full_body", "base_name_ring_tiles", "base_name_pet_box_HamamatsuVUV",
-                        "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK"],
-                ids=["full_body", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
+                        "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK", "base_name_pet_box_mix_Ham_FBK"],
+                ids=["full_body", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK", "pet_box_mix_Ham_FBK"])
 def petalosim_files(request, output_tmpdir):
     return os.path.join(output_tmpdir, request.getfixturevalue(request.param)+'.h5')
-
-
-@pytest.fixture(scope="module",
-                params=["base_name_pet_box_HamamatsuVUV", "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK"],
-                ids=["pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
-def petalosim_pet_box_basenames(request, output_tmpdir):
-    return request.getfixturevalue(request.param)
 
 
 @pytest.fixture(scope="module",
@@ -106,7 +123,8 @@ def petalosim_params(request):
 
 
 @pytest.fixture(scope="module",
-                params=["petalosim_params_pet_box_HamamatsuVUV", "petalosim_params_pet_box_HamamatsuBlue", "petalosim_params_pet_box_FBK"],
-                ids=["pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
+                params=["petalosim_params_pet_box_HamamatsuVUV", "petalosim_params_pet_box_HamamatsuBlue",
+                        "petalosim_params_pet_box_FBK", "petalosim_params_pet_box_mix_Ham_FBK"],
+                ids=["pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK", 'pet_box_mix_Ham_FBK'])
 def petalosim_pet_box_params(request):
     return request.getfixturevalue(request.param)

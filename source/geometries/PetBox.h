@@ -35,6 +35,7 @@ public:
   G4ThreeVector GenerateVertex(const G4String &region) const;
 
   TileGeometryBase *tile_;
+  TileGeometryBase *tile2_;
 
 private:
   void Construct();
@@ -52,7 +53,8 @@ private:
 
   G4double source_pos_x_, source_pos_y_, source_pos_z_;
 
-  G4String tile_type_;
+  G4String tile_type_d_, tile_type_c_;
+  G4bool single_tile_coinc_plane_;
   G4double time_binning_;
 
   G4double box_size_, box_thickness_;
@@ -63,7 +65,7 @@ private:
   G4double dist_source_roof_, source_tube_thick_roof_;
 
   G4double n_tile_rows_, n_tile_columns_;
-  G4double tile_thickn_, full_row_size_, full_col_size_;
+  G4double tile_thickn_, tile2_thickn_, full_row_size_, full_col_size_;
 
   G4double dist_lat_panels_;
 
@@ -77,7 +79,8 @@ private:
   G4double horiz_lat_panel_z_size_, horiz_lat_panel_y_pos_;
   G4double vert_lat_panel_z_size_;
 
-  G4double dist_dice_flange_;
+  G4double dist_dice_flange_, dist_dice_flange2_;
+  G4double dist_ham_vuv_, dist_ham_blue_, dist_fbk_;
   G4double panel_sipm_xy_size_, dist_sipms_panel_sipms_;
   G4double wls_depth_;
 
