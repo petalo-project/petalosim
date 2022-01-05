@@ -12,10 +12,10 @@
 #define LXESCINTILLATIONGENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
+#include <G4PhysicsOrderedFreeVector.hh>
 
 class G4GenericMessenger;
 class G4Event;
-class G4PhysicsOrderedFreeVector;
 
 namespace nexus {
 
