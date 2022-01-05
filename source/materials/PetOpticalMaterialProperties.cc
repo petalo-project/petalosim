@@ -211,9 +211,14 @@ G4MaterialPropertiesTable* LXe_nconst()
   assert(abs_energy.size() == abs_length.size());
   LXe_mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
 
+  std::vector<G4double> rayleigh_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
+  std::vector<G4double> rayleigh_length = {36.*cm, 36.*cm};
+
+  assert(rayleigh_energy.size() == rayleigh_length.size());
+  LXe_mpt->AddProperty("RAYLEIGH", rayleigh_energy.data(), rayleigh_length.data(), rayleigh_energy.size());
+
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
   LXe_mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 2.*ns);
   LXe_mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT21", 43.5*ns);
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD1", .029);
