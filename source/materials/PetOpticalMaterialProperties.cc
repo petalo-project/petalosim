@@ -202,8 +202,8 @@ G4MaterialPropertiesTable* LXe_nconst()
   XenonScintillation(sc_energy, intensity);
 
   assert(sc_energy.size() == intensity.size());
-  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
-  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
+  LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT2", sc_energy.data(), intensity.data(), sc_energy.size());
 
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
@@ -214,10 +214,11 @@ G4MaterialPropertiesTable* LXe_nconst()
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
-  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.*ns);
-  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 43.5*ns);
-  LXe_mpt->AddConstProperty("YIELDRATIO", 0.03);
-  LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
+  LXe_mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 2.*ns);
+  LXe_mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT21", 43.5*ns);
+  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD1", .029);
+  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD2", .971);
+  LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms, 1);
 
   return LXe_mpt;
 }
@@ -629,13 +630,13 @@ G4MaterialPropertiesTable* LYSO()
      2.3239436619718252, 1.4084507042253518, 0.};
 
   assert(sc_energy.size() == intensity.size());
-  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
 
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  mpt->AddConstProperty("FASTTIMECONSTANT", 41*ns);
+  mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 41*ns);
 
   std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
   std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
@@ -692,13 +693,13 @@ G4MaterialPropertiesTable* LYSO_nconst()
      2.3239436619718252, 1.4084507042253518, 0.};
 
   assert(sc_energy.size() == intensity.size());
-  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
 
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  mpt->AddConstProperty("FASTTIMECONSTANT", 41*ns);
+  mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 41*ns);
 
   std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
   std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
