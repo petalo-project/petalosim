@@ -32,8 +32,7 @@ G4MaterialPropertiesTable* Epoxy()
   std::vector<G4double> ri_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> ri_index = {1.54, 1.54};
 
-  assert(ri_energy.size() == ri_index.size());
-  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+  mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
   // ABSORPTION LENGTH
   std::vector<G4double> abs_energy =
@@ -45,8 +44,7 @@ G4MaterialPropertiesTable* Epoxy()
      31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm,
      2.69*mm, 1.94*mm, 1.94*mm};
 
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   return mpt;
 }
@@ -60,15 +58,13 @@ G4MaterialPropertiesTable* EpoxyFixedRefr(G4double n)
   std::vector<G4double> ri_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> ri_index  = {n, n};
 
-  assert(ri_energy.size() == ri_index.size());
-  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+  mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
   // ABSORPTION LENGTH
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
 
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   return mpt;
 }
@@ -90,17 +86,13 @@ G4MaterialPropertiesTable* EpoxyLXeRefr()
   for (G4int i=0; i<ri_entries; i++) {
     ri_index.push_back(XenonRefractiveIndex(ri_energy[i], density));
   }
-
-  assert(ri_energy.size() == ri_index.size());
-  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+  mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
   // ABSORPTION LENGTH
 
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   return mpt;
 }
@@ -114,15 +106,11 @@ G4MaterialPropertiesTable* FakeGenericMaterial(G4double quartz_rindex)
 
   // REFRACTIVE INDEX
   std::vector<G4double> ri_index = {quartz_rindex, quartz_rindex};
-
-  assert(energy.size() == ri_index.size());
-  mpt->AddProperty("RINDEX", energy.data(), ri_index.data(), energy.size());
+  mpt->AddProperty("RINDEX", energy, ri_index);
 
   // Absorption length
   std::vector<G4double> abs_length = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
-
-  assert(energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", energy.data(), abs_length.data(), energy.size());
+  mpt->AddProperty("ABSLENGTH", energy, abs_length);
 
   return mpt;
 }
@@ -153,9 +141,7 @@ G4MaterialPropertiesTable* GlassEpoxy()
       7.265983E-3*pow(lambda,-4) - 6.806145E-4*pow(lambda,-6) + 1.960732E-5*pow(lambda,-8);
     ri_index.push_back(sqrt(n2));
   }
-
-  assert(ri_energy.size() == ri_index.size());
-  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+  mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
   // ABSORPTION LENGTH
   std::vector<G4double> abs_energy =
@@ -168,9 +154,7 @@ G4MaterialPropertiesTable* GlassEpoxy()
      31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm,
      2.69*mm, 1.94*mm, 1.33*mm, 0.73*mm, 0.32*mm,
      0.10*mm, 0.10*mm};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   return mpt;
 }
@@ -182,9 +166,7 @@ G4MaterialPropertiesTable* LXe_nconst()
 
   std::vector<G4double> ri_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> ri_index  = {1.69, 1.69};
-
-  assert(ri_energy.size() == ri_index.size());
-  LXe_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+  LXe_mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
   // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
   const G4int ri_entries = 200;
@@ -199,23 +181,19 @@ G4MaterialPropertiesTable* LXe_nconst()
     sc_energy.push_back(minE + j * eWidth);
   }
   std::vector<G4double> intensity;
-  XenonScintillation(sc_energy, intensity);
-
-  assert(sc_energy.size() == intensity.size());
-  LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
-  LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT2", sc_energy.data(), intensity.data(), sc_energy.size());
+  for (int j=0; j<sc_entries; j++){
+    intensity.push_back(LXeScintillation(sc_energy[j]));
+  }
+  LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity);
+  LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT2", sc_energy, intensity);
 
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
-
-  assert(abs_energy.size() == abs_length.size());
-  LXe_mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  LXe_mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   std::vector<G4double> rayleigh_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> rayleigh_length = {36.*cm, 36.*cm};
-
-  assert(rayleigh_energy.size() == rayleigh_length.size());
-  LXe_mpt->AddProperty("RAYLEIGH", rayleigh_energy.data(), rayleigh_length.data(), rayleigh_energy.size());
+  LXe_mpt->AddProperty("RAYLEIGH", rayleigh_energy, rayleigh_length);
 
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
@@ -247,9 +225,7 @@ G4MaterialPropertiesTable* Pyrex_vidrasa()
   for (int i=0; i<(int)ri_energy.size(); i++) {
     ri_index.push_back(1.472);
   }
-
-  assert(ri_energy.size() == ri_index.size());
-  pyrex_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+  pyrex_mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
   std::vector<G4double> abs_length = {99.800*mm, 99.999*mm, 95.000*mm, 70.000*mm,
                                       48.500*mm, 32.323*mm, 22.000*mm, 14.000*mm,
@@ -258,8 +234,7 @@ G4MaterialPropertiesTable* Pyrex_vidrasa()
                                       0.570*mm, 0.485*mm,  0.370*mm,   0.0*mm,
                                       0.0*mm};
 
-  assert(ri_energy.size() == abs_length.size());
-  pyrex_mpt->AddProperty("ABSLENGTH", ri_energy.data(), abs_length.data(), ri_energy.size());
+  pyrex_mpt->AddProperty("ABSLENGTH", ri_energy, abs_length);
 
   return pyrex_mpt;
 }
@@ -279,17 +254,13 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
   // REFRACTIVE INDEX
   std::vector<G4double> rIndex_energies = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> TPB_rIndex      = {1.67, 1.67};
-
-  assert(rIndex_energies.size() == TPB_rIndex.size());
-  mpt->AddProperty("RINDEX", rIndex_energies.data(), TPB_rIndex.data(), rIndex_energies.size());
+  mpt->AddProperty("RINDEX", rIndex_energies, TPB_rIndex);
 
   // ABSORPTION LENGTH
   // Assuming no absorption except WLS
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length  = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   // WLS ABSORPTION LENGTH (Version No Secondary WLS)
   // The No Secondary WLS is forced by setting the WLS_absLength to opticalprops::noAbsLength_
@@ -315,10 +286,7 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
                               350. * nm,     250. * nm,     // 210 , 190 nm
                               350. * nm,     400. * nm,     // 170 , 150 nm
                               400. * nm,     opticalprops::noAbsLength_ };// 100 nm
-
-  assert(WLS_abs_energy.size() == WLS_absLength.size());
-  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy.data(),
-                   WLS_absLength.data(), WLS_abs_energy.size());
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
 
   // WLS EMISSION SPECTRUM
   // Implemented with formula (7), with parameter values in table (3)
@@ -346,10 +314,7 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
     // G4cout << "* TPB WLSemi:  " << std::setw(4)
     //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
   };
-
-  assert(WLS_emi_energy.size() == WLS_emiSpectrum.size());
-  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy.data(),
-                   WLS_emiSpectrum.data(), WLS_emi_energy.size());
+  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy, WLS_emiSpectrum);
 
   // WLS Delay
   mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
@@ -391,17 +356,13 @@ G4MaterialPropertiesTable* TPB_LXe(G4double decay_time)
   for (G4int i=0; i<ri_entries; i++) {
     ri_index.push_back(XenonRefractiveIndex(ri_energy[i], density));
   }
-
-  assert(ri_energy.size() == ri_index.size());
   mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   // ABSORPTION LENGTH
   // Assuming no absorption except WLS
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length  = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   // WLS ABSORPTION LENGTH (Version No Secondary WLS)
   // The No Secondary WLS is forced by setting the WLS_absLength to opticalprops::noAbsLength_
@@ -427,10 +388,7 @@ G4MaterialPropertiesTable* TPB_LXe(G4double decay_time)
                               350. * nm,     250. * nm,     // 210 , 190 nm
                               350. * nm,     400. * nm,     // 170 , 150 nm
                               400. * nm,     opticalprops::noAbsLength_ };// 100 nm
-
-  assert(WLS_abs_energy.size() == WLS_absLength.size());
-  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy.data(),
-                   WLS_absLength.data(), WLS_abs_energy.size());
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
 
   // WLS EMISSION SPECTRUM
   // Implemented with formula (7), with parameter values in table (3)
@@ -458,10 +416,7 @@ G4MaterialPropertiesTable* TPB_LXe(G4double decay_time)
     // G4cout << "* TPB WLSemi:  " << std::setw(4)
     //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
   };
-
-  assert(WLS_emi_energy.size() == WLS_emiSpectrum.size());
-  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy.data(),
-                   WLS_emiSpectrum.data(), WLS_emi_energy.size());
+  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy, WLS_emiSpectrum);
 
   // WLS Delay
   mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
@@ -492,17 +447,13 @@ G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay_time)
   // REFRACTIVE INDEX
   std::vector<G4double> ri_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> rindex    = {1.7, 1.7};
-
-  assert(ri_energy.size() == rindex.size());
-  mpt->AddProperty("RINDEX", ri_energy.data(), rindex.data(), ri_energy.size());
+  mpt->AddProperty("RINDEX", ri_energy, rindex);
 
   // ABSORPTION LENGTH
   // Assuming no absorption except WLS
   std::vector<G4double> abs_energy = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
   std::vector<G4double> abs_length  = {opticalprops::noAbsLength_, opticalprops::noAbsLength_};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   // WLS ABSORPTION LENGTH (Version No Secondary WLS)
   // The No Secondary WLS is forced by setting the WLS_absLength to opticalprops::noAbsLength_
@@ -528,10 +479,7 @@ G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay_time)
                               350. * nm,     250. * nm,     // 210 , 190 nm
                               350. * nm,     400. * nm,     // 170 , 150 nm
                               400. * nm,     opticalprops::noAbsLength_ };// 100 nm
-
-  assert(WLS_abs_energy.size() == WLS_absLength.size());
-  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy.data(),
-                   WLS_absLength.data(), WLS_abs_energy.size());
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
 
   // WLS EMISSION SPECTRUM
   // Implemented with formula (7), with parameter values in table (3)
@@ -559,10 +507,7 @@ G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay_time)
     // G4cout << "* TPB WLSemi:  " << std::setw(4)
     //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
   };
-
-  assert(WLS_emi_energy.size() == WLS_emiSpectrum.size());
-  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy.data(),
-                   WLS_emiSpectrum.data(), WLS_emi_energy.size());
+  mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy, WLS_emiSpectrum);
 
   // WLS Delay
   mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
@@ -597,7 +542,6 @@ G4MaterialPropertiesTable* LYSO()
   //  for (G4int i=1; i<ri_entries; i++) {
   //   G4cout  << ri_energy[i] << " eV --> " << rindex[i] << ", " << G4endl;
   // }
-  assert(ri_energy.size() == ri_index.size());
   mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   std::vector<G4double> sc_energy =
@@ -633,9 +577,7 @@ G4MaterialPropertiesTable* LYSO()
      15.633802816901408, 14.577464788732392, 11.338028169014079, 10.281690140845065, 8.943661971830984,
      7.746478873239432, 6.760563380281688, 5.7042253521126725, 4.718309859154921, 3.450704225352105,
      2.3239436619718252, 1.4084507042253518, 0.};
-
-  assert(sc_energy.size() == intensity.size());
-  mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity);
 
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
@@ -645,9 +587,7 @@ G4MaterialPropertiesTable* LYSO()
 
   std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
   std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   return mpt;
 }
@@ -660,8 +600,6 @@ G4MaterialPropertiesTable* LYSO_nconst()
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
   std::vector<G4double> ri_energy = {lyso_minE_, lyso_maxE_};
   std::vector<G4double> ri_index    = {1.8, 1.8};
-
-  assert(ri_energy.size() == ri_index.size());
   mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   std::vector<G4double> sc_energy =
@@ -696,9 +634,7 @@ G4MaterialPropertiesTable* LYSO_nconst()
      15.633802816901408, 14.577464788732392, 11.338028169014079, 10.281690140845065, 8.943661971830984,
      7.746478873239432, 6.760563380281688, 5.7042253521126725, 4.718309859154921, 3.450704225352105,
      2.3239436619718252, 1.4084507042253518, 0.};
-
-  assert(sc_energy.size() == intensity.size());
-  mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity);
 
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
@@ -708,9 +644,7 @@ G4MaterialPropertiesTable* LYSO_nconst()
 
   std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
   std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
-
-  assert(abs_energy.size() == abs_length.size());
-  mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+  mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
 
   return mpt;
@@ -729,16 +663,14 @@ G4MaterialPropertiesTable* ReflectantSurface(G4double reflectivity)
   std::vector<G4double> specularspike = {0., 0.}; // specular reflection about the average normal
   std::vector<G4double> backscatter = {0., 0.}; //180 degrees reflection
   // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
-
-  assert(ENERGIES.size() == REFLECTIVITY.size());
-  mpt->AddProperty("REFLECTIVITY", ENERGIES.data(), REFLECTIVITY.data(), ENERGIES.size());
+  mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY);
 
   assert(ENERGIES.size() == specularlobe.size());
   assert(ENERGIES.size() == specularspike.size());
   assert(ENERGIES.size() == backscatter.size());
-  mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES.data(), specularlobe.data(), ENERGIES.size());
-  mpt->AddProperty("SPECULARSPIKECONSTANT", ENERGIES.data(), specularspike.data(), ENERGIES.size());
-  mpt->AddProperty("BACKSCATTERCONSTANT", ENERGIES.data(), backscatter.data(), ENERGIES.size());
+  mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES, specularlobe);
+  mpt->AddProperty("SPECULARSPIKECONSTANT", ENERGIES, specularspike);
+  mpt->AddProperty("BACKSCATTERCONSTANT", ENERGIES, backscatter);
 
   return mpt;
 }
