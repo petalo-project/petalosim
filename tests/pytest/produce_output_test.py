@@ -143,7 +143,7 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 @pytest.mark.order(3)
 def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_params):
 
-     _, base_name, tile_type1, tile_type2, _, _, _, _ = petalosim_pet_box_params
+     _, base_name, tile_type1, tile_type2, _, _, _, _, _ = petalosim_pet_box_params
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4

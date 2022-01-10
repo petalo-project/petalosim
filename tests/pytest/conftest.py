@@ -68,10 +68,11 @@ def petalosim_params_pet_box_HamamatsuVUV(output_tmpdir):
     tile_type1     = 'HamamatsuVUV'
     tile_type2     = 'HamamatsuVUV'
     n_sipm         = 128
-    sipms_per_tile = 16
-    init_sns_id    = 11
+    sipms_per_tile =  16
+    init_sns_id1   =  11
+    init_sns_id2   = 111
     sensor_name    = 'SiPMHmtsuVUV'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_pet_box_HamamatsuBlue(output_tmpdir):
@@ -79,10 +80,11 @@ def petalosim_params_pet_box_HamamatsuBlue(output_tmpdir):
     tile_type1     = 'HamamatsuBlue'
     tile_type2     = 'HamamatsuBlue'
     n_sipm         = 128
-    sipms_per_tile = 16
-    init_sns_id    = 11
+    sipms_per_tile =  16
+    init_sns_id1   =  11
+    init_sns_id2   = 111
     sensor_name    = 'SiPMHmtsuBlue'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2,sensor_name
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_pet_box_FBK(output_tmpdir):
@@ -90,10 +92,11 @@ def petalosim_params_pet_box_FBK(output_tmpdir):
     tile_type1     = 'FBK'
     tile_type2     = 'FBK'
     n_sipm         = 512
-    sipms_per_tile = 64
-    init_sns_id    = 11
+    sipms_per_tile =  64
+    init_sns_id1   =  11
+    init_sns_id2   = 111
     sensor_name    = 'SiPMFBKVUV'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
@@ -102,9 +105,10 @@ def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
     tile_type2     = 'FBK'
     n_sipm         = 320
     sipms_per_tile = 64
-    init_sns_id    = 11
+    init_sns_id1   = 11
+    init_sns_id2   = 111
     sensor_name    = 'SiPMFBKVUV', 'SiPMHmtsuVUV'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id, sensor_name
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name
 
 
 @pytest.fixture(scope="module",
