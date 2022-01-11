@@ -154,7 +154,7 @@ void Tile::Construct()
   }
   else
   {
-    tile_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    tile_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

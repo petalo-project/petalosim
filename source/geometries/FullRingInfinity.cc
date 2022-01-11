@@ -167,7 +167,7 @@ void FullRingInfinity::Construct()
   lab_logic_ =
       new G4LogicalVolume(lab_solid,
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
-  lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(lab_logic_);
 
   axial_length_ = sipm_pitch_ *  n_sipm_rows_;

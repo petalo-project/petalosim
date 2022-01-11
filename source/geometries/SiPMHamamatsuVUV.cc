@@ -154,7 +154,7 @@ void SiPMHamamatsuVUV::Construct()
   }
   else
   {
-    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    active_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    sipm_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    active_window_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }

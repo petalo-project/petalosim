@@ -110,7 +110,7 @@ void PetLYSOCell::Construct()
 
   // lab_logic_ =
   //   new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
-  // lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  // lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   // this->SetLogicalVolume(lab_logic_);
 
   lyso_ = petmaterials::LYSO();
@@ -142,7 +142,7 @@ void PetLYSOCell::BuildDetector()
   G4Material *steel = materials::Steel();
 
   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
-  det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(det_logic_);
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), det_logic_,
                     "WALL", lab_logic_, false, 0, true);
@@ -156,7 +156,7 @@ void PetLYSOCell::BuildLYSO()
       new G4Box("LYSO", lyso_size / 2., lyso_size / 2., lyso_size2 / 2.);
 
   lyso_logic_ = new G4LogicalVolume(lyso_solid, lyso_, "LYSO");
-  lyso_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  lyso_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), lyso_logic_,
                     "LYSO", det_logic_, false, 0, true);
 }
@@ -170,7 +170,7 @@ void PetLYSOCell::BuildActive()
 
   G4LogicalVolume *active_logic =
       new G4LogicalVolume(active_solid, lyso_, "ACTIVE_LYSO");
-  active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   // G4VisAttributes red_color;
   // red_color.SetColor(1., 0., 0.);
   // red_color.SetForceSolid(true);
