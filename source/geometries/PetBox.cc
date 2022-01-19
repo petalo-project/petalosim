@@ -62,13 +62,13 @@ PetBox::PetBox() : GeometryBase(),
                    n_tile_rows_(2),
                    n_tile_columns_(2),
                    dist_lat_panels_(69. * mm),
-                   dist_ihat_entry_panel_(5.25 * mm), //x distance between the external surface of the hat and the internal surface of the entry panel
+                   dist_ihat_entry_panel_(5.25 * mm), //z distance between the external surface of the hat and the internal surface of the entry panel
                    panel_thickness_(1.75 * mm),
                    entry_panel_x_size_(77.5 * mm),
                    entry_panel_y_size_(120 * mm),
                    dist_entry_panel_ground_(12 * mm),
-                   dist_entry_panel_horiz_panel_(6.2 * mm), //x distance between the internal surface of the entry panel and the edge of the horizontal lateral panel
-                   dist_entry_panel_vert_panel_(1.5 * mm),  //x distance between the internal surface of the entry panel and the edge of the vertical lateral panel
+                   dist_entry_panel_horiz_panel_(6.2 * mm), //z distance between the internal surface of the entry panel and the edge of the horizontal lateral panel
+                   dist_entry_panel_vert_panel_(1.5 * mm),  //z distance between the internal surface of the entry panel and the edge of the vertical lateral panel
                    lat_panel_len_(66.5 * mm),
                    horiz_lat_panel_z_size_(42. * mm),
                    horiz_lat_panel_y_pos_(40.95 * mm),
