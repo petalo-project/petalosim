@@ -51,7 +51,7 @@ private:
   G4double tile_refl_;
   G4double sipm_pde_;
 
-  G4double source_pos_x_, source_pos_y_, source_pos_z_;
+  G4ThreeVector source_pos_;
 
   G4String tile_type_d_, tile_type_c_;
   G4bool single_tile_coinc_plane_;

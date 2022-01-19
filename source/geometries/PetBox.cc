@@ -42,9 +42,7 @@ PetBox::PetBox() : GeometryBase(),
                    tile_vis_(1),
                    tile_refl_(0.),
                    sipm_pde_(0.2),
-                   source_pos_x_(0. * mm),
-                   source_pos_y_(0. * mm),
-                   source_pos_z_(0. * mm),
+                   source_pos_{},
                    tile_type_d_("HamamatsuVUV"),
                    tile_type_c_("HamamatsuVUV"),
                    single_tile_coinc_plane_(0),
@@ -91,20 +89,8 @@ PetBox::PetBox() : GeometryBase(),
   msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
   msg_->DeclareProperty("sipm_pde", sipm_pde_, "SiPM photodetection efficiency");
 
-  G4GenericMessenger::Command &source_pos_x_cmd =
-      msg_->DeclareProperty("source_pos_x", source_pos_x_, "X position of the source");
-  source_pos_x_cmd.SetUnitCategory("Length");
-  source_pos_x_cmd.SetParameterName("source_pos_x", false);
-
-  G4GenericMessenger::Command &source_pos_y_cmd =
-      msg_->DeclareProperty("source_pos_y", source_pos_y_, "Y position of the source");
-  source_pos_y_cmd.SetUnitCategory("Length");
-  source_pos_y_cmd.SetParameterName("source_pos_y", false);
-
-  G4GenericMessenger::Command &source_pos_z_cmd =
-      msg_->DeclareProperty("source_pos_z", source_pos_z_, "Z position of the source");
-  source_pos_z_cmd.SetUnitCategory("Length");
-  source_pos_z_cmd.SetParameterName("source_pos_z", false);
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  source_pos_,
+                                "Set generation vertex.");
 
   msg_->DeclareProperty("tile_type_d", tile_type_d_, "Type of the tile in the detection plane");
   msg_->DeclareProperty("tile_type_c", tile_type_c_, "Type of the tile in the coincidence plane");
@@ -633,7 +619,7 @@ G4ThreeVector PetBox::GenerateVertex(const G4String &region) const
   }
   else if (region == "AD_HOC")
   {
-    vertex = G4ThreeVector(source_pos_x_, source_pos_y_, source_pos_z_);
+    vertex = source_pos_;
   }
   else
   {
