@@ -1,4 +1,4 @@
-petalosim is a GEANT4-based software that simulates the interaction of particles in the PETALO detectors. It is based on the [`nexus` software](https://github.com/next-exp/nexus).
+petalosim is a GEANT4-based software that simulates the interaction of particles in the PETALO detectors. It is based on the [nexus software](https://github.com/next-exp/nexus).
 
 ## Installation
 
