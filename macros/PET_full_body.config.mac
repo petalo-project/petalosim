@@ -6,9 +6,7 @@
 /Geometry/FullRingInfinity/inner_radius 380. mm
 /Geometry/FullRingInfinity/sipm_rows 278
 /Geometry/FullRingInfinity/instrumented_faces 1
-/Geometry/FullRingInfinity/specific_vertex_X 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Y 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Z 0. cm
+/Geometry/FullRingInfinity/specific_vertex 0. 0. 0. cm
 
 #/Geometry/FullRingInfinity/pointFile /home/jrenner/production/petalo/phantoms/phantom_cylinder.dat
 
@@ -19,7 +17,7 @@
 
 
 ### GENERATOR
-/Generator/Back2back/region CENTER
+/Generator/Back2back/region AD_HOC
 #/Generator/Back2back/region CUSTOM
 
 /Actions/PetaloEventAction/energy_threshold .511 MeV

@@ -6,9 +6,7 @@
 /Geometry/FullRingInfinity/inner_radius 165. mm
 /Geometry/FullRingInfinity/sipm_rows 20
 /Geometry/FullRingInfinity/instrumented_faces 1
-/Geometry/FullRingInfinity/specific_vertex_X 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Y 166. mm
-/Geometry/FullRingInfinity/specific_vertex_Z 0. cm
+/Geometry/FullRingInfinity/specific_vertex 0. 166. 0. mm
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true

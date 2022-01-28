@@ -79,9 +79,7 @@ private:
 
   SpherePointSampler *spheric_gen_;
 
-  G4double specific_vertex_X_;
-  G4double specific_vertex_Y_;
-  G4double specific_vertex_Z_;
+  G4ThreeVector specific_vertex_;
 
   G4bool phantom_;
 
