@@ -1,9 +1,3 @@
-### --------------------------------------------------------
-### File     : source/CMakeLists.txt
-### Author   : Justo Martin-Albo
-### Creation : 30 March 2019
-### --------------------------------------------------------
-
 set(SRC_DIRS  ${CMAKE_CURRENT_SOURCE_DIR}/actions
               ${CMAKE_CURRENT_SOURCE_DIR}/base
               ${CMAKE_CURRENT_SOURCE_DIR}/generators
@@ -59,7 +53,6 @@ add_executable(nexus nexus.cc
 
 target_link_libraries(nexus ${ROOT_LIBRARIES}
                             ${Geant4_LIBRARIES}
-                            ${GATE_LIBRARIES}
                             ${HDF5_LIBRARIES}
                             ${GSL_LIBRARIES})
 
