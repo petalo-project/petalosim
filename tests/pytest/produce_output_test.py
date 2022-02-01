@@ -40,21 +40,21 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALO
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /Geometry/FullRingInfinity/depth 3. cm
 /Geometry/FullRingInfinity/pitch 7. mm
 /Geometry/FullRingInfinity/inner_radius 380. mm
 /Geometry/FullRingInfinity/sipm_rows 278
 /Geometry/FullRingInfinity/instrumented_faces 1
-/Geometry/FullRingInfinity/specific_vertex_X 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Y 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Z 0. cm
+/Geometry/FullRingInfinity/specific_vertex 0. 0. 0. cm
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
-/Generator/Back2back/region CENTER
+/Generator/Back2back/region AD_HOC
 
 /process/optical/processActivation Cerenkov false
 
@@ -109,6 +109,8 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/FullRingTiles/depth 3. cm
 /Geometry/FullRingTiles/inner_radius 165. mm
@@ -178,6 +180,8 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/PetBox/tile_type_d {tile_type1}
 /Geometry/PetBox/tile_type_c {tile_type2}

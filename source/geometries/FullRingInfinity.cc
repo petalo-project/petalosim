@@ -54,6 +54,7 @@ FullRingInfinity::FullRingInfinity() :
   vessel_ext_thickn_(1.*cm),
   vacuum_thickn_(10.*cm),
   max_step_size_(1. * mm),
+  specific_vertex_{},
   phantom_(false),
   pt_Lx_(0.),
   pt_Ly_(0.),
@@ -89,26 +90,13 @@ FullRingInfinity::FullRingInfinity() :
   inner_r_cmd.SetParameterName("inner_radius", false);
   inner_r_cmd.SetRange("inner_radius>0.");
 
-    msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
-    msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
-    msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
-
-  G4GenericMessenger::Command &specific_vertex_X_cmd =
-      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-                            "If region is AD_HOC, x coord where particles are generated");
-  specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-  specific_vertex_X_cmd.SetUnitCategory("Length");
-  G4GenericMessenger::Command &specific_vertex_Y_cmd =
-      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-                            "If region is AD_HOC, y coord where particles are generated");
-  specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-  specific_vertex_Y_cmd.SetUnitCategory("Length");
-  G4GenericMessenger::Command &specific_vertex_Z_cmd =
-      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-                            "If region is AD_HOC, z coord where particles are generated");
-  specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-  specific_vertex_Z_cmd.SetUnitCategory("Length");
-
+  msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
+  msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
+  msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
+  
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+                                "Set generation vertex.");
+  
   // Read in the point distribution.
   msg_->DeclareMethod("pointFile", &FullRingInfinity::BuildPointfile, "Location of file containing distribution of event generation points.");
 
@@ -441,8 +429,7 @@ void FullRingInfinity::BuildPhantom()
   G4Orb *phantom_solid = new G4Orb("PHANTOM", phantom_diam_ / 2.);
   G4LogicalVolume *phantom_logic =
       new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
-  G4ThreeVector phantom_origin =
-      G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+  G4ThreeVector phantom_origin = specific_vertex_;
   new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);
 
   spheric_gen_ =
@@ -460,7 +447,7 @@ G4ThreeVector FullRingInfinity::GenerateVertex(const G4String &region) const
   }
   else if (region == "AD_HOC")
   {
-    vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+    vertex = specific_vertex_;
   }
   else if (region == "PHANTOM")
   {
