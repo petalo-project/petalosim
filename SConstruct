@@ -18,7 +18,7 @@ import os
 import subprocess
 
 ## Geant4 version required by petalosim
-MIN_G4VERSION_NUMBER = 1051
+MIN_G4VERSION_NUMBER = 1100
 
 ## petalosim source code directories
 SRCDIR = ['actions',
@@ -134,7 +134,7 @@ vars.AddVariables(
 
     ('CXXFLAGS',
      'c++ compiler options.',
-     ['-std=c++11']),
+     ['-std=c++17']),
 
     ('CPPPATH',
      'List of directories where the include headers are located.',
@@ -239,6 +239,12 @@ if not env['LIBPATH']:
 
 
 ## ##################################################################
+
+    ## Force nexus to use C++17 standard
+    if '-std=c++11' in env['CXXFLAGS']:
+        env['CXXFLAGS'].remove('-std=c++11')
+
+
     env = conf.Finish()
 
 vars.Save(BUILDVARS_FILE, env)
