@@ -84,8 +84,6 @@ private:
 
   G4double timebinning_; ///< Time bin width for TOF table
 
-  G4OpBoundaryProcess *boundary_; ///< Pointer to the optical boundary process
-
   G4int box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
 
   SensorHitsCollection *HC_; ///< Pointer to the collection of hits
