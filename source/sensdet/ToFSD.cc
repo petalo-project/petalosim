@@ -61,7 +61,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     // Get the list of processes defined for the optical photon
     // and loop through it to find the optical boundary process.
     G4ProcessVector *pv = pdef->GetProcessManager()->GetProcessList();
-    for (G4int i = 0; i < pv->size(); i++)
+    for (size_t i = 0; i < pv->size(); i++)
     {
       if ((*pv)[i]->GetProcessName() == "OpBoundary")
       {
@@ -85,7 +85,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
       SensorHit *hit = 0;
       SensorHit *hit_tof = 0;
-      for (G4int i = 0; i < HC_->entries(); i++)
+      for (size_t i = 0; i < HC_->entries(); i++)
       {
         if ((*HC_)[i]->GetPmtID() == pmt_id)
         {
@@ -94,7 +94,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         }
       }
 
-      for (G4int i = 0; i < HC_->entries(); i++)
+      for (size_t i = 0; i < HC_->entries(); i++)
       {
         if ((*HC_)[i]->GetPmtID() == -pmt_id)
         {
