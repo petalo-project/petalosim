@@ -39,7 +39,7 @@ Back2backGammas::Back2backGammas() : geom_(0), costheta_min_(-1.),
                                      costheta_max_(1.),
                                      phi_min_(0.), phi_max_(2.*pi)
 {
-  G4cout << "Limits = " << std::numeric_limits<unsigned int>::max() << G4endl;
+  //G4cout << "Limits = " << std::numeric_limits<unsigned int>::max() << G4endl;
   /// For the moment, only random direction are allowed. To be fixes if needed
   msg_ = new G4GenericMessenger(this, "/Generator/Back2back/",
                                 "Control commands of 511-keV back to back gammas generator.");
@@ -91,7 +91,25 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   auto vertex = new G4PrimaryVertex(position, time);
 
   vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
-  vertex->SetPrimary(new G4PrimaryParticle(gamma, -p.x(), -p.y(), -p.z()));
+
+
+  G4double sigma = 0.213 * pi / 180; // radiants. value taken from a nuclear medicine course
+  G4double angle = G4RandGauss::shoot(0, sigma);
+
+  auto collinear_dir     = G4ThreeVector(-p.x(), -p.y(), -p.z());
+  auto perpendicular_dir = G4ThreeVector(1, 1, 0); // any x,y value works
+  G4double z             = (- collinear_dir.x()*perpendicular_dir.x()
+                            - collinear_dir.y()*perpendicular_dir.y())/collinear_dir.z();
+  perpendicular_dir.setZ(z); // this way the vector is in the plane perpendicular to p
+
+  auto final_dir = collinear_dir;
+  final_dir.rotate(angle, perpendicular_dir);
+  G4double angle2 = 2*pi*G4UniformRand();
+  final_dir.rotate(angle2, collinear_dir);
+  auto final_momentum = 510.999 * keV * final_dir.unit();
+
+  vertex->SetPrimary(new G4PrimaryParticle(gamma, final_momentum.x(),
+                                           final_momentum.y(), final_momentum.z()));
 
   evt->AddPrimaryVertex(vertex);
 
