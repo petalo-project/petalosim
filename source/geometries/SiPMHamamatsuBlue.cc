@@ -143,7 +143,7 @@ void SiPMHamamatsuBlue::Construct()
   }
   else
   {
-    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    sipm_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }

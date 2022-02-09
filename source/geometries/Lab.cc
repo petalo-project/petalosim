@@ -56,7 +56,7 @@ void Lab::Construct()
 
   G4LogicalVolume *lab_logic =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR");
-  lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Set this volume as the wrapper for the whole geometry
   // (i.e., this is the volume that will be placed in the world)
@@ -82,7 +82,7 @@ void Lab::Construct()
   G4Material *steel = materials::Steel();
 
   G4LogicalVolume *det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
-  //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  //   det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., -10. * cm + det_size_z / 2.), det_logic,
                     "WALL", lab_logic, false, 0, true);

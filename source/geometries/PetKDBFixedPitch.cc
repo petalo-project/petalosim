@@ -192,8 +192,8 @@ void PetKDBFixedPitch::Construct()
   else
   {
 
-    board_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    board_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    // coating_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

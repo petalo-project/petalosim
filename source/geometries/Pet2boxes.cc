@@ -94,7 +94,7 @@ void Pet2boxes::Construct()
 
   // lab_logic_ =
   //   new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
-  // lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  // lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   // this->SetLogicalVolume(lab_logic_);
 
   lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
@@ -116,7 +116,7 @@ void Pet2boxes::BuildDetector()
   G4Material *steel = materials::Steel();
 
   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
-  det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(det_logic_);
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), det_logic_,
                     "WALL", lab_logic_, false, 0, true);
@@ -130,7 +130,7 @@ void Pet2boxes::BuildLXe()
       new G4Box("LXE", lXe_size / 2., lXe_size / 2., lXe_size2 / 2.);
 
   lXe_logic_ = new G4LogicalVolume(lXe_solid, lXe_, "LXE");
-  lXe_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  lXe_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), lXe_logic_,
                     "LXE", det_logic_, false, 0, true);
 }
@@ -141,7 +141,7 @@ void Pet2boxes::BuildActive()
       new G4Box("ACTIVE", active_size_ / 2., active_size_ / 2., z_size_ / 2.);
 
   G4LogicalVolume *active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
-  active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   // G4VisAttributes red_color;
   // red_color.SetColor(1., 0., 0.);
   // red_color.SetForceSolid(true);

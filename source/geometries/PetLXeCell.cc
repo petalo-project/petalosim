@@ -147,7 +147,7 @@ void PetLXeCell::Construct()
 //   G4Material* steel = PetMaterialsList::Steel();
 
 //   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
-//   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+//   det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
 //   this->SetLogicalVolume(det_logic_);
 
 //   // new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), det_logic_,
@@ -168,7 +168,7 @@ void PetLXeCell::BuildLXe()
   SetDimensions(G4ThreeVector(lXe_size_xy, lXe_size_xy, lXe_size_z_));
   G4VisAttributes col = nexus::Lilla();
   lXe_logic_->SetVisAttributes(col);
-  // lXe_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  // lXe_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   // new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), lXe_logic_,
   //     	      "LXE", det_logic_, false, 0, true);
 }
@@ -180,7 +180,7 @@ void PetLXeCell::BuildActive()
 
   active_logic_ =
       new G4LogicalVolume(active_solid, lXe_, "ACTIVE_LXE");
-  //active_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  //active_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   G4VisAttributes col = nexus::DarkGreen();
   col.SetForceSolid(true);
   active_logic_->SetVisAttributes(col);

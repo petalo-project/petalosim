@@ -116,7 +116,7 @@ void PetBox::Construct()
 
   G4Material *air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   lab_logic_ = new G4LogicalVolume(lab_solid, air, "LAB");
-  lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(lab_logic_);
 
   BuildBox();
@@ -517,8 +517,8 @@ void PetBox::BuildBox()
   }
   else
   {
-    box_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    LXe_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+    box_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    LXe_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

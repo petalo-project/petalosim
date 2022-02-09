@@ -148,7 +148,7 @@ void PetaloPersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
   if (!tc) return;
 
   // Loop through the trajectories stored in the container
-  for (G4int i=0; i<tc->entries(); ++i) {
+  for (size_t i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
@@ -261,7 +261,7 @@ void PetaloPersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
    std::string sdname = hits->GetSDname();
 
-   for (G4int i=0; i<hits->entries(); i++) {
+   for (size_t i=0; i<hits->entries(); i++) {
 
      IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
      if (!hit) continue;
@@ -287,7 +287,7 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
   if (!hits) return;
 
   std::vector<G4int > sensor_ids;
-  for (G4int i=0; i<hits->entries(); i++) {
+  for (size_t i=0; i<hits->entries(); i++) {
 
     SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
     if (!hit) continue;

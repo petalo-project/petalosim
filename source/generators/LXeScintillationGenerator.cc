@@ -24,7 +24,6 @@
 #include <G4Event.hh>
 #include <G4RandomDirection.hh>
 #include <G4MaterialPropertiesTable.hh>
-#include <G4PhysicsOrderedFreeVector.hh>
 #include <Randomize.hh>
 
 #include "CLHEP/Units/SystemOfUnits.h"

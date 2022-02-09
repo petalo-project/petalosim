@@ -15,8 +15,6 @@
 #include <Randomize.hh>
 #include <G4WLSTimeGeneratorProfileExponential.hh>
 
-#include "CLHEP/Units/PhysicalConstants.h"
-
 #include <TH1F.h>
 #include <TFile.h>
 
