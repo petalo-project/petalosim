@@ -93,7 +93,7 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
 
 
-  G4double sigma = 0.213 * pi / 180; // radiants. value taken from a nuclear medicine course
+  G4double sigma = 0.213 * pi / 180; // radians. Value taken from a nuclear medicine course
   G4double angle = G4RandGauss::shoot(0, sigma);
 
   auto collinear_dir     = G4ThreeVector(-p.x(), -p.y(), -p.z());
@@ -108,8 +108,10 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   final_dir.rotate(angle2, collinear_dir);
   auto final_momentum = 510.999 * keV * final_dir.unit();
 
-  vertex->SetPrimary(new G4PrimaryParticle(gamma, final_momentum.x(),
-                                           final_momentum.y(), final_momentum.z()));
+  vertex->SetPrimary(new G4PrimaryParticle(gamma,
+                                           final_momentum.x(),
+                                           final_momentum.y(),
+                                           final_momentum.z()));
 
   evt->AddPrimaryVertex(vertex);
 
