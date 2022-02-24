@@ -24,17 +24,12 @@
 PositronAnnihilation::PositronAnnihilation(const G4String& name)
   :  G4VEmProcess(name)
   {
-    //   theGamma = G4Gamma::Gamma();
-    //    theElectron = G4Electron::Electron();
     SetCrossSectionType(fEmDecreasing);
     SetBuildTableFlag(false);
     SetStartFromNullFlag(false);
-    //SetSecondaryParticle(theGamma);
     SetProcessSubType(fAnnihilation);
     enableAtRestDoIt = true;
     mainSecondaries = 2;
-    //  fEntanglementModelID = G4PhysicsModelCatalog::GetModelID("model_GammaGammaEntanglement");
-    //  G4cout << "Constructor" << G4endl;
   }
 
 
@@ -78,7 +73,7 @@ G4VParticleChange* PositronAnnihilation::AtRestDoIt(const G4Track& aTrack,
 
    fParticleChange.SetNumberOfSecondaries(2) ;
 
-   G4double r  = CLHEP::RandGauss::shoot(0.,0.0011); // hard coded value: it gives
+   G4double r  = CLHEP::RandGauss::shoot(0.,0.00092); // It gives
    // a distribution of deviation of collinearity with 0.5 degrees FWHM.
 
    G4double E1 = electron_mass_c2 + r;
