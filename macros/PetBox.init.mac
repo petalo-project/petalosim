@@ -10,7 +10,7 @@
 /nexus/RegisterGeometry PetBox
 
 ### GENERATOR
-/nexus/RegisterGenerator Back2backGammas
+/nexus/RegisterGenerator IonGenerator
 #/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
