@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-// petalosim | Back2backGammas.h
+// petalosim | Back2backGammas.cc
 //
-// This generator simulates two gammas of 510.999 keV back to back, with
-// random direction. It is possible to specify a limited solid angle.
-// Control histograms of the solid angle where gammas are generated
-// are produced.
+// This generator simulates two gammas, product of a positron annihilation.
+// The non-collinearity of the momenta and the Doppler shift of the energy
+// are taken into account. The first gamma is generated with random direction,
+// by default. However, it is possible to specify a limited solid angle.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
