@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | Na22Source.cc
 //
-// Na-22 calibration specific source with plastic support used at LSC.
+// Na-22 calibration specific source with plastic support used in PETit.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
@@ -12,6 +12,7 @@
 #include "nexus/MaterialsList.h"
 
 #include <G4Tubs.hh>
+#include <G4Orb.hh>
 #include <G4NistManager.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
@@ -25,10 +26,9 @@ namespace nexus {
   Na22Source::Na22Source():
     DiskSource()
   {
-    source_diam_ = 3.*mm;
-    source_thick_ = .1*mm;
-    support_diam_ = 25.33*mm;
-    support_thick_ = 6.2*mm;
+    source_diam_   = 0.25*mm;
+    support_diam_  = 25.4*mm;
+    support_thick_ = 6.35*mm;
   }
 
   Na22Source::~Na22Source()
@@ -39,9 +39,7 @@ namespace nexus {
   void Na22Source::Construct()
   {
 
-    ///Plastic support
-    // G4double support_thick = 6.2*mm;
-    // G4double support_diam = 25.33*mm;
+    // Plastic support
     G4Tubs* support_solid =
       new G4Tubs("SUPPORT", 0., support_diam_/2., support_thick_/2., 0., twopi);
 
@@ -51,17 +49,15 @@ namespace nexus {
 
     this->SetLogicalVolume(support_logic);
 
-    // G4double source_thick = .1*mm;
-    // G4double source_diam = 3.*mm;
-    G4Tubs* source_solid =
-      new G4Tubs("SOURCE", 0., source_diam_/2., source_thick_/2., 0., twopi);
+    G4Orb* source_solid =
+      new G4Orb("NA22_SOURCE", source_diam_/2.);
     G4Material* sodium22_mat =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Na");
     G4LogicalVolume* source_logic =
-      new G4LogicalVolume(source_solid, sodium22_mat, "NA22");
+      new G4LogicalVolume(source_solid, sodium22_mat, "NA22_SOURCE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0.,  support_thick_/2. - source_thick_/2.),
-		      source_logic, "NA22",
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+		      source_logic, "NA22_SOURCE",
 		      support_logic, false, 0, false);
     G4VisAttributes source_col = nexus::LightGreen();
     source_col.SetForceSolid(true);
