@@ -13,6 +13,7 @@
 
 class G4GenericMessenger;
 class WavelengthShifting;
+class PositronAnnihilation;
 
 class PetaloPhysics : public G4VPhysicsConstructor
 {
@@ -34,6 +35,7 @@ private:
 
   G4GenericMessenger *msg_;
   WavelengthShifting *wls_;
+  PositronAnnihilation* pos_annihil_;
 };
 
 #endif

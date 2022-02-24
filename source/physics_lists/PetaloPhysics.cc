@@ -8,12 +8,14 @@
 
 #include "PetaloPhysics.h"
 #include "WavelengthShifting.h"
+#include "PositronAnnihilation.h"
 
 #include <G4Scintillation.hh>
 #include <G4GenericMessenger.hh>
 #include <G4OpticalPhoton.hh>
 #include <G4Gamma.hh>
 #include <G4Electron.hh>
+#include <G4Positron.hh>
 #include <G4ProcessManager.hh>
 #include <G4ProcessTable.hh>
 #include <G4StepLimiter.hh>
@@ -58,23 +60,37 @@ void PetaloPhysics::ConstructProcess()
     G4Exception("ConstructProcess()", "[PetaloPhysics]", FatalException,
                 "G4OpticalPhoton without a process manager.");
   }
-  //WavelengthShifting* wls = new WavelengthShifting();
+
   wls_ = new WavelengthShifting();
   pmanager->AddDiscreteProcess(wls_);
+
+  pmanager = G4Positron::Definition()->GetProcessManager();
+
+  // Remove Geant4 annihilation process
+  G4VProcess* eplusAnnihilation =
+    G4ProcessTable::GetProcessTable()->FindProcess("annihil", G4Positron::Definition());
+  pmanager->RemoveProcess(eplusAnnihilation);
+  // Add our custom-made process
+  pos_annihil_ = new PositronAnnihilation();
+  pmanager->AddDiscreteProcess(pos_annihil_);
+  pmanager->SetProcessOrderingToFirst(pos_annihil_, idxAtRest);
 
   // Add rise time to scintillation
   if (risetime_)
   {
     pmanager = G4Electron::Definition()->GetProcessManager();
     G4Scintillation *theScintillationProcess =
-        (G4Scintillation *)G4ProcessTable::GetProcessTable()->FindProcess("Scintillation", G4Electron::Definition());
+        (G4Scintillation *)G4ProcessTable::GetProcessTable()->FindProcess("Scintillation",
+                                                                          G4Electron::Definition());
     theScintillationProcess->SetFiniteRiseTime(true);
   }
 
   if (noCompt_)
   {
     pmanager = G4Gamma::Definition()->GetProcessManager();
-    G4VProcess *cs = G4ProcessTable::GetProcessTable()->FindProcess("compt", G4Gamma::Definition());
+    G4VProcess *cs =
+      G4ProcessTable::GetProcessTable()->FindProcess("compt", G4Gamma::Definition());
     pmanager->RemoveProcess(cs);
   }
+
 }
