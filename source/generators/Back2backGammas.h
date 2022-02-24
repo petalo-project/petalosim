@@ -17,9 +17,6 @@
 class G4Event;
 class G4GenericMessenger;
 
-class TFile;
-class TH1F;
-
 namespace nexus {
 
   class GeometryBase;
@@ -45,10 +42,6 @@ namespace nexus {
     G4double costheta_max_;
     G4double phi_min_;
     G4double phi_max_;
-
-    TH1F*  theta_angle_;
-    TH1F*  phi_angle_;
-    TFile* out_file_;
   };
 
 }// end namespace nexus

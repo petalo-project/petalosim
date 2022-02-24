@@ -26,10 +26,6 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
-#include <TFile.h>
-#include <TH1F.h>
-
-
 using namespace CLHEP;
 using namespace nexus;
 
@@ -58,22 +54,10 @@ Back2backGammas::Back2backGammas(): geom_(0), costheta_min_(-1.),
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
-
-  theta_angle_ = new TH1F("CosTheta", "CosTheta", 180, -2, 2);
-  theta_angle_->GetXaxis()->SetTitle("Cos(theta)");
-  theta_angle_->GetYaxis()->SetTitle("Entries");
-
-  phi_angle_ = new TH1F("Phi", "Phi", 360, -pi-2, pi+2);
-  phi_angle_->GetXaxis()->SetTitle("Phi (rad)");
-  phi_angle_->GetYaxis()->SetTitle("Entries");
 }
 
 Back2backGammas::~Back2backGammas()
 {
-  out_file_ = new TFile("GenerationAngles.root", "recreate");
-  theta_angle_->Write();
-  phi_angle_->Write();
-  out_file_->Close();
 }
 
 void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
@@ -107,10 +91,4 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   vertex->SetPrimary(new G4PrimaryParticle(gamma, -e2*p2.x(), -e2*p2.y(), -e2*p2.z()));
 
   evt->AddPrimaryVertex(vertex);
-
-  // theta_angle_->Fill(p.z());
-  G4double angle = std::acos(-p1.x()*p2.x()-p1.y()*p2.y()-p1.z()*p2.z());
-  theta_angle_->Fill(angle);
-  theta_angle_->Fill(-angle);
-  phi_angle_->Fill(std::atan2(p1.y(), p1.x()));
 }
