@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------------------
 
 #include "Back2backGammas.h"
+#include "PetaloUtils.h"
 
 #include "nexus/RandomUtils.h"
 #include "nexus/DetectorConstruction.h"
@@ -65,33 +66,21 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   G4ParticleDefinition* gamma =
     G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
-  G4double r = G4RandGauss::shoot(0., 0.00099); // It gives
-    // a distribution of deviation of collinearity with 0.54 degrees FWHM.
-    // Value taken from "Limit of Spatial Resolution in FDG-PET due to
-    // Annihilation Photon Non-Collinearity", Shibuya, K. et al.
-    // DOI: 10.1007/978-3-540-36841-0_411
+  auto dir1 = (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
+               RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_):
+               G4RandomDirection();
 
-  G4double e1 = electron_mass_c2 + r;
-  G4double e2 = electron_mass_c2 - r;
+  auto [dir2, e1, e2] = CalculateNonCollinearKinematicInBodyTissue(dir1);
 
-  auto p1 = e1 * (
-            (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
-            RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_):
-            G4RandomDirection());
+  auto p1 = e1 * dir1;
+  auto p2 = e2 * dir2;
 
   G4ThreeVector position = geom_->GenerateVertex(region_);
   G4double time = 0.;
   auto vertex = new G4PrimaryVertex(position, time);
 
   vertex->SetPrimary(new G4PrimaryParticle(gamma,  p1.x(),  p1.y(),  p1.z()));
-
-  G4double DeltaTeta = 2*r/electron_mass_c2;
-  G4double Phi1      = (twopi * G4UniformRand())/2. ;
-
-  G4ThreeVector p2(sin(DeltaTeta)*cos(Phi1), sin(DeltaTeta)*sin(Phi1), cos(DeltaTeta));
-  p2.rotateUz(p1.unit());
-
-  vertex->SetPrimary(new G4PrimaryParticle(gamma, -e2*p2.x(), -e2*p2.y(), -e2*p2.z()));
+  vertex->SetPrimary(new G4PrimaryParticle(gamma, -p2.x(), -p2.y(), -p2.z()));
 
   evt->AddPrimaryVertex(vertex);
 }

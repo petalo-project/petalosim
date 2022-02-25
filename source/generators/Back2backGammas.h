@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// petalosim | Back2backGammas.cc
+// petalosim | Back2backGammas.h
 //
 // This generator simulates two gammas, product of a positron annihilation.
 // The non-collinearity of the momenta and the Doppler shift of the energy
