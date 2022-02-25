@@ -65,15 +65,18 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   G4ParticleDefinition* gamma =
     G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
-  G4double r = G4RandGauss::shoot(0., 0.00092); // it gives
-   // a distribution of deviation of collinearity with 0.5 degrees FWHM.
+  G4double r = G4RandGauss::shoot(0., 0.00099); // It gives
+    // a distribution of deviation of collinearity with 0.54 degrees FWHM.
+    // Value taken from "Limit of Spatial Resolution in FDG-PET due to
+    // Annihilation Photon Non-Collinearity", Shibuya, K. et al.
+    // DOI: 10.1007/978-3-540-36841-0_411
 
   G4double e1 = electron_mass_c2 + r;
   G4double e2 = electron_mass_c2 - r;
 
   auto p1 = e1 * (
             (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
-              RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_):
+            RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_):
             G4RandomDirection());
 
   G4ThreeVector position = geom_->GenerateVertex(region_);
