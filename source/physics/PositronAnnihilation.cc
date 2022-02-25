@@ -73,8 +73,13 @@ G4VParticleChange* PositronAnnihilation::AtRestDoIt(const G4Track& aTrack,
 
    fParticleChange.SetNumberOfSecondaries(2) ;
 
-   G4double r  = CLHEP::RandGauss::shoot(0.,0.00092); // It gives
-   // a distribution of deviation of collinearity with 0.5 degrees FWHM.
+   G4double r  = CLHEP::RandGauss::shoot(0.,0.00099); // It gives
+   // a distribution of deviation of collinearity with 0.54 degrees FWHM.
+   // Value taken from "Limit of Spatial Resolution in FDG-PET due to
+   // Annihilation Photon Non-Collinearity", Shibuya, K. et al.
+   // DOI: 10.1007/978-3-540-36841-0_411
+   // World Congress on Medical Physics and Biomedical Engineering 2006, IFMBE
+
 
    G4double E1 = electron_mass_c2 + r;
    G4double E2 = electron_mass_c2 - r;
