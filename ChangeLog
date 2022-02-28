@@ -1,3 +1,11 @@
+tag v1_00_00 - 28 Feb 2022
+        - Save the total charge for each sensor in sns_response.
+        - Add 1-tile configuration to PETit.
+        - Fix bug in definition of property vector.
+        - Fix the diameter of the source tube.
+        - Adapt the code to Geant4-v11.
+        - Add non-collinearity to back-to-back gamma generator.
+
 tag v0_00_00 - 19 Nov 2021
 	- Decouple petalosim from nexus.
 	- Add a vacuum vessel to the ring geometry.
