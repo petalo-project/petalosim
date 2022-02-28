@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 // petalosim | Back2backGammas.h
 //
-// This generator simulates two gammas of 510.999 keV back to back, with
-// random direction. It is possible to specify a limited solid angle.
-// Control histograms of the solid angle where gammas are generated
-// are produced.
+// This generator simulates two gammas, product of a positron annihilation.
+// The non-collinearity of the momenta and the Doppler shift of the energy
+// are taken into account. The first gamma is generated with random direction,
+// by default. However, it is possible to specify a limited solid angle.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
@@ -16,9 +16,6 @@
 
 class G4Event;
 class G4GenericMessenger;
-
-class TFile;
-class TH1F;
 
 namespace nexus {
 
@@ -45,10 +42,6 @@ namespace nexus {
     G4double costheta_max_;
     G4double phi_min_;
     G4double phi_max_;
-
-    TH1F*  theta_angle_;
-    TH1F*  phi_angle_;
-    TFile* out_file_;
   };
 
 }// end namespace nexus
