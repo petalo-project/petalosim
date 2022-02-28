@@ -8,11 +8,13 @@
 // ----------------------------------------------------------------------------
 
 #include "PositronAnnihilation.h"
+#include "PetaloUtils.h"
 
 #include <G4UnitsTable.hh>
 #include <globals.hh>
 #include <G4PhysicalConstants.hh>
 #include <Randomize.hh>
+#include <G4RandomDirection.hh>
 #include <G4Gamma.hh>
 #include <G4Electron.hh>
 #include <G4Positron.hh>
@@ -65,6 +67,8 @@ G4VParticleChange* PositronAnnihilation::AtRestDoIt(const G4Track& aTrack,
 // spread in the angle between the photons. The energy of the photons also
 // deviates from the electron_mass, due to Doppler shift.
 // The angular distribution is isotropic.
+// Caveat: the positron annihilates always at rest, therefore, the 4-momentum
+// is not conserved.
 //
 // Note : Effects due to binding of atomic electrons are negliged.
 
@@ -73,39 +77,17 @@ G4VParticleChange* PositronAnnihilation::AtRestDoIt(const G4Track& aTrack,
 
    fParticleChange.SetNumberOfSecondaries(2) ;
 
-   G4double r  = CLHEP::RandGauss::shoot(0.,0.00099); // It gives
-   // a distribution of deviation of collinearity with 0.54 degrees FWHM.
-   // Value taken from "Limit of Spatial Resolution in FDG-PET due to
-   // Annihilation Photon Non-Collinearity", Shibuya, K. et al.
-   // DOI: 10.1007/978-3-540-36841-0_411
-   // World Congress on Medical Physics and Biomedical Engineering 2006, IFMBE
+   auto  dir1          = G4RandomDirection();
+   auto [dir2, e1, e2] = CalculateNonCollinearKinematicInBodyTissue(dir1);
 
-
-   G4double E1 = electron_mass_c2 + r;
-   G4double E2 = electron_mass_c2 - r;
-
-   G4double DeltaTeta = 2*r/electron_mass_c2;
-
-   G4double cosTeta = G4RandFlat::shoot(-1.0, 1.0);
-   G4double sinTeta = sqrt(1.-cosTeta*cosTeta);
-   G4double Phi     = twopi * G4UniformRand() ;
-   G4double Phi1     = (twopi * G4UniformRand())/2. ;
-   G4ThreeVector Direction (sinTeta*cos(Phi), sinTeta*sin(Phi), cosTeta);
-
-
-   G4ThreeVector DirectionPhoton (sin(DeltaTeta)*cos(Phi1),sin(DeltaTeta)*sin(Phi1),cos(DeltaTeta));
-   DirectionPhoton.rotateUz(Direction);
-
-
-   fParticleChange.AddSecondary( new G4DynamicParticle (G4Gamma::Gamma(),
-                                                        DirectionPhoton, E1) );
-   fParticleChange.AddSecondary( new G4DynamicParticle (G4Gamma::Gamma(),
-                                                        -Direction, E2) );
+   fParticleChange.AddSecondary(new G4DynamicParticle (G4Gamma::Gamma(),
+                                                       dir1, e1) );
+   fParticleChange.AddSecondary(new G4DynamicParticle (G4Gamma::Gamma(),
+                                                       -dir2, e2) );
 
    fParticleChange.ProposeLocalEnergyDeposit(0.);
 
    // Kill the incident positron
-   //
    fParticleChange.ProposeTrackStatus( fStopAndKill );
 
    return &fParticleChange;
