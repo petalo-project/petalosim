@@ -324,14 +324,27 @@ void PetBox::BuildBox()
   G4double active_depth = active_z_pos_max - active_z_pos_min;
   G4double active_z_pos = active_z_pos_min + active_depth / 2.;
 
-  G4Box *active_solid =
-    new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
+  G4Box *active_solid = nullptr;
+  G4LogicalVolume* active_logic = nullptr;
 
-  G4LogicalVolume* active_logic =
-    new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+  if (add_teflon_block_){
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., -active_z_pos), active_logic,
-                    "ACTIVE", LXe_logic_, false, 1, false);
+    active_solid =
+      new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., (active_z_pos_max - ih_z_size_ / 2.) / 2.);
+
+    active_logic = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -(active_z_pos_max + ih_z_size_ / 2.) / 2.), active_logic,
+                      "ACTIVE", LXe_logic_, false, 1, false);
+  } else {
+    active_solid =
+      new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
+
+    active_logic = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -active_z_pos), active_logic,
+                      "ACTIVE", LXe_logic_, false, 1, false);
+  }
 
   active_logic->SetSensitiveDetector(ionisd);
   // Limit the step size in ACTIVE volume for better tracking precision
@@ -360,9 +373,35 @@ void PetBox::BuildBox()
     active_logic2->SetSensitiveDetector(ionisd);
     active_logic2->SetUserLimits(new G4UserLimits(max_step_size_));
 
+    if (visibility_) {
+      G4VisAttributes active_col = nexus::Blue();
+      active_logic2->SetVisAttributes(active_col);
+    }
+
   } else {
-    new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos), active_logic,
-                    "ACTIVE", LXe_logic_, false, 2, false);
+
+    if (add_teflon_block_){
+      G4Box* active_solid2 =
+        new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
+
+      G4LogicalVolume* active_logic2 =
+        new G4LogicalVolume(active_solid2, LXe, "ACTIVE");
+
+      new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos), active_logic2,
+                        "ACTIVE", LXe_logic_, false, 1, false);
+
+      active_logic2->SetSensitiveDetector(ionisd);
+      active_logic2->SetUserLimits(new G4UserLimits(max_step_size_));
+
+      if (visibility_) {
+        G4VisAttributes active_col = nexus::Blue();
+        active_logic2->SetVisAttributes(active_col);
+        }
+
+    } else {
+      new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos), active_logic,
+                       "ACTIVE", LXe_logic_, false, 2, false);
+    }
   }
 
   // TEFLON BLOCK TO REDUCE XENON VOL  /////////////////////////
@@ -386,7 +425,7 @@ void PetBox::BuildBox()
     G4Box *teflon_block_nh_solid =
       new G4Box("TEFLON_BLOCK", teflon_block_xy / 2., teflon_block_xy / 2., teflon_block_thick / 2.);
 
-    G4double block_z_pos = ih_z_size_ / 2. + teflon_block_thick / 2.;
+    G4double block_z_pos = - (active_z_pos_max - ih_z_size_ / 2.) / 2. + teflon_block_thick / 2.;
 
     // Holes in the block
     G4double dist_four_holes = 4* teflon_holes_xy + 3*dist_between_holes_xy;
@@ -426,7 +465,7 @@ void PetBox::BuildBox()
     G4LogicalVolume *teflon_block_logic = new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                        "TEFLON_BLOCK", LXe_logic_, false, 1, false);
+                        "TEFLON_BLOCK", active_logic, false, 1, false);
 
       if (visibility_) {
         G4VisAttributes block_col = nexus::LightBlue();
