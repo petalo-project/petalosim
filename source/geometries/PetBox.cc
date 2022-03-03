@@ -443,15 +443,24 @@ void PetBox::BuildBox()
     }
 
     G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    teflon->SetMaterialPropertiesTable(opticalprops::PTFE());
+
     G4LogicalVolume *teflon_block_logic = new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
                         "TEFLON_BLOCK", active_logic, false, 1, false);
 
-      if (visibility_) {
-        G4VisAttributes block_col = nexus::LightBlue();
-        teflon_block_logic->SetVisAttributes(block_col);
-      }
+    // Optical surface for teflon
+    G4OpticalSurface* teflon_optSurf =
+      new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
+
+      new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
+
+
+    if (visibility_) {
+      G4VisAttributes block_col = nexus::LightBlue();
+      teflon_block_logic->SetVisAttributes(block_col);
+    }
   }
 
   // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS /////
@@ -471,10 +480,10 @@ void PetBox::BuildBox()
   if (add_teflon_block_==0){
     new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, -entry_panel_zpos), entry_panel_logic,
                       "ENTRY_PANEL", LXe_logic_, false, 1, false);
-  }
 
-  new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, entry_panel_zpos), entry_panel_logic,
-                    "ENTRY_PANEL", LXe_logic_, false, 2, false);
+    new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, entry_panel_zpos), entry_panel_logic,
+                      "ENTRY_PANEL", LXe_logic_, false, 2, false);
+  }
 
 
   // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS /////////////
