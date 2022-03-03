@@ -321,30 +321,22 @@ void PetBox::BuildBox()
   }
 
   G4double active_z_pos_min = ih_z_size_ / 2. + dist_ihat_entry_panel_ + panel_thickness_;
+
+  if (add_teflon_block_){
+    active_z_pos_min = ih_z_size_ / 2.;
+  }
+
   G4double active_depth = active_z_pos_max - active_z_pos_min;
   G4double active_z_pos = active_z_pos_min + active_depth / 2.;
 
-  G4Box *active_solid = nullptr;
-  G4LogicalVolume* active_logic = nullptr;
+  G4Box *active_solid =
+    new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
 
-  if (add_teflon_block_){
-
-    active_solid =
-      new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., (active_z_pos_max - ih_z_size_ / 2.) / 2.);
-
-    active_logic = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -(active_z_pos_max + ih_z_size_ / 2.) / 2.), active_logic,
-                      "ACTIVE", LXe_logic_, false, 1, false);
-  } else {
-    active_solid =
-      new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
-
-    active_logic = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+  G4LogicalVolume* active_logic =
+    new G4LogicalVolume(active_solid, LXe, "ACTIVE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., -active_z_pos), active_logic,
                       "ACTIVE", LXe_logic_, false, 1, false);
-  }
 
   active_logic->SetSensitiveDetector(ionisd);
   // Limit the step size in ACTIVE volume for better tracking precision
@@ -386,30 +378,12 @@ void PetBox::BuildBox()
     }
 
   } else {
-
-    if (add_teflon_block_){
-      G4Box* active_solid2 =
-        new G4Box("ACTIVE", dist_lat_panels_ / 2., dist_lat_panels_ / 2., active_depth / 2.);
-
-      G4LogicalVolume* active_logic2 =
-        new G4LogicalVolume(active_solid2, LXe, "ACTIVE");
-
-      new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos), active_logic2,
-                        "ACTIVE", LXe_logic_, false, 1, false);
-
-      active_logic2->SetSensitiveDetector(ionisd);
-      active_logic2->SetUserLimits(new G4UserLimits(max_step_size_));
-
-      if (visibility_) {
-        G4VisAttributes active_col = nexus::Blue();
-        active_logic2->SetVisAttributes(active_col);
-        }
-
-    } else {
-      new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos), active_logic,
+    G4RotationMatrix rot_active;
+    rot_active.rotateY(pi);
+      new G4PVPlacement(G4Transform3D(rot_active, G4ThreeVector(0., 0., active_z_pos)), active_logic,
                        "ACTIVE", LXe_logic_, false, 2, false);
-    }
   }
+
 
   // TEFLON BLOCK TO REDUCE XENON VOL  /////////////////////////
 
