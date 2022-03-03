@@ -443,7 +443,7 @@ void PetBox::BuildBox()
     }
 
     G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    teflon->SetMaterialPropertiesTable(opticalprops::PTFE());
+    teflon->SetMaterialPropertiesTable(petopticalprops::PTFE());
 
     G4LogicalVolume *teflon_block_logic = new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
 

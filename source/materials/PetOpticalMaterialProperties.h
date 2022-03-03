@@ -31,6 +31,7 @@ namespace petopticalprops
   G4MaterialPropertiesTable* LXe_nconst();
 
   G4MaterialPropertiesTable* Pyrex_vidrasa();
+  G4MaterialPropertiesTable* PTFE();
 
   G4MaterialPropertiesTable* TPB(G4double decay_time = 2.2 * nanosecond);
   G4MaterialPropertiesTable* TPB_LXe(G4double decay_time = 2.2 * nanosecond);

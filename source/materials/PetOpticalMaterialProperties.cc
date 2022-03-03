@@ -239,6 +239,35 @@ G4MaterialPropertiesTable* Pyrex_vidrasa()
   return pyrex_mpt;
 }
 
+/// PTFE (== TEFLON) ///
+G4MaterialPropertiesTable* PTFE()
+{
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFLECTIVITY IN LXE (from https://link.springer.com/content/pdf/10.1140/epjc/s10052-020-7800-6.pdf)
+  std::vector<G4double> ENERGIES = {opticalprops::optPhotMinE_, opticalprops::optPhotMaxE_};
+  std::vector<G4double> REFLECTIVITY = {0.8, 0.8};
+  mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY);
+
+  // REFLEXION BEHAVIOR
+  // Specular reflection about the normal to a microfacet.
+  // Such a vector is chosen according to a gaussian distribution with
+  // sigma = SigmaAlhpa (in rad) and centered in the average normal.
+  std::vector<G4double> specularlobe  = {0., 0.};
+  // specular reflection about the average normal
+  std::vector<G4double> specularspike = {0., 0.};
+  // 180 degrees reflection.
+  std::vector<G4double> backscatter   = {0., 0.};
+  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
+
+  mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES, specularlobe);
+  mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES, specularspike);
+  mpt->AddProperty("BACKSCATTERCONSTANT",  ENERGIES, backscatter);
+
+  return mpt;
+}
+
+
 
 G4MaterialPropertiesTable* TPB(G4double decay_time)
 {
