@@ -352,6 +352,13 @@ void PetBox::BuildBox()
 
 
   if (tile_type_d_ != tile_type_c_) {
+
+    /// Checks
+    if (add_teflon_block_){
+      G4Exception("[PetBox]", "BuildBox()", FatalException,
+                  "Teflon Block only allowed when tiles in both planes are the same!");
+    }
+
     // Coincidence plane
     G4double active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_;
     if (tile_type_c_ == "HamamatsuBlue") {
