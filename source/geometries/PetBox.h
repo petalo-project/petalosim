@@ -78,11 +78,11 @@ private:
   G4double entry_panel_x_size_, entry_panel_y_size_;
   G4double dist_entry_panel_ground_;
 
-  G4double dist_entry_panel_horiz_panel_, dist_entry_panel_vert_panel_;
+  G4double dist_entry_panel_h_panel_, dist_entry_panel_v_panel_;
 
   G4double lat_panel_len_;
-  G4double horiz_lat_panel_z_size_, horiz_lat_panel_y_pos_;
-  G4double vert_lat_panel_z_size_;
+  G4double h_l_panel_z_size_, h_l_panel_y_pos_;
+  G4double v_l_panel_z_size_;
 
   G4double dist_dice_flange_, dist_dice_flange2_;
   G4double dist_ham_vuv_, dist_ham_blue_, dist_fbk_;

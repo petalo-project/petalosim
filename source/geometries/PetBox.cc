@@ -68,12 +68,12 @@ PetBox::PetBox() : GeometryBase(),
                    entry_panel_x_size_(77.5 * mm),
                    entry_panel_y_size_(120 * mm),
                    dist_entry_panel_ground_(12 * mm),
-                   dist_entry_panel_horiz_panel_(6.2 * mm), //z distance between the internal surface of the entry panel and the edge of the horizontal lateral panel
-                   dist_entry_panel_vert_panel_(1.5 * mm),  //z distance between the internal surface of the entry panel and the edge of the vertical lateral panel
+                   dist_entry_panel_h_panel_(6.2 * mm), //z distance between the internal surface of the entry panel and the edge of the horizontal lateral panel
+                   dist_entry_panel_v_panel_(1.5 * mm),  //z distance between the internal surface of the entry panel and the edge of the vertical lateral panel
                    lat_panel_len_(66.5 * mm),
-                   horiz_lat_panel_z_size_(42. * mm),
-                   horiz_lat_panel_y_pos_(40.95 * mm),
-                   vert_lat_panel_z_size_(46.7 * mm),
+                   h_l_panel_z_size_(42. * mm),
+                   h_l_panel_y_pos_(40.95 * mm),
+                   v_l_panel_z_size_(46.7 * mm),
                    dist_ham_vuv_(18.6 * mm),
                    dist_ham_blue_(19.35 * mm),
                    dist_fbk_(21.05 * mm),
@@ -499,54 +499,57 @@ void PetBox::BuildBox()
 
 
   // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS /////////////
-  G4Box *horiz_lat_panel_solid =
-      new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2., horiz_lat_panel_z_size_/2.);
 
-  G4LogicalVolume *horiz_lat_panel_logic =
-      new G4LogicalVolume(horiz_lat_panel_solid, pyrex, "LAT_PANEL");
+  // Horizontal lateral panels
+  G4Box *h_l_panel_solid =
+      new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2., h_l_panel_z_size_/2.);
 
-  G4double horiz_lat_panel_ypos_bot = -box_size_/2. + box_thickness_ +
-                                      horiz_lat_panel_y_pos_ + panel_thickness_/2.;
-  G4double horiz_lat_panel_ypos_top = horiz_lat_panel_ypos_bot + panel_thickness_ +
-                                      dist_lat_panels_;
-  G4double horiz_lat_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
-                              dist_entry_panel_horiz_panel_ + horiz_lat_panel_z_size_/2.;
+  G4LogicalVolume *h_l_panel_logic =
+      new G4LogicalVolume(h_l_panel_solid, pyrex, "LAT_PANEL");
 
-  new G4PVPlacement(0, G4ThreeVector(0., horiz_lat_panel_ypos_bot, -horiz_lat_panel_zpos),
-                    horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
+  G4double h_l_panel_ypos_bot = -box_size_/2. + box_thickness_ +
+                                h_l_panel_y_pos_ + panel_thickness_/2.;
+  G4double h_l_panel_ypos_top = h_l_panel_ypos_bot + panel_thickness_ +
+                                dist_lat_panels_;
+  G4double h_l_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
+                            dist_entry_panel_h_panel_ + h_l_panel_z_size_/2.;
 
-  new G4PVPlacement(0, G4ThreeVector(0., horiz_lat_panel_ypos_bot, horiz_lat_panel_zpos),
-                    horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
+  new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_bot, -h_l_panel_zpos),
+                    h_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
 
-  new G4PVPlacement(0, G4ThreeVector(0., horiz_lat_panel_ypos_top, -horiz_lat_panel_zpos),
-                    horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
+  new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_bot, h_l_panel_zpos),
+                    h_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
-  new G4PVPlacement(0, G4ThreeVector(0., horiz_lat_panel_ypos_top, horiz_lat_panel_zpos),
-                    horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
+  new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_top, -h_l_panel_zpos),
+                    h_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
 
-  G4Box *vert_lat_panel_solid =
-      new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2., vert_lat_panel_z_size_/2.);
+  new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_top, h_l_panel_zpos),
+                    h_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
-  G4LogicalVolume *vert_lat_panel_logic =
-      new G4LogicalVolume(vert_lat_panel_solid, pyrex, "LAT_PANEL");
+  // Vertical lateral panels
+  G4Box *v_l_panel_solid =
+      new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2., v_l_panel_z_size_/2.);
 
-  G4double vert_lat_panel_xpos = dist_lat_panels_/2. + panel_thickness_/2.;
-  G4double vert_lat_panel_ypos = horiz_lat_panel_ypos_bot + dist_lat_panels_/2. +
-                                 panel_thickness_/2.;
-  G4double vert_lat_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
-                                 dist_entry_panel_vert_panel_ + vert_lat_panel_z_size_/2.;
+  G4LogicalVolume *v_l_panel_logic =
+      new G4LogicalVolume(v_l_panel_solid, pyrex, "LAT_PANEL");
 
-  new G4PVPlacement(0, G4ThreeVector(-vert_lat_panel_xpos, vert_lat_panel_ypos, -vert_lat_panel_zpos),
-                    vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
+  G4double v_l_panel_xpos = dist_lat_panels_/2. + panel_thickness_/2.;
+  G4double v_l_panel_ypos = h_l_panel_ypos_bot + dist_lat_panels_/2. +
+                            panel_thickness_/2.;
+  G4double v_l_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
+                            dist_entry_panel_v_panel_ + v_l_panel_z_size_/2.;
 
-  new G4PVPlacement(0, G4ThreeVector(-vert_lat_panel_xpos, vert_lat_panel_ypos, vert_lat_panel_zpos),
-                    vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
+  new G4PVPlacement(0, G4ThreeVector(-v_l_panel_xpos, v_l_panel_ypos, -v_l_panel_zpos),
+                    v_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
 
-  new G4PVPlacement(0, G4ThreeVector(vert_lat_panel_xpos, vert_lat_panel_ypos, -vert_lat_panel_zpos),
-                    vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
+  new G4PVPlacement(0, G4ThreeVector(-v_l_panel_xpos, v_l_panel_ypos, v_l_panel_zpos),
+                    v_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
-  new G4PVPlacement(0, G4ThreeVector(vert_lat_panel_xpos, vert_lat_panel_ypos, vert_lat_panel_zpos),
-                    vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
+  new G4PVPlacement(0, G4ThreeVector(v_l_panel_xpos, v_l_panel_ypos, -v_l_panel_zpos),
+                    v_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
+
+  new G4PVPlacement(0, G4ThreeVector(v_l_panel_xpos, v_l_panel_ypos, v_l_panel_zpos),
+                    v_l_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
   // Optical surface for the panels
   G4OpticalSurface *panel_opsur = new G4OpticalSurface("OP_PANEL");
@@ -556,8 +559,8 @@ void PetBox::BuildBox()
   panel_opsur->SetSigmaAlpha(0.1);
   panel_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(reflectivity_));
   new G4LogicalSkinSurface("OP_PANEL", entry_panel_logic, panel_opsur);
-  new G4LogicalSkinSurface("OP_PANEL_H", horiz_lat_panel_logic, panel_opsur);
-  new G4LogicalSkinSurface("OP_PANEL_V", vert_lat_panel_logic, panel_opsur);
+  new G4LogicalSkinSurface("OP_PANEL_H", h_l_panel_logic, panel_opsur);
+  new G4LogicalSkinSurface("OP_PANEL_V", v_l_panel_logic, panel_opsur);
 
 
   // Panel in front of the sensors just for the Hamamatsu Blue SiPMs
@@ -651,8 +654,8 @@ void PetBox::BuildBox()
     active_logic->SetVisAttributes(active_col);
     G4VisAttributes panel_col = nexus::Red();
     entry_panel_logic->SetVisAttributes(panel_col);
-    horiz_lat_panel_logic->SetVisAttributes(panel_col);
-    vert_lat_panel_logic->SetVisAttributes(panel_col);
+    h_l_panel_logic->SetVisAttributes(panel_col);
+    v_l_panel_logic->SetVisAttributes(panel_col);
   }
   else
   {
