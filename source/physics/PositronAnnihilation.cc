@@ -70,7 +70,7 @@ G4VParticleChange* PositronAnnihilation::AtRestDoIt(const G4Track& aTrack,
 // Caveat: the positron annihilates always at rest, therefore, the 4-momentum
 // is not conserved.
 //
-// Note : Effects due to binding of atomic electrons are negliged.
+// Note : Effects due to binding of atomic electrons are neglected.
 
 {
    fParticleChange.InitializeForPostStep(aTrack);
