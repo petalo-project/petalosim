@@ -161,6 +161,26 @@ void PetBox::BuildBox()
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
                     LXe_logic_, "LXE", box_logic, false, 0, false);
 
+  // ACTIVE IN CASE THE TEFLON BLOCK IS ADDED /////////////////
+  // If not, active will be defined later /////////////////////
+
+  // Set the ACTIVE volume as an ionization sensitive det
+  IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
+  G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+
+  if (add_teflon_block_){
+    G4Box *active_solid =
+      new G4Box("ACTIVE", LXe_size/2., LXe_size/2., LXe_size/2.);
+
+    active_logic_ = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
+                        "ACTIVE", LXe_logic_, false, 1, false);
+
+    active_logic_->SetSensitiveDetector(ionisd);
+    active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
+
+  }
   // Aluminum cylinder /////////////////////////////////////////
   G4double aluminum_cyl_rad = 40. * mm;
   G4double aluminum_cyl_len = 19. * mm;
@@ -173,8 +193,15 @@ void PetBox::BuildBox()
   G4RotationMatrix rot;
   rot.rotateX(pi / 2.);
   G4double aluminum_cyl_ypos = box_size_/2. - box_thickness_ - aluminum_cyl_len/2.;
-  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., aluminum_cyl_ypos, 0.)),
-                    aluminum_cyl_logic, "ALUMINUM_CYL", LXe_logic_, false, 0, false);
+
+  if (add_teflon_block_==0){
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., aluminum_cyl_ypos, 0.)),
+                      aluminum_cyl_logic, "ALUMINUM_CYL", LXe_logic_, false, 0, false);
+  } else {
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., aluminum_cyl_ypos, 0.)),
+                      aluminum_cyl_logic, "ALUMINUM_CYL", active_logic_, false, 0, false);
+  }
+
 
   // INTERNAL HAT //////////////////////////////////////////////
   G4Box *internal_hat_solid =
@@ -183,8 +210,13 @@ void PetBox::BuildBox()
   G4LogicalVolume *internal_hat_logic =
       new G4LogicalVolume(internal_hat_solid, aluminum, "INTERNAL_HAT");
 
-  new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2. + box_thickness_ + ih_y_size_/2.), 0.),
-                    internal_hat_logic, "INTERNAL_HAT", LXe_logic_, false, 0, false);
+  if (add_teflon_block_==0){
+    new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2. + box_thickness_ + ih_y_size_/2.), 0.),
+                      internal_hat_logic, "INTERNAL_HAT", LXe_logic_, false, 0, false);
+  } else {
+    new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2. + box_thickness_ + ih_y_size_/2.), 0.),
+                      internal_hat_logic, "INTERNAL_HAT", active_logic_, false, 0, false);
+  }
 
   G4double vacuum_hat_xsize = ih_x_size_ - 2. * ih_thick_wall_;
   G4double vacuum_hat_ysize = ih_y_size_ - ih_thick_roof_;
@@ -314,170 +346,68 @@ void PetBox::BuildBox()
 
   // ACTIVE ////////////////////////////////////////////////////
 
-  // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
-  G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+  if (add_teflon_block_==0){
 
-  // 2 ACTIVE REGIONS
-  G4double active_z_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_;
-  if (tile_type_d_ == "HamamatsuBlue"){
-    active_z_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
-    - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
-  }
-
-  G4double active_z_pos_min = ih_z_size_/2. + dist_ihat_entry_panel_ + panel_thickness_;
-
-  if (add_teflon_block_){
-    active_z_pos_min = ih_z_size_/2.;
-  }
-
-  G4double active_depth = active_z_pos_max - active_z_pos_min;
-  G4double active_z_pos = active_z_pos_min + active_depth/2.;
-
-  G4Box *active_solid =
-    new G4Box("ACTIVE", dist_lat_panels_/2., dist_lat_panels_/2., active_depth/2.);
-
-  G4LogicalVolume* active_logic =
-    new G4LogicalVolume(active_solid, LXe, "ACTIVE");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -active_z_pos), active_logic,
-                      "ACTIVE", LXe_logic_, false, 1, false);
-
-  active_logic->SetSensitiveDetector(ionisd);
-  // Limit the step size in ACTIVE volume for better tracking precision
-  active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
-
-
-  if (tile_type_d_ != tile_type_c_) {
-
-    /// Checks
-    if (add_teflon_block_){
-      G4Exception("[PetBox]", "BuildBox()", FatalException,
-                  "Teflon Block only allowed when tiles in both planes are the same!");
+    // 2 ACTIVE REGIONS
+    G4double active_z_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_;
+    if (tile_type_d_ == "HamamatsuBlue"){
+      active_z_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
+      - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
     }
 
-    // Coincidence plane
-    G4double active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_;
-    if (tile_type_c_ == "HamamatsuBlue") {
-      active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_
-                          - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
-    }
-    G4double active_depth2 = active_z_pos_max2 - active_z_pos_min;
-    G4double active_z_pos2 = active_z_pos_min + active_depth2/2.;
+    G4double active_z_pos_min = ih_z_size_/2. + dist_ihat_entry_panel_ + panel_thickness_;
+    G4double active_depth     = active_z_pos_max - active_z_pos_min;
+    G4double active_z_pos     = active_z_pos_min + active_depth/2.;
 
-    G4Box* active_solid2 =
-     new G4Box("ACTIVE", dist_lat_panels_/2., dist_lat_panels_/2., active_depth2/2.);
+    G4Box *active_solid =
+      new G4Box("ACTIVE", dist_lat_panels_/2., dist_lat_panels_/2., active_depth/2.);
 
-    G4LogicalVolume* active_logic2 =
-     new G4LogicalVolume(active_solid2, LXe, "ACTIVE");
+    active_logic_ = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos2), active_logic2,
-                      "ACTIVE", LXe_logic_, false, 1, false);
+      new G4PVPlacement(0, G4ThreeVector(0., 0., -active_z_pos), active_logic_,
+                        "ACTIVE", LXe_logic_, false, 1, false);
 
-    active_logic2->SetSensitiveDetector(ionisd);
-    active_logic2->SetUserLimits(new G4UserLimits(max_step_size_));
-
-    if (visibility_) {
-      G4VisAttributes active_col = nexus::Blue();
-      active_logic2->SetVisAttributes(active_col);
-    }
-
-  } else {
-    G4RotationMatrix rot_active;
-    rot_active.rotateY(pi);
-      new G4PVPlacement(G4Transform3D(rot_active, G4ThreeVector(0., 0., active_z_pos)),
-                        active_logic, "ACTIVE", LXe_logic_, false, 2, false);
-  }
+    active_logic_->SetSensitiveDetector(ionisd);
+    // Limit the step size in ACTIVE volume for better tracking precision
+    active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
 
 
-  // TEFLON BLOCK TO REDUCE XENON VOL  /////////////////////////
-
-  if (add_teflon_block_){
-
-    G4double teflon_block_xy    = 67    * mm;
-    G4double teflon_block_thick = 35.75 * mm;
-
-    G4double teflon_offset_x = 3.64 * mm;
-    G4double teflon_offset_y = 3.7  * mm;
-
-    G4double teflon_central_offset_x = 3.23 * mm;
-    G4double teflon_central_offset_y = 3.11 * mm;
-
-    G4double teflon_holes_xy    = 5.75 * mm;
-    G4double teflon_holes_depth = 5    * mm;
-
-    G4double dist_between_holes_xy = 1.75 * mm;
-
-    G4Box *teflon_block_nh_solid =
-      new G4Box("TEFLON_BLOCK", teflon_block_xy/2., teflon_block_xy/2., teflon_block_thick/2.);
-
-    G4double block_z_pos = -(active_z_pos_max - ih_z_size_/2.)/2. + teflon_block_thick/2.;
-
-    // Holes in the block
-    G4double dist_four_holes = 4* teflon_holes_xy + 3*dist_between_holes_xy;
-
-    G4Box *teflon_hole_solid =
-      new G4Box("BLOCK_HOLE", teflon_holes_xy/2., teflon_holes_xy/2., teflon_holes_depth/2.);
-
-    G4double holes_pos_z = -teflon_block_thick/2. + teflon_holes_depth/2.;
-
-    G4double first_hole_xpos = -teflon_block_xy/2. + teflon_offset_x +
-        dist_four_holes/2. - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.);
-    G4double first_hole_ypos =  teflon_block_xy/2. - teflon_offset_y -
-        dist_four_holes/2. + 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.);
-
-    G4SubtractionSolid* teflon_block_solid =
-      new G4SubtractionSolid("TEFLON_BLOCK", teflon_block_nh_solid, teflon_hole_solid,
-                             0, G4ThreeVector(first_hole_xpos, first_hole_ypos, holes_pos_z));
-
-    for (G4int j = 0; j < 2; j++){ // Loop over the tiles in row
-      G4double set_holes_y = teflon_block_xy/2. - teflon_offset_y - dist_four_holes/2.
-                             - j*(teflon_central_offset_y + dist_four_holes);
-      for (G4int i = 0; i < 2; i++){ // Loop over the tiles in column
-        G4double set_holes_x = -teflon_block_xy/2. + teflon_offset_x + dist_four_holes/2.
-                               + i*(teflon_central_offset_x + dist_four_holes);
-        for (G4int l = 0; l < 4; l++){ // Loop over the sensors in row
-          G4double holes_pos_y = set_holes_y + 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.)
-                                - l*(teflon_holes_xy + dist_between_holes_xy);
-          for (G4int k = 0; k < 4; k++){ // Loop over the sensors in column
-            G4double holes_pos_x = set_holes_x - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.)
-                                    + k*(teflon_holes_xy + dist_between_holes_xy);
-            if (i==0 && j==0 && k==0 && l==0){
-              continue;
-            }
-            teflon_block_solid =
-              new G4SubtractionSolid("TEFLON_BLOCK", teflon_block_solid, teflon_hole_solid,
-                                     0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z));
-          }
-        }
+    if (tile_type_d_ != tile_type_c_) {
+      // Coincidence plane
+      G4double active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_;
+      if (tile_type_c_ == "HamamatsuBlue") {
+        active_z_pos_max2 = box_size_/2. - box_thickness_ - dist_dice_flange2_ - tile2_thickn_
+                            - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
       }
+      G4double active_depth2 = active_z_pos_max2 - active_z_pos_min;
+      G4double active_z_pos2 = active_z_pos_min + active_depth2/2.;
+
+      G4Box* active_solid2 =
+       new G4Box("ACTIVE", dist_lat_panels_/2., dist_lat_panels_/2., active_depth2/2.);
+
+      G4LogicalVolume* active_logic2 =
+       new G4LogicalVolume(active_solid2, LXe, "ACTIVE");
+
+      new G4PVPlacement(0, G4ThreeVector(0., 0., active_z_pos2), active_logic2,
+                        "ACTIVE", LXe_logic_, false, 1, false);
+
+      active_logic2->SetSensitiveDetector(ionisd);
+      active_logic2->SetUserLimits(new G4UserLimits(max_step_size_));
+
+      if (visibility_) {
+        G4VisAttributes active_col = nexus::Blue();
+        active_logic2->SetVisAttributes(active_col);
+      }
+
+    } else {
+      G4RotationMatrix rot_active;
+      rot_active.rotateY(pi);
+        new G4PVPlacement(G4Transform3D(rot_active, G4ThreeVector(0., 0., active_z_pos)),
+                          active_logic_, "ACTIVE", LXe_logic_, false, 2, false);
     }
-
-    G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    teflon->SetMaterialPropertiesTable(petopticalprops::PTFE());
-
-    G4LogicalVolume *teflon_block_logic =
-      new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
-
-      new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                        "TEFLON_BLOCK", active_logic, false, 1, false);
-
-    // Optical surface for teflon
-    G4OpticalSurface* teflon_optSurf =
-      new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
-
-      new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
-
-
-    if (visibility_) {
-      G4VisAttributes block_col = nexus::LightBlue();
-      teflon_block_logic->SetVisAttributes(block_col);
-    }
-  }
 
   // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS /////
 
-  if (add_teflon_block_==0){
     G4Box *entry_panel_solid =
         new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2., panel_thickness_/2.);
 
@@ -633,6 +563,93 @@ void PetBox::BuildBox()
         wls_logic->SetVisAttributes(wls_col);
       }
     }
+  } else {
+    // TEFLON BLOCK TO REDUCE XENON VOL  /////////////////////////
+
+    G4double teflon_block_xy    = 67    * mm;
+    G4double teflon_block_thick = 35.75 * mm;
+
+    G4double teflon_offset_x = 3.64 * mm;
+    G4double teflon_offset_y = 3.7  * mm;
+
+    G4double teflon_central_offset_x = 3.23 * mm;
+    G4double teflon_central_offset_y = 3.11 * mm;
+
+    G4double teflon_holes_xy    = 5.75 * mm;
+    G4double teflon_holes_depth = 5    * mm;
+
+    G4double dist_between_holes_xy = 1.75 * mm;
+
+    G4Box *teflon_block_nh_solid =
+      new G4Box("TEFLON_BLOCK", teflon_block_xy/2., teflon_block_xy/2., teflon_block_thick/2.);
+
+    G4double block_z_pos = ih_z_size_/2. + teflon_block_thick/2.;
+
+    // Holes in the block
+    G4double dist_four_holes = 4* teflon_holes_xy + 3*dist_between_holes_xy;
+
+    G4Box *teflon_hole_solid =
+      new G4Box("BLOCK_HOLE", teflon_holes_xy/2., teflon_holes_xy/2., teflon_holes_depth/2.);
+
+    G4double holes_pos_z = -teflon_block_thick/2. + teflon_holes_depth/2.;
+
+    G4double first_hole_xpos = -teflon_block_xy/2. + teflon_offset_x +
+        dist_four_holes/2. - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.);
+    G4double first_hole_ypos =  teflon_block_xy/2. - teflon_offset_y -
+        dist_four_holes/2. + 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.);
+
+    G4SubtractionSolid* teflon_block_solid =
+      new G4SubtractionSolid("TEFLON_BLOCK", teflon_block_nh_solid, teflon_hole_solid,
+                             0, G4ThreeVector(first_hole_xpos, first_hole_ypos, holes_pos_z));
+
+    for (G4int j = 0; j < 2; j++){ // Loop over the tiles in row
+      G4double set_holes_y = teflon_block_xy/2. - teflon_offset_y - dist_four_holes/2.
+                             - j*(teflon_central_offset_y + dist_four_holes);
+      for (G4int i = 0; i < 2; i++){ // Loop over the tiles in column
+        G4double set_holes_x = -teflon_block_xy/2. + teflon_offset_x + dist_four_holes/2.
+                               + i*(teflon_central_offset_x + dist_four_holes);
+        for (G4int l = 0; l < 4; l++){ // Loop over the sensors in row
+          G4double holes_pos_y = set_holes_y + 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.)
+                                - l*(teflon_holes_xy + dist_between_holes_xy);
+          for (G4int k = 0; k < 4; k++){ // Loop over the sensors in column
+            G4double holes_pos_x = set_holes_x - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.)
+                                    + k*(teflon_holes_xy + dist_between_holes_xy);
+            if (i==0 && j==0 && k==0 && l==0){
+              continue;
+            }
+            teflon_block_solid =
+              new G4SubtractionSolid("TEFLON_BLOCK", teflon_block_solid, teflon_hole_solid,
+                                     0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z));
+          }
+        }
+      }
+    }
+
+    G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    teflon->SetMaterialPropertiesTable(petopticalprops::PTFE());
+
+    G4LogicalVolume *teflon_block_logic =
+      new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
+
+      new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
+                        "TEFLON_BLOCK", active_logic_, false, 1, false);
+
+    G4RotationMatrix rot_teflon;
+    rot_teflon.rotateY(pi);
+      new G4PVPlacement(G4Transform3D(rot_teflon, G4ThreeVector(0., 0., block_z_pos)), teflon_block_logic,
+                        "TEFLON_BLOCK", active_logic_, false, 1, false);
+
+    // Optical surface for teflon
+    G4OpticalSurface* teflon_optSurf =
+      new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
+
+      new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
+
+
+    if (visibility_) {
+      G4VisAttributes block_col = nexus::LightBlue();
+      teflon_block_logic->SetVisAttributes(block_col);
+    }
   }
 
 
@@ -659,7 +676,7 @@ void PetBox::BuildBox()
     //air_source_tube_inside_box_col.SetForceSolid(true);
     source_tube_inside_box_logic->SetVisAttributes(air_source_tube_inside_box_col);
     G4VisAttributes active_col = nexus::Blue();
-    active_logic->SetVisAttributes(active_col);
+    active_logic_->SetVisAttributes(active_col);
   }
   else
   {
@@ -690,8 +707,13 @@ void PetBox::BuildSensors()
     {
       G4double x_pos = -full_row_size_/2. + tile_size_x/2. + i*tile_size_x;
       vol_name = "TILE_" + std::to_string(copy_no);
-      new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
-                        vol_name, LXe_logic_, false, copy_no, false);
+      if (add_teflon_block_==0){
+        new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
+                          vol_name, LXe_logic_, false, copy_no, false);
+      } else {
+        new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
+                          vol_name, active_logic_, false, copy_no, false);
+      }
       copy_no += 1;
     }
   }
@@ -711,8 +733,13 @@ void PetBox::BuildSensors()
       vol_name = "TILE_" + std::to_string(copy_no);
       G4double x_pos = 0.;
       G4double y_pos = 0.;
-      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
-                        tile2_logic, vol_name, LXe_logic_, false, copy_no, false);
+      if (add_teflon_block_==0){
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
+                          tile2_logic, vol_name, LXe_logic_, false, copy_no, false);
+      } else {
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
+                          tile2_logic, vol_name, active_logic_, false, copy_no, false);
+      }
 
     } else {
 
@@ -722,8 +749,14 @@ void PetBox::BuildSensors()
         for (G4int i=0; i<n_tile_columns_; i++) {
           G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
           vol_name = "TILE_" + std::to_string(copy_no);
-          new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
-                            tile2_logic, vol_name, LXe_logic_, false, copy_no, false);
+
+          if (add_teflon_block_==0){
+            new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
+                              tile2_logic, vol_name, LXe_logic_, false, copy_no, false);
+          } else {
+            new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
+                              tile2_logic, vol_name, active_logic_, false, copy_no, false);
+          }
           copy_no += 1;
         }
       }
@@ -735,8 +768,13 @@ void PetBox::BuildSensors()
       vol_name = "TILE_" + std::to_string(copy_no);
       G4double x_pos = 0.;
       G4double y_pos = 0.;
-      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
-                        tile_logic, vol_name, LXe_logic_, false, copy_no, false);
+      if (add_teflon_block_==0){
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
+                          tile_logic, vol_name, LXe_logic_, false, copy_no, false);
+      } else {
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
+                          tile_logic, vol_name, active_logic_, false, copy_no, false);
+      }
 
     } else {
 
@@ -746,8 +784,13 @@ void PetBox::BuildSensors()
         for (G4int i=0; i<n_tile_columns_; i++) {
           G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
           vol_name = "TILE_" + std::to_string(copy_no);
-          new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
-                            tile_logic, vol_name, LXe_logic_, false, copy_no, false);
+          if (add_teflon_block_==0){
+            new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
+                              tile_logic, vol_name, LXe_logic_, false, copy_no, false);
+          } else {
+            new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
+                              tile_logic, vol_name, active_logic_, false, copy_no, false);
+          }
           copy_no += 1;
         }
       }
