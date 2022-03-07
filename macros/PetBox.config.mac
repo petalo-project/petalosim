@@ -1,8 +1,8 @@
 ### GEOMETRY
 /Geometry/PetBox/visibility true
 /Geometry/PetBox/tile_type_d HamamatsuVUV
-/Geometry/PetBox/tile_type_c FBK
-/Geometry/PetBox/single_tile_coinc_plane 1
+/Geometry/PetBox/tile_type_c HamamatsuVUV
+/Geometry/PetBox/single_tile_coinc_plane 0
 /Geometry/PetBox/add_teflon_block 1
 
 /Geometry/PetBox/tile_vis true
