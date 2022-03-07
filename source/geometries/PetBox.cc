@@ -632,7 +632,7 @@ void PetBox::BuildBox()
       new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                        "TEFLON_BLOCK", active_logic_, false, 1, false);
+                        "TEFLON_BLOCK", active_logic_, false, 0, false);
 
     G4RotationMatrix rot_teflon;
     rot_teflon.rotateY(pi);
