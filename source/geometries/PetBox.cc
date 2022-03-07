@@ -492,6 +492,17 @@ void PetBox::BuildBox()
       }
     }
   } else {
+
+    if (tile_type_d_ != tile_type_c_) {
+      G4Exception("[PetBox]", "BuildBox()", FatalException,
+                  "Teflon Block only allowed when tiles in both planes are the same!");
+    } else {
+      if (tile_type_d_ == "FBK" or tile_type_d_ == "HamamatsuBlue"){
+        G4Exception("[PetBox]", "BuildBox()", FatalException,
+                    "Teflon Block only allowed when tiles in both planes are the HamamatsuVUV!");
+      }
+    }
+
     // TEFLON BLOCK TO REDUCE XENON VOL  /////////////////////////
 
     G4double teflon_block_xy    = 67    * mm;
