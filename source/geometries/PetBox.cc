@@ -162,8 +162,6 @@ void PetBox::BuildBox()
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
                     active_logic_, "ACTIVE", box_logic, false, 0, false);
 
-  // ACTIVE ///////////////////////////////////////////////////
-
   // Set the ACTIVE volume as an ionization sensitive det
   IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
