@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // petalosim | PetSensorsEventAction.cc
 //
-// This is the default event action of the PETALO simulations. Only events with
-// deposited energy larger than 0 are saved in the nexus output file.
+// This class saves in the nexus output file only events with any detected
+// charge by the sensors and deposited energy larger than 0.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
