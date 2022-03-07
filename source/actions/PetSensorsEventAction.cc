@@ -89,7 +89,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
       }
     }
 
-    G4double touched_sns = 0.;
+    G4bool any_charge_in_sns = false;
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     G4HCtable* hct = sdmgr->GetHCtable();
 
@@ -111,7 +111,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
         size_t sns_hit_size = hits->GetSize();
         if (sns_hit_size>0)
         {
-          touched_sns += 1;
+          any_charge_in_sns = true;
         }
       }
     }
@@ -129,7 +129,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    if (!event->IsAborted() && touched_sns && edep > energy_threshold_ && edep < energy_max_)
+    if (!event->IsAborted() && any_charge_in_sns && edep > energy_threshold_ && edep < energy_max_)
     {
       pm->StoreCurrentEvent(true);
     }
