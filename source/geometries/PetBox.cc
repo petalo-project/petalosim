@@ -148,33 +148,25 @@ void PetBox::BuildBox()
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), box_logic,
                     "BOX", lab_logic_, false, 0, false);
 
-  // LXe ///////////////////////////////////////////////////////
+  // LXe as ACTIVE /////////////////////////////////////////////
+
   G4double LXe_size = box_size_ - 2. * box_thickness_;
-  G4Box *LXe_solid =
+  G4Box *active_solid =
       new G4Box("LXe", LXe_size/2., LXe_size/2., LXe_size/2.);
 
   G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
   LXe->SetMaterialPropertiesTable(opticalprops::LXe());
-  LXe_logic_ =
-      new G4LogicalVolume(LXe_solid, LXe, "LXE");
+  active_logic_ =
+      new G4LogicalVolume(active_solid, LXe, "ACTIVE");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
-                    LXe_logic_, "LXE", box_logic, false, 0, false);
+                    active_logic_, "ACTIVE", box_logic, false, 0, false);
 
-  // ACTIVE IN CASE THE TEFLON BLOCK IS ADDED /////////////////
-  // If not, active will be defined later /////////////////////
+  // ACTIVE ///////////////////////////////////////////////////
 
   // Set the ACTIVE volume as an ionization sensitive det
   IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
-
-  G4Box *active_solid =
-    new G4Box("ACTIVE", LXe_size/2., LXe_size/2., LXe_size/2.);
-
-  active_logic_ = new G4LogicalVolume(active_solid, LXe, "ACTIVE");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
-                      "ACTIVE", LXe_logic_, false, 1, false);
 
   active_logic_->SetSensitiveDetector(ionisd);
   active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
@@ -599,8 +591,8 @@ void PetBox::BuildBox()
     G4VisAttributes al_cyl_col = nexus::DarkGrey();
     //al_cyl_col.SetForceSolid(true);
     aluminum_cyl_logic->SetVisAttributes(al_cyl_col);
-    G4VisAttributes lxe_col = nexus::Blue();
-    LXe_logic_->SetVisAttributes(lxe_col);
+    G4VisAttributes active_col = nexus::Blue();
+    active_logic_->SetVisAttributes(active_col);
     G4VisAttributes ih_col = nexus::Yellow();
     internal_hat_logic->SetVisAttributes(ih_col);
     G4VisAttributes vacuum_col = nexus::Lilla();
@@ -614,13 +606,11 @@ void PetBox::BuildBox()
     G4VisAttributes air_source_tube_inside_box_col = nexus::White();
     //air_source_tube_inside_box_col.SetForceSolid(true);
     source_tube_inside_box_logic->SetVisAttributes(air_source_tube_inside_box_col);
-    G4VisAttributes active_col = nexus::Blue();
-    active_logic_->SetVisAttributes(active_col);
   }
   else
   {
     box_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    LXe_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
+    active_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

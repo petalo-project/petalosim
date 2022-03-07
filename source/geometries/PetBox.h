@@ -48,7 +48,6 @@ private:
   void BuildSensors();
 
   G4LogicalVolume *lab_logic_;
-  G4LogicalVolume *LXe_logic_;
   G4LogicalVolume *active_logic_;
 
   G4bool visibility_;
