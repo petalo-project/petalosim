@@ -129,7 +129,6 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    // G4cout << " Helloooooooo    !!!!!!!! : " << touched_sns << "  " << edep << G4endl;
     if (!event->IsAborted() && touched_sns && edep > energy_threshold_ && edep < energy_max_)
     {
       pm->StoreCurrentEvent(true);
