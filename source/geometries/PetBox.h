@@ -20,6 +20,11 @@ class TileHamamatsuVUV;
 class TileHamamatsuBlue;
 class TileFBK;
 
+namespace nexus
+{
+class SpherePointSampler;
+}
+
 using namespace nexus;
 
 class PetBox : public GeometryBase
@@ -87,7 +92,9 @@ private:
   G4double max_step_size_;
 
   /// Messenger for the definition of control commands
-  G4GenericMessenger *msg_;
+  G4GenericMessenger* msg_;
+
+  SpherePointSampler* source_gen_;
 };
 
 #endif

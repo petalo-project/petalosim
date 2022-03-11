@@ -12,12 +12,14 @@
 #include "TileFBK.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
+#include "Na22Source.h"
 
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/MaterialsList.h"
 #include "nexus/OpticalMaterialProperties.h"
+#include "nexus/SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -213,6 +215,20 @@ void PetBox::BuildBox()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., source_tube_thick_roof_ / 2.), air_source_tube_logic,
                     "AIR_SOURCE_TUBE", source_tube_logic, false, 0, false);
+
+  // ENCAPSULATED SOURCE
+
+  Na22Source na22 = Na22Source();
+  na22.Construct();
+  G4LogicalVolume* na22_logic = na22.GetLogicalVolume();
+  G4double source_offset_y = -0.9 * mm;
+  G4double na22_pos = - box_size_/2 + box_thickness_ + air_source_tube_len / 2. - source_offset_y;
+
+  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., na22_pos)), na22_logic,
+                    "NA22_SOURCE_SUPPORT", air_source_tube_logic, false, 0, false);
+
+  source_gen_ = new SpherePointSampler(0, na22.GetSourceDiameter()/2,
+                                       G4ThreeVector(0, source_offset_y, 0.));
 
   // SOURCE TUBE INSIDE BOX
   G4Tubs *source_tube_inside_box_solid =
@@ -503,10 +519,10 @@ void PetBox::BuildBox()
     //source_tube_col.SetForceSolid(true);
     source_tube_logic->SetVisAttributes(source_tube_col);
     G4VisAttributes air_source_tube_col = nexus::DarkGrey();
-    air_source_tube_col.SetForceSolid(true);
+    // air_source_tube_col.SetForceSolid(true);
     air_source_tube_logic->SetVisAttributes(air_source_tube_col);
     G4VisAttributes air_source_tube_inside_box_col = nexus::White();
-    air_source_tube_inside_box_col.SetForceSolid(true);
+    //air_source_tube_inside_box_col.SetForceSolid(true);
     source_tube_inside_box_logic->SetVisAttributes(air_source_tube_inside_box_col);
     G4VisAttributes active_col = nexus::Blue();
     active_logic->SetVisAttributes(active_col);
@@ -614,17 +630,21 @@ G4ThreeVector PetBox::GenerateVertex(const G4String &region) const
   G4ThreeVector vertex(0., 0., 0.);
 
   if (region == "CENTER")
-  {
-    return vertex;
-  }
+    {
+      return vertex;
+    }
   else if (region == "AD_HOC")
-  {
-    vertex = source_pos_;
-  }
+    {
+      vertex = source_pos_;
+    }
+  else if (region == "SOURCE")
+    {
+      vertex = source_gen_->GenerateVertex("VOLUME");
+    }
   else
-  {
-    G4Exception("[PetBox]", "GenerateVertex()", FatalException,
-                "Unknown vertex generation region!");
-  }
+    {
+      G4Exception("[PetBox]", "GenerateVertex()", FatalException,
+                  "Unknown vertex generation region!");
+    }
   return vertex;
 }
