@@ -48,7 +48,7 @@ private:
   void BuildSensors();
 
   G4LogicalVolume *lab_logic_;
-  G4LogicalVolume *LXe_logic_;
+  G4LogicalVolume *active_logic_;
 
   G4bool visibility_;
   G4double reflectivity_;
@@ -78,16 +78,18 @@ private:
   G4double entry_panel_x_size_, entry_panel_y_size_;
   G4double dist_entry_panel_ground_;
 
-  G4double dist_entry_panel_horiz_panel_, dist_entry_panel_vert_panel_;
+  G4double dist_entry_panel_h_panel_, dist_entry_panel_v_panel_;
 
   G4double lat_panel_len_;
-  G4double horiz_lat_panel_z_size_, horiz_lat_panel_y_pos_;
-  G4double vert_lat_panel_z_size_;
+  G4double h_l_panel_z_size_, h_l_panel_y_pos_;
+  G4double v_l_panel_z_size_;
 
   G4double dist_dice_flange_, dist_dice_flange2_;
   G4double dist_ham_vuv_, dist_ham_blue_, dist_fbk_;
   G4double panel_sipm_xy_size_, dist_sipms_panel_sipms_;
   G4double wls_depth_;
+
+  G4bool add_teflon_block_;
 
   G4double max_step_size_;
 

@@ -15,7 +15,7 @@
 
 ### ACTIONS
 /nexus/RegisterRunAction PetaloRunAction
-/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterEventAction PetSensorsEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
