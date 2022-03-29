@@ -36,6 +36,7 @@ private:
   G4int nevt_, nupdate_;
   G4double energy_threshold_;
   G4double energy_max_;
+  G4int min_charge_;
 };
 
 #endif

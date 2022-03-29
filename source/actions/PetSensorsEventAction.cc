@@ -27,8 +27,12 @@ using namespace nexus;
 
 REGISTER_CLASS(PetSensorsEventAction, G4UserEventAction)
 
-PetSensorsEventAction::PetSensorsEventAction() : G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.),
-                                         energy_max_(DBL_MAX)
+PetSensorsEventAction::PetSensorsEventAction() : G4UserEventAction(),
+                                                 nevt_(0),
+                                                 nupdate_(10),
+                                                 energy_threshold_(0.),
+                                                 energy_max_(DBL_MAX),
+                                                 min_charge_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Actions/PetSensorsEventAction/");
 
@@ -45,6 +49,9 @@ PetSensorsEventAction::PetSensorsEventAction() : G4UserEventAction(), nevt_(0), 
   max_energy_cmd.SetParameterName("max_energy", true);
   max_energy_cmd.SetUnitCategory("Energy");
   max_energy_cmd.SetRange("max_energy>0.");
+
+  msg_->DeclareProperty("min_charge", min_charge_,
+    "Minimum charge detected to save the event to file.");
 }
 
 PetSensorsEventAction::~PetSensorsEventAction()
@@ -129,7 +136,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    if (!event->IsAborted() && any_charge_in_sns && edep > energy_threshold_ && edep < energy_max_)
+    if (!event->IsAborted() && any_charge_in_sns && charge_above_th && edep > energy_threshold_ && edep < energy_max_)
     {
       pm->StoreCurrentEvent(true);
     }
