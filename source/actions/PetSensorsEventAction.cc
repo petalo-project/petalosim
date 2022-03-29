@@ -97,6 +97,9 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     }
 
     G4bool any_charge_in_sns = false;
+    G4bool charge_above_th   = false;
+    G4double amplitude = 0.;
+
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     G4HCtable* hct = sdmgr->GetHCtable();
 
@@ -116,11 +119,26 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
         G4VHitsCollection* SensHits = hc->GetHC(hcid);
         SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
         size_t sns_hit_size = hits->GetSize();
-        if (sns_hit_size>0)
-        {
+
+        if (sns_hit_size>0){
           any_charge_in_sns = true;
         }
+
+        for (size_t j=0; j<hits->entries(); j++) {
+          SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(j));
+
+          const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
+          std::map<G4double, G4int>::const_iterator it;
+
+          for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+            amplitude = amplitude + (*it).second;
+          }
+        }
       }
+    }
+
+    if (amplitude>min_charge_){
+      charge_above_th = true;
     }
 
 
