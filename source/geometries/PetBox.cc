@@ -330,7 +330,7 @@ void PetBox::BuildBox()
         new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2., panel_thickness_/2.);
 
     G4Material *pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
-    pyrex->SetMaterialPropertiesTable(petopticalprops::Pyrex_vidrasa());
+    //pyrex->SetMaterialPropertiesTable(petopticalprops::Pyrex_vidrasa());
 
     G4LogicalVolume *entry_panel_logic =
         new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
