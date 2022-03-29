@@ -96,8 +96,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
       }
     }
 
-    G4bool any_charge_in_sns = false;
-    G4bool charge_above_th   = false;
+    G4bool charge_above_th = false;
     G4double amplitude = 0.;
 
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
@@ -118,11 +117,6 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
       if (hcname == SensorSD::GetCollectionUniqueName()){
         G4VHitsCollection* SensHits = hc->GetHC(hcid);
         SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
-        size_t sns_hit_size = hits->GetSize();
-
-        if (sns_hit_size>0){
-          any_charge_in_sns = true;
-        }
 
         for (size_t j=0; j<hits->entries(); j++) {
           SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(j));
@@ -154,7 +148,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    if (!event->IsAborted() && any_charge_in_sns && charge_above_th && edep > energy_threshold_ && edep < energy_max_)
+    if (!event->IsAborted() && charge_above_th && edep > energy_threshold_ && edep < energy_max_)
     {
       pm->StoreCurrentEvent(true);
     }
