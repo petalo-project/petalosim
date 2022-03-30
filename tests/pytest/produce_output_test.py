@@ -159,7 +159,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /nexus/RegisterGeometry PetBox
 
 ### GENERATOR
-/nexus/RegisterGenerator Back2backGammas
+/nexus/RegisterGenerator IonGenerator
 #/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
@@ -190,7 +190,9 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /Geometry/PetBox/sipm_time_binning 5. picosecond
 /Geometry/PetBox/sipm_pde 0.5
 
-/Generator/Back2back/region CENTER
+/Generator/IonGenerator/region SOURCE
+/Generator/IonGenerator/atomic_number 11
+/Generator/IonGenerator/mass_number 22
 
 /process/optical/processActivation Cerenkov false
 
