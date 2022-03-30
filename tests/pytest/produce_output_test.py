@@ -145,7 +145,7 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 @pytest.mark.order(3)
 def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_params):
 
-     _, base_name, tile_type1, tile_type2, _, _, _, _, _ = petalosim_pet_box_params
+     _, base_name, tile_type1, tile_type2, _, _, _, _, _, min_charge_evt = petalosim_pet_box_params
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -164,7 +164,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 ### ACTIONS
 /nexus/RegisterRunAction PetaloRunAction
-/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterEventAction PetSensorsEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
@@ -193,6 +193,8 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /Generator/IonGenerator/region SOURCE
 /Generator/IonGenerator/atomic_number 11
 /Generator/IonGenerator/mass_number 22
+
+/Actions/PetSensorsEventAction/min_charge {min_charge_evt}
 
 /process/optical/processActivation Cerenkov false
 

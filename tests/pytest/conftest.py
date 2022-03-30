@@ -72,7 +72,8 @@ def petalosim_params_pet_box_HamamatsuVUV(output_tmpdir):
     init_sns_id1   =  11
     init_sns_id2   = 111
     sensor_name    = 'SiPMHmtsuVUV'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name
+    min_charge_evt = 50
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_pet_box_HamamatsuBlue(output_tmpdir):
@@ -84,7 +85,8 @@ def petalosim_params_pet_box_HamamatsuBlue(output_tmpdir):
     init_sns_id1   =  11
     init_sns_id2   = 111
     sensor_name    = 'SiPMHmtsuBlue'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2,sensor_name
+    min_charge_evt = 50
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_pet_box_FBK(output_tmpdir):
@@ -96,7 +98,8 @@ def petalosim_params_pet_box_FBK(output_tmpdir):
     init_sns_id1   =  11
     init_sns_id2   = 111
     sensor_name    = 'SiPMFBKVUV'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name
+    min_charge_evt = 50
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
@@ -108,7 +111,8 @@ def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
     init_sns_id1   = 11
     init_sns_id2   = 111
     sensor_name    = 'SiPMFBKVUV', 'SiPMHmtsuVUV'
-    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name
+    min_charge_evt = 50
+    return os.path.join(output_tmpdir, base_name+'.h5'), base_name, tile_type1, tile_type2, n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
 
 
 @pytest.fixture(scope="module",
