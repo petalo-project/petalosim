@@ -99,38 +99,32 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     G4bool charge_above_th = false;
     G4double amplitude = 0.;
 
+    G4HCofThisEvent* hce = event->GetHCofThisEvent();
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     G4HCtable* hct = sdmgr->GetHCtable();
 
-    G4HCofThisEvent* hc = event->GetHCofThisEvent();
+    // Get only the SensorHitsCollection --> 1
+    G4String hcname = hct->GetHCname(1);
+    G4String sdname = hct->GetSDname(1);
+    int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
 
-    // Loop through the hits collections
-    for (int i=0; i<hct->entries(); i++) {
+    G4VHitsCollection* SensHits = hce->GetHC(hcid);
+    SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
+    if (!hits) return;
+    for (size_t i=0; i<hits->entries(); i++) {
+      SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
+      if (!hit) continue;
 
-      // Collection are identified univocally (in principle) using
-      // their id number, and this can be obtained using the collection
-      // and sensitive detector names.
-      G4String hcname = hct->GetHCname(i);
-      G4String sdname = hct->GetSDname(i);
-      int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
+      // Reject TOF hits
+      if (hit->GetPmtID() >= 0) {
+        const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
+        std::map<G4double, G4int>::const_iterator it;
 
-      if (hcname == SensorSD::GetCollectionUniqueName()){
-        G4VHitsCollection* SensHits = hc->GetHC(hcid);
-        SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
-
-        for (size_t j=0; j<hits->entries(); j++) {
-          SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(j));
-
-          const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-          std::map<G4double, G4int>::const_iterator it;
-
-          for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-            amplitude = amplitude + (*it).second;
-          }
+        for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+          amplitude = amplitude + (*it).second;
         }
-      }
+      } else continue;
     }
-
     if (amplitude>min_charge_){
       charge_above_th = true;
     }
