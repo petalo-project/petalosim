@@ -14,7 +14,7 @@
 
 ### ACTIONS
 /nexus/RegisterRunAction DefaultRunAction
-/nexus/RegisterEventAction SaveAllEventAction
+/nexus/RegisterEventAction PetSaveAllEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 /nexus/RegisterSteppingAction PetSaveAllSteppingAction
 
