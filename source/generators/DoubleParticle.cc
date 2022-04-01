@@ -34,7 +34,7 @@ REGISTER_CLASS(DoubleParticle, G4VPrimaryGenerator)
 
 DoubleParticle::DoubleParticle():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-energy_min_(0.), energy_max_(0.), geom_(0)
+energy_min_(0.), max_energy_(0.), geom_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/DoubleParticle/",
     "Control commands of single-particle generator.");
@@ -50,7 +50,7 @@ energy_min_(0.), energy_max_(0.), geom_(0)
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_,
+    msg_->DeclareProperty("max_energy", max_energy_,
       "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
 
@@ -164,8 +164,8 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 
 G4double DoubleParticle::RandomEnergy() const
 {
-  if (energy_max_ == energy_min_)
+  if (max_energy_ == energy_min_)
     return energy_min_;
   else
-    return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);
+    return (G4UniformRand()*(max_energy_ - energy_min_) + energy_min_);
 }
