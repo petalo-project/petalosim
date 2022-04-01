@@ -22,7 +22,7 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALO
 /nexus/RegisterGenerator Back2backGammas
 
 ### ACTIONS
-/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction PetaloEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 
@@ -92,7 +92,7 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 /nexus/RegisterGenerator Back2backGammas
 
 ### ACTIONS
-/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction PetaloEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 
@@ -163,7 +163,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 #/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
-/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction PetSensorsEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 
