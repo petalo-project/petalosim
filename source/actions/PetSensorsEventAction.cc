@@ -108,27 +108,28 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     G4String sdname = hct->GetSDname(1);
     int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
 
-    G4VHitsCollection* SensHits = hce->GetHC(hcid);
-    SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
-    if (!hits) return;
-    for (size_t i=0; i<hits->entries(); i++) {
-      SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
-      if (!hit) continue;
+    if (hcname == SensorSD::GetCollectionUniqueName()){
+      G4VHitsCollection* SensHits = hce->GetHC(hcid);
+      SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
+      if (!hits) return;
+      for (size_t i=0; i<hits->entries(); i++) {
+        SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
+        if (!hit) continue;
 
-      // Reject TOF hits
-      if (hit->GetPmtID() >= 0) {
-        const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-        std::map<G4double, G4int>::const_iterator it;
+        // Reject TOF hits
+        if (hit->GetPmtID() >= 0) {
+          const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
+          std::map<G4double, G4int>::const_iterator it;
 
-        for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-          amplitude = amplitude + (*it).second;
-        }
-      } else continue;
-    }
-    if (amplitude>min_charge_){
-      charge_above_th = true;
-    }
-
+          for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+            amplitude = amplitude + (*it).second;
+          }
+        } else continue;
+      }
+      if (amplitude>min_charge_){
+        charge_above_th = true;
+      }
+  }
 
     PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
