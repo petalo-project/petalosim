@@ -13,7 +13,7 @@
 /nexus/RegisterGenerator ScintillationGenerator
 
 ### ACTIONS
-/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction PetaloEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 

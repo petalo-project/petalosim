@@ -13,8 +13,8 @@
 /nexus/RegisterGenerator Back2backGammas
 
 ### ACTIONS
-/nexus/RegisterRunAction PetaloRunAction
-/nexus/RegisterEventAction PetSaveAllEventAction
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction SaveAllEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 /nexus/RegisterSteppingAction PetSaveAllSteppingAction
 
