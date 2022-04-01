@@ -34,8 +34,9 @@ public:
 private:
   G4GenericMessenger *msg_;
   G4int nevt_, nupdate_;
-  G4double energy_threshold_;
-  G4double energy_max_;
+  G4double min_energy_;
+  G4double max_energy_;
+  G4int min_charge_;
 };
 
 #endif

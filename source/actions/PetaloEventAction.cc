@@ -26,20 +26,20 @@ using namespace nexus;
 
 REGISTER_CLASS(PetaloEventAction, G4UserEventAction)
 
-PetaloEventAction::PetaloEventAction() : G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.),
-                                         energy_max_(DBL_MAX)
+PetaloEventAction::PetaloEventAction() : G4UserEventAction(), nevt_(0), nupdate_(10), min_energy_(0.),
+                                         max_energy_(DBL_MAX)
 {
   msg_ = new G4GenericMessenger(this, "/Actions/PetaloEventAction/");
 
   G4GenericMessenger::Command &thresh_cmd =
-      msg_->DeclareProperty("energy_threshold", energy_threshold_,
+      msg_->DeclareProperty("min_energy", min_energy_,
                             "Minimum deposited energy to save the event to file.");
-  thresh_cmd.SetParameterName("energy_threshold", true);
+  thresh_cmd.SetParameterName("min_energy", true);
   thresh_cmd.SetUnitCategory("Energy");
-  thresh_cmd.SetRange("energy_threshold>0.");
+  thresh_cmd.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command &max_energy_cmd =
-      msg_->DeclareProperty("max_energy", energy_max_,
+      msg_->DeclareProperty("max_energy", max_energy_,
                             "Maximum deposited energy to save the event to file.");
   max_energy_cmd.SetParameterName("max_energy", true);
   max_energy_cmd.SetUnitCategory("Energy");
@@ -67,7 +67,7 @@ void PetaloEventAction::EndOfEventAction(const G4Event *event)
 
   // Determine whether total energy deposit in ionization sensitive
   // detectors is above threshold
-  if (energy_threshold_ >= 0.)
+  if (min_energy_ >= 0.)
   {
 
     // Get the trajectories stored for this event and loop through them
@@ -90,7 +90,7 @@ void PetaloEventAction::EndOfEventAction(const G4Event *event)
 
     PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
-    // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
+    // if (edep > _min_energy) pm->StoreCurrentEvent(true);
     // else pm->StoreCurrentEvent(false);
     if (!event->IsAborted() && edep > 0)
     {
@@ -100,7 +100,7 @@ void PetaloEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_)
+    if (!event->IsAborted() && edep > min_energy_ && edep < max_energy_)
     {
       pm->StoreCurrentEvent(true);
     }

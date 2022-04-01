@@ -20,7 +20,7 @@
 /Generator/Back2back/region AD_HOC
 #/Generator/Back2back/region CUSTOM
 
-/Actions/PetaloEventAction/energy_threshold .511 MeV
+/Actions/PetaloEventAction/min_energy .511 MeV
 
 ### VERBOSITIES
 /run/verbose 1

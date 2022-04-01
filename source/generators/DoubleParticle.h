@@ -40,7 +40,7 @@ namespace nexus {
     void SetParticleDefinition(G4String);
 
     /// Generate a random kinetic energy with flat probability in
-    //  the interval [energy_min, energy_max].
+    //  the interval [energy_min, max_energy].
     G4double RandomEnergy() const;
 
   private:
@@ -49,7 +49,7 @@ namespace nexus {
     G4ParticleDefinition* particle_definition_;
 
     G4double energy_min_; ///< Minimum kinetic energy
-    G4double energy_max_; ///< Maximum kinetic energy
+    G4double max_energy_; ///< Maximum kinetic energy
 
     const GeometryBase* geom_; ///< Pointer to the detector geometry
 

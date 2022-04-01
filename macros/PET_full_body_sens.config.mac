@@ -23,7 +23,7 @@
 ### GENERATOR
 /Generator/SensMap/num_gammas 1
 
-/Actions/PetaloEventAction/energy_threshold 0.95 MeV
+/Actions/PetaloEventAction/min_energy 0.95 MeV
 
 ### VERBOSITIES
 /run/verbose 1

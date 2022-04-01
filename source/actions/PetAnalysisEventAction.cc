@@ -33,22 +33,22 @@ REGISTER_CLASS(PetAnalysisEventAction, G4UserEventAction)
 
 PetAnalysisEventAction::PetAnalysisEventAction() : G4UserEventAction(),
                                                    nevt_(0), nupdate_(10),
-                                                   energy_threshold_(0.),
-                                                   energy_max_(DBL_MAX),
+                                                   min_energy_(0.),
+                                                   max_energy_(DBL_MAX),
                                                    file_name_("OpticalEvent"),
                                                    file_no_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Actions/PetAnalysisEventAction/");
 
   G4GenericMessenger::Command &thresh_cmd =
-      msg_->DeclareProperty("energy_threshold", energy_threshold_,
+      msg_->DeclareProperty("min_energy", min_energy_,
                             "Minimum deposited energy to save the event to file.");
-  thresh_cmd.SetParameterName("energy_threshold", true);
+  thresh_cmd.SetParameterName("min_energy", true);
   thresh_cmd.SetUnitCategory("Energy");
-  thresh_cmd.SetRange("energy_threshold>0.");
+  thresh_cmd.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command &max_energy_cmd =
-      msg_->DeclareProperty("max_energy", energy_max_,
+      msg_->DeclareProperty("max_energy", max_energy_,
                             "Maximum deposited energy to save the event to file.");
   max_energy_cmd.SetParameterName("max_energy", true);
   max_energy_cmd.SetUnitCategory("Energy");
@@ -88,7 +88,7 @@ void PetAnalysisEventAction::EndOfEventAction(const G4Event *event)
 
   // Determine whether total energy deposit in ionization sensitive
   // detectors is above threshold
-  if (energy_threshold_ >= 0.)
+  if (min_energy_ >= 0.)
   {
 
     // Get the trajectories stored for this event and loop through them
@@ -125,7 +125,7 @@ void PetAnalysisEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_)
+    if (!event->IsAborted() && edep > min_energy_ && edep < max_energy_)
     {
       pm->StoreCurrentEvent(true);
       hNPhotons->Fill(n_opt_photons);

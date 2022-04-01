@@ -27,24 +27,31 @@ using namespace nexus;
 
 REGISTER_CLASS(PetSensorsEventAction, G4UserEventAction)
 
-PetSensorsEventAction::PetSensorsEventAction() : G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.),
-                                         energy_max_(DBL_MAX)
+PetSensorsEventAction::PetSensorsEventAction() : G4UserEventAction(),
+                                                 nevt_(0),
+                                                 nupdate_(10),
+                                                 min_energy_(0.),
+                                                 max_energy_(DBL_MAX),
+                                                 min_charge_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Actions/PetSensorsEventAction/");
 
   G4GenericMessenger::Command &thresh_cmd =
-      msg_->DeclareProperty("energy_threshold", energy_threshold_,
+      msg_->DeclareProperty("min_energy", min_energy_,
                             "Minimum deposited energy to save the event to file.");
-  thresh_cmd.SetParameterName("energy_threshold", true);
+  thresh_cmd.SetParameterName("min_energy", true);
   thresh_cmd.SetUnitCategory("Energy");
-  thresh_cmd.SetRange("energy_threshold>0.");
+  thresh_cmd.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command &max_energy_cmd =
-      msg_->DeclareProperty("max_energy", energy_max_,
+      msg_->DeclareProperty("max_energy", max_energy_,
                             "Maximum deposited energy to save the event to file.");
   max_energy_cmd.SetParameterName("max_energy", true);
   max_energy_cmd.SetUnitCategory("Energy");
   max_energy_cmd.SetRange("max_energy>0.");
+
+  msg_->DeclareProperty("min_charge", min_charge_,
+    "Minimum charge detected to save the event to file.");
 }
 
 PetSensorsEventAction::~PetSensorsEventAction()
@@ -68,7 +75,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
 
   // Determine whether total energy deposit in ionization sensitive
   // detectors is above threshold
-  if (energy_threshold_ >= 0.)
+  if (min_energy_ >= 0.)
   {
 
     // Get the trajectories stored for this event and loop through them
@@ -89,38 +96,43 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
       }
     }
 
-    G4bool any_charge_in_sns = false;
+    G4bool charge_above_th = false;
+    G4double amplitude = 0.;
+
+    G4HCofThisEvent* hce = event->GetHCofThisEvent();
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     G4HCtable* hct = sdmgr->GetHCtable();
 
-    G4HCofThisEvent* hc = event->GetHCofThisEvent();
+    // Get only the SensorHitsCollection --> 1
+    G4String hcname = hct->GetHCname(1);
+    G4String sdname = hct->GetSDname(1);
+    int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
 
-    // Loop through the hits collections
-    for (int i=0; i<hct->entries(); i++) {
+    if (hcname == SensorSD::GetCollectionUniqueName()){
+      G4VHitsCollection* SensHits = hce->GetHC(hcid);
+      SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
+      if (!hits) return;
+      for (size_t i=0; i<hits->entries(); i++) {
+        SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
+        if (!hit) continue;
 
-      // Collection are identified univocally (in principle) using
-      // their id number, and this can be obtained using the collection
-      // and sensitive detector names.
-      G4String hcname = hct->GetHCname(i);
-      G4String sdname = hct->GetSDname(i);
-      int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
+        // Reject TOF hits
+        if (hit->GetPmtID() >= 0) {
+          const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
+          std::map<G4double, G4int>::const_iterator it;
 
-      if (hcname == SensorSD::GetCollectionUniqueName()){
-        G4VHitsCollection* SensHits = hc->GetHC(hcid);
-        SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
-        size_t sns_hit_size = hits->GetSize();
-        if (sns_hit_size>0)
-        {
-          any_charge_in_sns = true;
-        }
+          for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+            amplitude = amplitude + (*it).second;
+          }
+        } else continue;
       }
-    }
-
+      if (amplitude>min_charge_){
+        charge_above_th = true;
+      }
+  }
 
     PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
-    // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
-    // else pm->StoreCurrentEvent(false);
     if (!event->IsAborted() && edep > 0)
     {
       pm->InteractingEvent(true);
@@ -129,7 +141,7 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->InteractingEvent(false);
     }
-    if (!event->IsAborted() && any_charge_in_sns && edep > energy_threshold_ && edep < energy_max_)
+    if (!event->IsAborted() && charge_above_th && edep > min_energy_ && edep < max_energy_)
     {
       pm->StoreCurrentEvent(true);
     }
