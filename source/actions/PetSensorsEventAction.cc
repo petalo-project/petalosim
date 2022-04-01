@@ -133,8 +133,6 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
 
     PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
-    // if (edep > _min_energy) pm->StoreCurrentEvent(true);
-    // else pm->StoreCurrentEvent(false);
     if (!event->IsAborted() && edep > 0)
     {
       pm->InteractingEvent(true);
