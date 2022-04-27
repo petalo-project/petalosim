@@ -44,6 +44,11 @@ PetaloEventAction::PetaloEventAction() : G4UserEventAction(), nevt_(0), nupdate_
   max_energy_cmd.SetParameterName("max_energy", true);
   max_energy_cmd.SetUnitCategory("Energy");
   max_energy_cmd.SetRange("max_energy>0.");
+
+  PetaloPersistencyManager* pm = dynamic_cast<PetaloPersistencyManager*>
+    (G4VPersistencyManager::GetPersistencyManager());
+
+  pm->SaveNumbOfInteractingEvents(true);
 }
 
 PetaloEventAction::~PetaloEventAction()
