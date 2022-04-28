@@ -43,8 +43,9 @@ REGISTER_CLASS(PetaloPersistencyManager, PersistencyManagerBase)
 
 PetaloPersistencyManager::PetaloPersistencyManager():
   PersistencyManagerBase(), msg_(0), ready_(false), store_evt_(true),
-  store_steps_(false), interacting_evt_(false), event_type_("other"),
-  saved_evts_(0), interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
+  store_steps_(false), interacting_evt_(false), save_int_e_numb_(false),
+  event_type_("other"), saved_evts_(0), interacting_evts_(0),
+  nevt_(0), start_id_(0), first_evt_(true),
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
   save_tot_charge_(true), h5writer_(0)
 {
@@ -159,7 +160,7 @@ void PetaloPersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
       std::string key, value;
       std::getline(init_read, key, ' ');
       std::getline(init_read, value);
-      if ((key == "/nexus/RegisterTrackingAction") && (value == "PetOpticalTrackingAction")) {
+      if ((key == "/nexus/RegisterTrackingAction") && (value == "OpticalTrackingAction")) {
         save_opt_phot = true;
         break;
       }
@@ -434,8 +435,11 @@ G4bool PetaloPersistencyManager::Store(const G4Run*)
   h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
   key = "tof_bin_size";
   h5writer_->WriteRunInfo(key, (std::to_string(tof_bin_size_/picosecond)+" ps").c_str());
-  key = "interacting_events";
-  h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
+
+  if (save_int_e_numb_) {
+     key = "interacting_events";
+     h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
+   }
 
   SaveConfigurationInfo(init_macro_);
   for (unsigned long i=0; i<macros_.size(); i++) {

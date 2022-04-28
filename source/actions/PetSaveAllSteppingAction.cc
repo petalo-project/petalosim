@@ -115,8 +115,8 @@ G4bool PetSaveAllSteppingAction::KeepVolume(G4String& initial_volume, G4String& 
 
   for (auto volume=selected_volumes_.begin(); volume != selected_volumes_.end(); volume++)
   {
-    if (initial_volume.contains(*volume)) return true;
-    if (  final_volume.contains(*volume)) return true;
+    if (G4StrUtil::contains(initial_volume, *volume)) return true;
+    if (G4StrUtil::contains(final_volume, *volume)) return true;
   }
 
   return false;

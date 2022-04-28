@@ -44,6 +44,11 @@ PetaloEventAction::PetaloEventAction() : G4UserEventAction(), nevt_(0), nupdate_
   max_energy_cmd.SetParameterName("max_energy", true);
   max_energy_cmd.SetUnitCategory("Energy");
   max_energy_cmd.SetRange("max_energy>0.");
+
+  PetaloPersistencyManager* pm = dynamic_cast<PetaloPersistencyManager*>
+    (G4VPersistencyManager::GetPersistencyManager());
+
+  pm->SaveNumbOfInteractingEvents(true);
 }
 
 PetaloEventAction::~PetaloEventAction()
@@ -76,22 +81,16 @@ void PetaloEventAction::EndOfEventAction(const G4Event *event)
     G4double edep = 0.;
 
     G4TrajectoryContainer *tc = event->GetTrajectoryContainer();
-    if (tc)
-    {
-      for (unsigned int i = 0; i < tc->size(); ++i)
-      {
+    if (tc) {
+      for (unsigned int i = 0; i < tc->size(); ++i) {
         Trajectory *trj = dynamic_cast<Trajectory *>((*tc)[i]);
         edep += trj->GetEnergyDeposit();
-        // Draw tracks in visual mode
-        if (G4VVisManager::GetConcreteInstance())
-          trj->DrawTrajectory();
       }
     }
 
-    PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
+    PetaloPersistencyManager *pm =
+      dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
-    // if (edep > _min_energy) pm->StoreCurrentEvent(true);
-    // else pm->StoreCurrentEvent(false);
     if (!event->IsAborted() && edep > 0)
     {
       pm->InteractingEvent(true);

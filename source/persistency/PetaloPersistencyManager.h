@@ -35,6 +35,7 @@ public:
   void StoreCurrentEvent(G4bool);
   void InteractingEvent(G4bool);
   void StoreSteps(G4bool);
+  void SaveNumbOfInteractingEvents(G4bool);
 
   ///
   virtual G4bool Store(const G4Event *);
@@ -67,6 +68,7 @@ private:
   G4bool store_evt_;       ///< Should we store the current event?
   G4bool store_steps_;     ///< Should we store the steps for the current event?
   G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
+  G4bool save_int_e_numb_; ///< Should we save the number of interacting events in the configuration table?
 
   G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
@@ -102,6 +104,10 @@ inline void PetaloPersistencyManager::StoreSteps(G4bool ss)
 inline void PetaloPersistencyManager::InteractingEvent(G4bool ie)
 {
   interacting_evt_ = ie;
+}
+inline void PetaloPersistencyManager::SaveNumbOfInteractingEvents(G4bool sie)
+{
+  save_int_e_numb_ = sie;
 }
 inline G4bool PetaloPersistencyManager::Store(const G4VPhysicalVolume *)
 {

@@ -14,7 +14,7 @@
 #/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
-/nexus/RegisterRunAction PetaloRunAction
+/nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction PetSensorsEventAction
 /nexus/RegisterTrackingAction PetaloTrackingAction
 

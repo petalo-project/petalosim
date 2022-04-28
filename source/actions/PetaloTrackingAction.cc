@@ -3,7 +3,7 @@
 //
 // This class is the default tracking action of the PETALO simulation.
 // It stores in memory the trajectories of all particles, except optical photons
-// and ionization electrons, with the relevant tracking information that will be
+// , with the relevant tracking information that will be
 // saved to the output file.
 //
 // The PETALO Collaboration
