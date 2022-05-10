@@ -532,6 +532,10 @@ void PetBox::BuildBox()
     G4LogicalVolume *teflon_hole_logic =
        new G4LogicalVolume(teflon_hole_solid, LXe, "LXE_TEFLON_BLOCK");
 
+    // Set the ACTIVE volume as an ionization sensitive det
+    teflon_hole_logic->SetSensitiveDetector(ionisd);
+    teflon_hole_logic->SetUserLimits(new G4UserLimits(max_step_size_));
+
     G4double holes_pos_z = -teflon_block_thick/2. + teflon_holes_depth/2.;
 
     G4int copy_no = 0;
@@ -550,7 +554,7 @@ void PetBox::BuildBox()
                                     + k*(teflon_holes_xy + dist_between_holes_xy);
 
             new G4PVPlacement(0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z), teflon_hole_logic,
-                              "LXE_TEFLON_BLOCK", teflon_block_logic, false, copy_no, false);
+                              "ACTIVE", teflon_block_logic, false, copy_no, false);
             copy_no += 1;
           }
         }
