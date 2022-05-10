@@ -523,9 +523,6 @@ void PetBox::BuildBox()
     G4LogicalVolume *teflon_block_logic =
        new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                      "TEFLON_BLOCK", active_logic_, false, 0, false);
-
     // Holes in the block which are filled with LXe and defined as LXe vols
     G4double dist_four_holes = 4* teflon_holes_xy + 3*dist_between_holes_xy;
 
@@ -559,6 +556,9 @@ void PetBox::BuildBox()
         }
       }
     }
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
+                      "TEFLON_BLOCK", active_logic_, false, 0, false);
 
     G4RotationMatrix rot_teflon;
     rot_teflon.rotateY(pi);
