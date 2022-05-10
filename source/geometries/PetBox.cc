@@ -512,27 +512,32 @@ void PetBox::BuildBox()
 
     G4double dist_between_holes_xy = 1.75 * mm;
 
-    G4Box *teflon_block_nh_solid =
+    G4Box *teflon_block_solid =
       new G4Box("TEFLON_BLOCK", teflon_block_xy/2., teflon_block_xy/2., teflon_block_thick/2.);
 
     G4double block_z_pos = ih_z_size_/2. + teflon_block_thick/2.;
 
-    // Holes in the block
+    G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+
+    G4LogicalVolume *teflon_block_logic =
+       new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
+
+    // Holes in the block which are filled with LXe and defined as LXe vols
     G4double dist_four_holes = 4* teflon_holes_xy + 3*dist_between_holes_xy;
 
     G4Box *teflon_hole_solid =
-      new G4Box("BLOCK_HOLE", teflon_holes_xy/2., teflon_holes_xy/2., teflon_holes_depth/2.);
+      new G4Box("ACTIVE", teflon_holes_xy/2., teflon_holes_xy/2., teflon_holes_depth/2.);
+
+    G4LogicalVolume *teflon_hole_logic =
+       new G4LogicalVolume(teflon_hole_solid, LXe, "ACTIVE");
+
+    // Set the ACTIVE volume as an ionization sensitive det
+    teflon_hole_logic->SetSensitiveDetector(ionisd);
+    teflon_hole_logic->SetUserLimits(new G4UserLimits(max_step_size_));
 
     G4double holes_pos_z = -teflon_block_thick/2. + teflon_holes_depth/2.;
 
-    G4double first_hole_xpos = -teflon_block_xy/2. + teflon_offset_x +
-        dist_four_holes/2. - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.);
-    G4double first_hole_ypos =  teflon_block_xy/2. - teflon_offset_y -
-        dist_four_holes/2. + 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.);
-
-    G4SubtractionSolid* teflon_block_solid =
-      new G4SubtractionSolid("TEFLON_BLOCK", teflon_block_nh_solid, teflon_hole_solid,
-                             0, G4ThreeVector(first_hole_xpos, first_hole_ypos, holes_pos_z));
+    G4int copy_no = 0;
 
     for (G4int j = 0; j < 2; j++){ // Loop over the tiles in row
       G4double set_holes_y = teflon_block_xy/2. - teflon_offset_y - dist_four_holes/2.
@@ -546,34 +551,29 @@ void PetBox::BuildBox()
           for (G4int k = 0; k < 4; k++){ // Loop over the sensors in column
             G4double holes_pos_x = set_holes_x - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.)
                                     + k*(teflon_holes_xy + dist_between_holes_xy);
-            if (i==0 && j==0 && k==0 && l==0){
-              continue;
-            }
-            teflon_block_solid =
-              new G4SubtractionSolid("TEFLON_BLOCK", teflon_block_solid, teflon_hole_solid,
-                                     0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z));
+
+            new G4PVPlacement(0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z), teflon_hole_logic,
+                              "ACTIVE", teflon_block_logic, false, copy_no, false);
+            copy_no += 1;
           }
         }
       }
     }
 
-    G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    teflon->SetMaterialPropertiesTable(petopticalprops::PTFE());
-
-    G4LogicalVolume *teflon_block_logic =
-      new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
-
-      new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                        "TEFLON_BLOCK", active_logic_, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
+                      "TEFLON_BLOCK", active_logic_, false, 0, false);
 
     G4RotationMatrix rot_teflon;
     rot_teflon.rotateY(pi);
       new G4PVPlacement(G4Transform3D(rot_teflon, G4ThreeVector(0., 0., block_z_pos)), teflon_block_logic,
                         "TEFLON_BLOCK", active_logic_, false, 1, false);
 
+
     // Optical surface for teflon
     G4OpticalSurface* teflon_optSurf =
       new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
+
+    teflon_optSurf->SetMaterialPropertiesTable(petopticalprops::PTFE());
 
       new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
 
