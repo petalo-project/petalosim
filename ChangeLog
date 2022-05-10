@@ -1,3 +1,8 @@
+tag v1_01_00 - 10 May 2022
+	- Add teflon blocks to PETit
+	- Add possibility of saving only events with a minimum charge
+	- Clean up actions
+
 tag v1_00_00 - 28 Feb 2022
         - Save the total charge for each sensor in sns_response.
         - Add 1-tile configuration to PETit.
