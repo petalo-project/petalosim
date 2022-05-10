@@ -565,9 +565,12 @@ void PetBox::BuildBox()
       new G4PVPlacement(G4Transform3D(rot_teflon, G4ThreeVector(0., 0., block_z_pos)), teflon_block_logic,
                         "TEFLON_BLOCK", active_logic_, false, 1, false);
 
+
     // Optical surface for teflon
     G4OpticalSurface* teflon_optSurf =
       new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
+
+    teflon_optSurf->SetMaterialPropertiesTable(petopticalprops::PTFE());
 
       new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
 
