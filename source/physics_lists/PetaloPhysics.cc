@@ -11,8 +11,8 @@
 #include "PositronAnnihilation.h"
 #include "PetaloPersistencyManager.h"
 
-#include "NESTProc.hh"
-#include "PetaloDetector.hh"
+#include <NESTProc.hh>
+#include <PetaloDetector.hh>
 
 #include <G4Scintillation.hh>
 #include <G4GenericMessenger.hh>
@@ -114,7 +114,7 @@ void PetaloPhysics::ConstructProcess()
       new NEST::NESTProc("S1", fElectromagnetic, petaloCalc, petalo);
     theNESTScintillationProcess->SetDetailedSecondaries(true); // this is to use the full scintillation spectrum of LXe.
     theNESTScintillationProcess->SetStackElectrons(true); //false if only light is collected
-    
+
     auto aParticleIterator = GetParticleIterator();
     aParticleIterator->reset();
     while ((*aParticleIterator)()) {
@@ -125,5 +125,5 @@ void PetaloPhysics::ConstructProcess()
       }
     }
   }
-  
+
 }
