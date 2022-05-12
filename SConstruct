@@ -97,12 +97,6 @@ vars.AddVariables(
                  'Path to ROOT bin directory.',
                  NULL_PATH),
 
-    ## gsl
-
-    PathVariable('GSL_BINDIR',
-                 'Path to gsl bin directory.',
-                 NULL_PATH),
-
     ## HDF5
 
     PathVariable('HDF5_DIR',
@@ -204,20 +198,6 @@ if not env['LIBPATH']:
 
     if not conf.CheckLib(library='Core', language='CXX', autoadd=0):
         Abort('ROOT libraries could not be found.')
-
-
-    ## GSL configuration ---------------------------------
-
-    if env['GSL_BINDIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['GSL_BINDIR'])
-
-    env.ParseConfig('gsl-config --cflags --libs')
-
-    if not conf.CheckCXXHeader('gsl/gsl_errno.h'):
-        Abort('GSL headers not found.')
-
-    if not conf.CheckLib(library='gsl', language='CXX', autoadd=0):
-        Abort('GSL library not found.')
 
 
     ## HDF5 configuration ----------------------------------
