@@ -38,9 +38,9 @@ TileHamamatsuVUV::TileHamamatsuVUV() : TileGeometryBase(),
                                        sipm_pitch_(7.5 * mm),
                                        n_rows_(4),
                                        n_columns_(4),
-                                       lxe_thick_(0.35 * mm),
+                                       lxe_thick_(0.6 * mm),
                                        quartz_rindex_(1.6), //Given by Hamamatsu
-                                       quartz_thick_(0.5 * mm)
+                                       quartz_thick_(0.6 * mm)
 
 {
   sipm_ = new SiPMHamamatsuVUV();
