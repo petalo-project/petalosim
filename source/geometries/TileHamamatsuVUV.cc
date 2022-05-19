@@ -34,13 +34,13 @@ using namespace CLHEP;
 TileHamamatsuVUV::TileHamamatsuVUV() : TileGeometryBase(),
                                        tile_x_(30.9 * mm),
                                        tile_y_(30.7 * mm),
-                                       tile_z_(2.3 * mm), // From Simón's 3d model. Hamamatsu file says 2.5. To be checked in the lab.
+                                       tile_z_(2.3 * mm),
                                        sipm_pitch_(7.5 * mm),
                                        n_rows_(4),
                                        n_columns_(4),
-                                       lxe_thick_(0.35 * mm),
+                                       lxe_thick_(0.6 * mm),
                                        quartz_rindex_(1.6), //Given by Hamamatsu
-                                       quartz_thick_(0.5 * mm)
+                                       quartz_thick_(0.6 * mm)
 
 {
   sipm_ = new SiPMHamamatsuVUV();

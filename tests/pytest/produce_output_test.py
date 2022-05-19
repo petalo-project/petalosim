@@ -200,7 +200,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /nexus/persistency/outputFile {output_tmpdir}/{base_name}
 
-/nexus/random_seed 23102020
+/nexus/random_seed 23102022
 """
 
      config_path = os.path.join(config_tmpdir, base_name+'.config.mac')
