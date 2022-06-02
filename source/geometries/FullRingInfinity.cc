@@ -60,6 +60,7 @@ FullRingInfinity::FullRingInfinity() :
   vessel_int_thickn_(3.*mm),
   vessel_ext_thickn_(1.*cm),
   vacuum_thickn_(10.*cm),
+  wall_refl_(0),
   max_step_size_(1. * mm),
   n_sep_z_(10),
   n_sep_phi_(10),
@@ -217,6 +218,7 @@ void FullRingInfinity::Construct()
   if (charge_det_) {
     BuildSeparators();
     BuildWires();
+    wall_refl_ = 0.8;
   }
 
   if (phantom_)
@@ -341,7 +343,7 @@ void FullRingInfinity::BuildCryostat()
     db_opsur->SetModel(unified);
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
-    db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(80.));
+    db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(wall_refl_));
     new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
     new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
     new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);

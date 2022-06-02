@@ -79,6 +79,7 @@ private:
   G4double lxe_container_int_thickn_, lxe_container_ext_thickn_;
   G4double vessel_int_thickn_, vessel_ext_thickn_;
   G4double vacuum_thickn_;
+  G4double wall_refl_;
 
   G4double phantom_diam_;
   G4double phantom_length_;
