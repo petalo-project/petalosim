@@ -109,6 +109,12 @@ FullRingInfinity::FullRingInfinity() :
   wire_pitch_cmd.SetParameterName("wire_pitch", false);
   wire_pitch_cmd.SetRange("wire_pitch>0.");
 
+  msg_->DeclareProperty("z_separators", n_sep_z_,
+    "Number of teflon separators in the z direction");
+
+  msg_->DeclareProperty("phi_separators", n_sep_phi_,
+    "Number of teflon separators in the phi direction");
+
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
                                 "Set generation vertex.");
 
@@ -505,7 +511,7 @@ void FullRingInfinity::BuildSeparators()
   G4double sep_angle = 2 * pi / n_sep_phi_;
 
   G4double segm_sep_z  = axial_length_ / n_sep_z_;
-  //G4double sep_pitch_z = G4int(segm_sep_z / sipm_pitch_) * sipm_pitch_; */
+  //G4double sep_pitch_z = G4int(segm_sep_z / sipm_pitch_) * sipm_pitch_;
 
   G4double sep_thickn = 5.*mm;
   G4double sep_offset = 0.01*mm;
