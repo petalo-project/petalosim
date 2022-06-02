@@ -9,6 +9,10 @@
 #include "PetaloPhysics.h"
 #include "WavelengthShifting.h"
 #include "PositronAnnihilation.h"
+#include "PetaloPersistencyManager.h"
+
+#include <NESTProc.hh>
+#include <PetaloDetector.hh>
 
 #include <G4Scintillation.hh>
 #include <G4GenericMessenger.hh>
@@ -26,16 +30,20 @@
 /// with the generic physics list
 G4_DECLARE_PHYSCONSTR_FACTORY(PetaloPhysics);
 
-PetaloPhysics::PetaloPhysics() : G4VPhysicsConstructor("PetaloPhysics"), risetime_(false), noCompt_(false)
+PetaloPhysics::PetaloPhysics() : G4VPhysicsConstructor("PetaloPhysics"),
+                                 risetime_(false), noCompt_(false), nest_(false)
 {
   msg_ = new G4GenericMessenger(this, "/PhysicsList/Petalo/",
                                 "Control commands of the nexus physics list.");
 
   msg_->DeclareProperty("scintRiseTime", risetime_,
-                        "True if LYSO is used");
+                        "Must be true if LYSO is used");
 
   msg_->DeclareProperty("offCompt", noCompt_,
-                        "Switch off Compton Scattering.");
+                        "If true, switches off Compton Scattering.");
+
+  msg_->DeclareProperty("nest", nest_,
+                        "If true, NEST is used for scintillation.");
 }
 
 PetaloPhysics::~PetaloPhysics()
@@ -47,6 +55,7 @@ PetaloPhysics::~PetaloPhysics()
 void PetaloPhysics::ConstructParticle()
 {
   G4OpticalPhoton::Definition();
+  NEST::NESTThermalElectron::Definition();
 }
 
 void PetaloPhysics::ConstructProcess()
@@ -91,6 +100,30 @@ void PetaloPhysics::ConstructProcess()
     G4VProcess *cs =
       G4ProcessTable::GetProcessTable()->FindProcess("compt", G4Gamma::Definition());
     pmanager->RemoveProcess(cs);
+  }
+
+
+  if (nest_) {
+    PetaloDetector* petalo = new PetaloDetector();
+    G4double e_field = petalo->FitEF(0, 0, 0);
+    PetaloPersistencyManager* pm =
+      dynamic_cast<PetaloPersistencyManager*>(G4VPersistencyManager::GetPersistencyManager());
+    pm->SetElectricField(e_field);
+    NEST::NESTcalc* petaloCalc = new NEST::NESTcalc(petalo);
+    NEST::NESTProc* theNESTScintillationProcess =
+      new NEST::NESTProc("S1", fElectromagnetic, petaloCalc, petalo);
+    theNESTScintillationProcess->SetDetailedSecondaries(true); // this is to use the full scintillation spectrum of LXe.
+    theNESTScintillationProcess->SetStackElectrons(true); //false if only light is collected
+
+    auto aParticleIterator = GetParticleIterator();
+    aParticleIterator->reset();
+    while ((*aParticleIterator)()) {
+      G4ParticleDefinition* particle = aParticleIterator->value();
+      if (theNESTScintillationProcess->IsApplicable(*particle)) {
+        pmanager = particle->GetProcessManager();
+        pmanager->AddProcess(theNESTScintillationProcess, ordDefault+1, ordInActive, ordDefault+1);
+      }
+    }
   }
 
 }
