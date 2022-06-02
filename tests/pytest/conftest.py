@@ -30,6 +30,21 @@ def petalosim_params_full_body(output_tmpdir, base_name_full_body):
     board_ordering  = 0
     return os.path.join(output_tmpdir, base_name_full_body+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
 
+@pytest.fixture(scope = 'session')
+def base_name_nest():
+    return 'PET_nest_test'
+
+@pytest.fixture(scope = 'session')
+def file_name_nest(output_tmpdir, base_name_nest):
+    return os.path.join(output_tmpdir, base_name_nest+'.h5')
+
+@pytest.fixture(scope = 'session')
+def petalosim_params_nest(output_tmpdir, base_name_nest):
+    n_sipm          = 102304
+    n_boards        = 0
+    sipms_per_board = 0
+    board_ordering  = 0
+    return os.path.join(output_tmpdir, base_name_nest+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
 
 @pytest.fixture(scope = 'session')
 def base_name_ring_tiles():
@@ -116,16 +131,18 @@ def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
 
 
 @pytest.fixture(scope="module",
-                params=["base_name_full_body", "base_name_ring_tiles", "base_name_pet_box_HamamatsuVUV",
-                        "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK", "base_name_pet_box_mix_Ham_FBK"],
-                ids=["full_body", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK", "pet_box_mix_Ham_FBK"])
+                params=["base_name_full_body", "base_name_nest", "base_name_ring_tiles",
+                        "base_name_pet_box_HamamatsuVUV", "base_name_pet_box_HamamatsuBlue",
+                        "base_name_pet_box_FBK", "base_name_pet_box_mix_Ham_FBK"],
+                ids=["full_body", "nest", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK", "pet_box_mix_Ham_FBK"])
 def petalosim_files(request, output_tmpdir):
     return os.path.join(output_tmpdir, request.getfixturevalue(request.param)+'.h5')
 
 
 @pytest.fixture(scope="module",
-                params=["petalosim_params_full_body", "petalosim_params_ring_tiles"],
-                ids=["full_body", "ring_tiles"])
+                params=["petalosim_params_full_body", "petalosim_params_nest",
+                        "petalosim_params_ring_tiles"],
+                ids=["full_body", "nest", "ring_tiles"])
 def petalosim_params(request):
     return request.getfixturevalue(request.param)
 

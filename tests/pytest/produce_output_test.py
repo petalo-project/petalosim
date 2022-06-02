@@ -212,3 +212,77 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
      petalo_exe = PETALODIR + '/bin/petalo'
      command   = [petalo_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
+
+
+@pytest.mark.order(4)
+def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, base_name_nest):
+
+     init_text = f"""
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics PetaloPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+### GEOMETRY
+/nexus/RegisterGeometry FullRingInfinity
+
+### GENERATOR
+/nexus/RegisterGenerator Back2backGammas
+
+### ACTIONS
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterTrackingAction OpticalTrackingAction
+/nexus/RegisterStackingAction PetNESTStackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
+
+/nexus/RegisterMacro {config_tmpdir}/{base_name_nest}.config.mac
+"""
+     init_path = os.path.join(config_tmpdir, base_name_nest+'.init.mac')
+     init_file = open(init_path,'w')
+     init_file.write(init_text)
+     init_file.close()
+
+     config_text = f"""
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+/Geometry/FullRingInfinity/depth 3. cm
+/Geometry/FullRingInfinity/pitch 7. mm
+/Geometry/FullRingInfinity/inner_radius 380. mm
+/Geometry/FullRingInfinity/sipm_rows 278
+/Geometry/FullRingInfinity/instrumented_faces 1
+/Geometry/FullRingInfinity/specific_vertex 0. 0. 0. cm
+
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+/Geometry/SiPMpet/time_binning 5. picosecond
+/Geometry/SiPMpet/size 6. mm
+
+/Generator/Back2back/region AD_HOC
+
+/process/optical/processActivation Scintillation false
+/PhysicsList/Petalo/nest true
+
+/process/optical/processActivation Cerenkov false
+
+/nexus/persistency/outputFile {output_tmpdir}/{base_name_nest}
+/nexus/random_seed 16062020
+
+"""
+
+     config_path = os.path.join(config_tmpdir, base_name_nest+'.config.mac')
+     config_file = open(config_path,'w')
+     config_file.write(config_text)
+     config_file.close()
+
+     my_env    = os.environ
+     petalo_exe = PETALODIR + '/bin/petalo'
+     command   = [petalo_exe, '-b', '-n', '1', init_path]
+     p         = subprocess.run(command, check=True, env=my_env)
