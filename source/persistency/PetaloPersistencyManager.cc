@@ -395,8 +395,6 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 
 void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
 {
-  std::map<G4int, ChargeHit*> mapOfHits;
-  
   ChargeHitsCollection* hits = dynamic_cast<ChargeHitsCollection*>(hc);
   if (!hits) return;
 
@@ -405,9 +403,6 @@ void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
 
     ChargeHit* hit = dynamic_cast<ChargeHit*>(hits->GetHit(i));
     if (!hit) continue;
-
-    int s_id  = hit->GetSensorID();
-    mapOfHits[s_id] = hit;
 
     const std::map<G4double, G4int>& wvfm = hit->GetChargeWaveform();
     std::map<G4double, G4int>::const_iterator it;
