@@ -318,16 +318,18 @@ void FullRingInfinity::BuildCryostat()
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
                       "KAPTON_INT", LXe_logic_, false, 0, false);
 
-    G4Tubs* kapton_ext_solid = new G4Tubs("KAPTON", inner_radius_ + wide_active_depth,
-    inner_radius_ + wide_active_depth + kapton_thickn_,
-                  axial_length_/2., 0, twopi);
+    G4Tubs* kapton_ext_solid =
+      new G4Tubs("KAPTON", inner_radius_ + wide_active_depth,
+                 inner_radius_ + wide_active_depth + kapton_thickn_,
+                 axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
                     "KAPTON_EXT", LXe_logic_, false, 0, false);
 
     G4Tubs* kapton_lat_solid =
-      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_ + wide_active_depth + kapton_thickn_,
+      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_,
+                 inner_radius_ + wide_active_depth + kapton_thickn_,
                  kapton_thickn_/2., 0, twopi);
     G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
