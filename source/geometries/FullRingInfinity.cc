@@ -490,8 +490,7 @@ void FullRingInfinity::BuildWires()
   G4int n_wires = 2. * pi * chdet_radius / wire_pitch_;
   G4cout << "Number of wires: " << n_wires << G4endl;
 
-  G4double chdet_z_pos = 0.;
-  G4ThreeVector chdet_position(0., chdet_radius, chdet_z_pos);
+  G4ThreeVector chdet_position(0., chdet_radius, 0.);
   G4int chdet_copy_no = 0;
   G4String chdet_vol_name = "WIRE_" + std::to_string(chdet_copy_no);
   G4RotationMatrix rot;
