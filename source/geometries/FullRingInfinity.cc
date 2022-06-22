@@ -47,6 +47,7 @@ FullRingInfinity::FullRingInfinity() :
   n_sipm_rows_(16),
   instr_faces_(2),
   charge_det_(false),
+  separators_(false),
   wire_pitch_(4. * mm),
   wire_time_bin_(1.*microsecond),
   chdet_thickn_(1.*micrometer),
@@ -103,6 +104,7 @@ FullRingInfinity::FullRingInfinity() :
   msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
   msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
   msg_->DeclareProperty("charge_detector", charge_det_, "True if charge is detected");
+  msg_->DeclareProperty("separators", separators_, "True if separator panels are present");
   msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
 
   G4GenericMessenger::Command& wire_pitch_cmd =
@@ -216,7 +218,9 @@ void FullRingInfinity::Construct()
   BuildSensors();
 
   if (charge_det_) {
-    BuildSeparators();
+    if (separators_) {
+      BuildSeparators();
+    }
     BuildWires();
     wall_refl_ = 0.8;
   }
