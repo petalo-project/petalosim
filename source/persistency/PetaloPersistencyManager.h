@@ -57,6 +57,7 @@ private:
   void StoreHits(G4HCofThisEvent *);
   void StoreIonizationHits(G4VHitsCollection *);
   void StoreSensorHits(G4VHitsCollection *);
+  void StoreChargeHits(G4VHitsCollection *);
   void StoreSteps();
 
   void SaveConfigurationInfo(G4String history);
@@ -77,6 +78,7 @@ private:
   G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
   std::vector<G4int> sns_posvec_;
+  std::vector<G4int> charge_posvec_;
 
   G4int saved_evts_;                      ///< number of events to be saved
   G4int interacting_evts_;                ///< number of events interacting in ACTIVE
@@ -92,7 +94,7 @@ private:
   G4bool save_tot_charge_;
   HDF5Writer *h5writer_; ///< Event writer to hdf5 file
 
-  G4double bin_size_, tof_bin_size_;
+  G4double bin_size_, tof_bin_size_, wire_bin_size_;
 };
 
 // INLINE DEFINITIONS //////////////////////////////////////////////

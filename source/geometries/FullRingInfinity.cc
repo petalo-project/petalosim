@@ -10,6 +10,7 @@
 #include "FullRingInfinity.h"
 #include "SiPMpetVUV.h"
 #include "PetOpticalMaterialProperties.h"
+#include "ChargeSD.h"
 
 #include "nexus/SpherePointSampler.h"
 #include "nexus/IonizationSD.h"
@@ -33,6 +34,7 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <Randomize.hh>
+#include <G4UnionSolid.hh>
 
 using namespace nexus;
 
@@ -44,6 +46,12 @@ FullRingInfinity::FullRingInfinity() :
   sipm_pitch_(4. * mm),
   n_sipm_rows_(16),
   instr_faces_(2),
+  charge_det_(false),
+  separators_(false),
+  wire_pitch_(4. * mm),
+  wire_time_bin_(1.*microsecond),
+  chdet_thickn_(1.*micrometer),
+  chdet_offset_(0.005 * mm),
   kapton_thickn_(0.3 * mm),
   lxe_depth_(5. * cm),
   offset_(0.1 * mm),
@@ -53,7 +61,10 @@ FullRingInfinity::FullRingInfinity() :
   vessel_int_thickn_(3.*mm),
   vessel_ext_thickn_(1.*cm),
   vacuum_thickn_(10.*cm),
+  wall_refl_(0),
   max_step_size_(1. * mm),
+  n_sep_z_(10),
+  n_sep_phi_(10),
   specific_vertex_{},
   phantom_(false),
   pt_Lx_(0.),
@@ -79,7 +90,7 @@ FullRingInfinity::FullRingInfinity() :
   depth_cmd.SetRange("depth>0.");
 
   G4GenericMessenger::Command &pitch_cmd =
-      msg_->DeclareProperty("pitch", sipm_pitch_, "Pitch of SiPMs");
+      msg_->DeclareProperty("sipm_pitch", sipm_pitch_, "Pitch of SiPMs");
   pitch_cmd.SetUnitCategory("Length");
   pitch_cmd.SetParameterName("pitch", false);
   pitch_cmd.SetRange("pitch>0.");
@@ -92,13 +103,34 @@ FullRingInfinity::FullRingInfinity() :
 
   msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
   msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
+  msg_->DeclareProperty("charge_detector", charge_det_, "True if charge is detected");
+  msg_->DeclareProperty("separators", separators_, "True if separator panels are present");
   msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
-  
+
+  G4GenericMessenger::Command& wire_pitch_cmd =
+      msg_->DeclareProperty("wire_pitch", wire_pitch_, "Pitch of wires");
+  wire_pitch_cmd.SetUnitCategory("Length");
+  wire_pitch_cmd.SetParameterName("wire_pitch", false);
+  wire_pitch_cmd.SetRange("wire_pitch>0.");
+
+  G4GenericMessenger::Command& wire_time_cmd =
+      msg_->DeclareProperty("wire_time_bin", wire_time_bin_, "Time binning of wires");
+  wire_time_cmd.SetUnitCategory("Time");
+  wire_time_cmd.SetParameterName("wire_time_bin", false);
+  wire_time_cmd.SetRange("wire_time_bin>0.");
+
+  msg_->DeclareProperty("z_separators", n_sep_z_,
+    "Number of teflon separators in the z direction");
+
+  msg_->DeclareProperty("phi_separators", n_sep_phi_,
+    "Number of teflon separators in the phi direction");
+
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
                                 "Set generation vertex.");
-  
+
   // Read in the point distribution.
-  msg_->DeclareMethod("pointFile", &FullRingInfinity::BuildPointfile, "Location of file containing distribution of event generation points.");
+  msg_->DeclareMethod("pointFile", &FullRingInfinity::BuildPointfile,
+    "Location of file containing distribution of event generation points.");
 
   G4GenericMessenger::Command &table_cmd =
       msg_->DeclareProperty("sensitivity_binning", sensitivity_binning_,
@@ -185,6 +217,14 @@ void FullRingInfinity::Construct()
   BuildCryostat();
   BuildSensors();
 
+  if (charge_det_) {
+    if (separators_) {
+      BuildSeparators();
+    }
+    BuildWires();
+    wall_refl_ = 0.8;
+  }
+
   if (phantom_)
     BuildPhantom();
 
@@ -245,10 +285,10 @@ void FullRingInfinity::BuildCryostat()
     G4Tubs* LXe_solid =
       new G4Tubs("LXE", lxe_int_radius, lxe_ext_radius,
                  lxe_width/2., 0, twopi);
-    G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-    LXe->SetMaterialPropertiesTable(opticalprops::LXe());
+    LXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    LXe_->SetMaterialPropertiesTable(opticalprops::LXe());
     LXe_logic_ =
-      new G4LogicalVolume(LXe_solid, LXe, "LXE");
+      new G4LogicalVolume(LXe_solid, LXe_, "LXE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
 		      "LXE", lxe_container_logic, false, 0, true);
 
@@ -258,47 +298,50 @@ void FullRingInfinity::BuildCryostat()
       new G4Tubs("ACTIVE", inner_radius_, inner_radius_ + wide_active_depth,
                  axial_length_/2., 0, twopi);
     active_logic_ =
-      new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+      new G4LogicalVolume(active_solid, LXe_, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
                       "ACTIVE", LXe_logic_, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive det
-    IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
+    IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
     active_logic_->SetSensitiveDetector(ionisd);
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
     // Limit the step size in ACTIVE volume for better tracking precision
     active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
 
-    G4Material *kapton =
+    // Reflectant panels
+    G4Material* kapton =
         G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
 
-    G4Tubs *kapton_int_solid =
+    G4Tubs* kapton_int_solid =
         new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
                     axial_length_ / 2., 0, twopi);
     G4LogicalVolume *kapton_int_logic =
         new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
-                      "KAPTON_INT", LXe_logic_, false, 0, true);
+                      "KAPTON_INT", LXe_logic_, false, 0, false);
 
     G4Tubs* kapton_ext_solid =
-      new G4Tubs("KAPTON", inner_radius_ + wide_active_depth, inner_radius_ + wide_active_depth + kapton_thickn_,
+      new G4Tubs("KAPTON", inner_radius_ + wide_active_depth,
+                 inner_radius_ + wide_active_depth + kapton_thickn_,
                  axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
-                    "KAPTON_EXT", LXe_logic_, false, 0, true);
+                    "KAPTON_EXT", LXe_logic_, false, 0, false);
 
     G4Tubs* kapton_lat_solid =
-      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_ + wide_active_depth + kapton_thickn_,
+      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_,
+                 inner_radius_ + wide_active_depth + kapton_thickn_,
                  kapton_thickn_/2., 0, twopi);
     G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
     G4double z_pos = axial_length_ / 2. + kapton_thickn_ / 2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
-                      "KAPTON_LAT_POS", LXe_logic_, false, 0, true);
+                      "KAPTON_LAT_POS", LXe_logic_, false, 0, false);
     new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
-                      "KAPTON_LAT_NEG", LXe_logic_, false, 1, true);
+                      "KAPTON_LAT_NEG", LXe_logic_, false, 1, false);
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
@@ -306,7 +349,7 @@ void FullRingInfinity::BuildCryostat()
     db_opsur->SetModel(unified);
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
-    db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(0.));
+    db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(wall_refl_));
     new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
     new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
     new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
@@ -333,7 +376,7 @@ void FullRingInfinity::BuildSensors()
   {
     G4cout << "Number of sipms in inner face: " << n_sipm_int * n_sipm_rows_ << G4endl;
   }
-  G4double step = 2. * pi / n_sipm_int;
+  G4double step   = 2. * pi / n_sipm_int;
   G4double radius = inner_radius_ + sipm_dim_.z() / 2.;
 
   G4RotationMatrix rot;
@@ -373,15 +416,16 @@ void FullRingInfinity::BuildSensors()
 
   //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
   //G4double offset = 0.1 * mm;
-  G4int n_sipm_ext = 2 * pi * external_radius_ / sipm_pitch_;
-  G4cout << "Number of sipms in external face: " << n_sipm_ext * n_sipm_rows_ << G4endl;
+  n_sipm_ext_ = 2 * pi * external_radius_ / sipm_pitch_;
+  G4cout << "Number of sipms in external face: " << n_sipm_ext_ * n_sipm_rows_ << G4endl;
   //radius = external_radius_ - sipm_dim_.z() / 2. - offset_;
   radius = inner_radius_ + lxe_depth_ + sipm_dim_.z()/2.;
+
 
   rot.rotateZ(step);
   rot.rotateX(pi);
 
-  step = 2. * pi / n_sipm_ext;
+  step = 2. * pi / n_sipm_ext_;
 
   //copy_no = 2000;
   if (instr_faces_ == 1)
@@ -397,23 +441,25 @@ void FullRingInfinity::BuildSensors()
     G4double z_pos = -axial_length_ / 2. + (j + 1. / 2.) * sipm_pitch_;
     G4ThreeVector position(0., radius, z_pos);
     copy_no = copy_no + 1;
-    G4String vol_name = "SIPM_" + std::to_string(copy_no);
+    G4String vol_name       = "SIPM_" + std::to_string(copy_no);
     new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
                       vol_name, active_logic_, false, copy_no, false);
+
     // G4cout << "INSERT INTO ChannelMatrixP7R410Z1950mm (MinRun, MaxRun, SensorID, PhiNumber, ZNumber) VALUES (0, 100000, "
     //	     << copy_no << ", 0, " << j << ");" << G4endl;
     //G4cout << "INSERT INTO ChannelPositionP7R410Z1950mm (MinRun, MaxRun, SensorID, X, Y, Z) VALUES (0, 100000, "
     //	       << copy_no << ", " << position.getX() << ", " << position.getY() << ", " << position.getZ() << ");" << G4endl;
-    for (G4int i = 2; i <= n_sipm_ext; ++i)
+    for (G4int i = 2; i <= n_sipm_ext_; ++i)
     {
       G4double angle = (i - 1) * step;
       rot.rotateZ(step);
       position.setX(-radius * sin(angle));
       position.setY(radius * cos(angle));
       copy_no = copy_no + 1;
-      vol_name = "SIPM_" + std::to_string(copy_no);
+      vol_name       = "SIPM_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
                         vol_name, active_logic_, false, copy_no, false);
+
       //	G4cout << "INSERT INTO ChannelMatrixP7R410Z1950mm (MinRun, MaxRun, SensorID, PhiNumber, ZNumber) VALUES (0, 100000, "
       //       << copy_no << ", " << i-1 << ", " << j << ");" << G4endl;
       //	G4cout << "INSERT INTO ChannelPositionP7R410Z1950mm (MinRun, MaxRun, SensorID, X, Y, Z) VALUES (0, 100000, "
@@ -421,6 +467,116 @@ void FullRingInfinity::BuildSensors()
     }
   }
 }
+
+void FullRingInfinity::BuildWires()
+{
+  // Add simple detector for charge
+  G4Box* chdet_solid = new G4Box("WIRE", wire_pitch_/2.,
+                                 axial_length_/2., chdet_thickn_/2);
+  G4LogicalVolume* chdet_logic =
+    new G4LogicalVolume(chdet_solid, LXe_, "WIRE");
+
+  G4String sdname = "/WIRE/ChargeDet";
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+  if (!sdmgr->FindSensitiveDetector(sdname, false))
+    {
+      ChargeSD* chargesd = new ChargeSD(sdname);
+      chargesd->SetTimeBinning(wire_time_bin_);
+      G4SDManager::GetSDMpointer()->AddNewDetector(chargesd);
+      chdet_logic->SetSensitiveDetector(chargesd);
+    }
+
+  G4VisAttributes wire_col = nexus::Yellow();
+  wire_col.SetForceSolid(true);
+  chdet_logic->SetVisAttributes(wire_col);
+
+  G4double chdet_radius = inner_radius_ + lxe_depth_ - chdet_thickn_ / 2. - chdet_offset_;
+  G4int n_wires = 2. * pi * chdet_radius / wire_pitch_;
+  G4cout << "Number of wires: " << n_wires << G4endl;
+
+  G4ThreeVector chdet_position(0., chdet_radius, 0.);
+  G4int chdet_copy_no = 0;
+  G4String chdet_vol_name = "WIRE_" + std::to_string(chdet_copy_no);
+  G4RotationMatrix rot;
+  rot.rotateX(-pi / 2.);
+  new G4PVPlacement(G4Transform3D(rot, chdet_position), chdet_logic,
+                    chdet_vol_name, active_logic_, false, chdet_copy_no, false);
+
+  G4double step = 2. * pi / n_wires;
+  for (G4int i = 1; i < n_wires; ++i) {
+    G4double angle = i * step;
+    rot.rotateZ(step);
+    chdet_position.setX(-chdet_radius * sin(angle));
+    chdet_position.setY(chdet_radius * cos(angle));
+    chdet_copy_no = chdet_copy_no + 1;
+    chdet_vol_name = "WIRE_" + std::to_string(chdet_copy_no);
+    new G4PVPlacement(G4Transform3D(rot, chdet_position), chdet_logic,
+                      chdet_vol_name, active_logic_, false, chdet_copy_no, false);
+  }
+}
+
+void FullRingInfinity::BuildSeparators()
+{
+  // Separate LXe volume in smaller areas with teflon panels
+  G4Material* teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+
+  //G4double arc_sep_phi = 2 * pi * (inner_radius_ + lxe_depth_) / n_sep_phi_;
+  //G4int n_sipm_in_sep_phi = arc_sep_phi / sipm_pitch_;
+  G4double sep_angle = 2 * pi / n_sep_phi_;
+
+  G4double segm_sep_z  = axial_length_ / n_sep_z_;
+  //G4double sep_pitch_z = G4int(segm_sep_z / sipm_pitch_) * sipm_pitch_;
+
+  G4double sep_thickn = 5.*mm;
+  G4double sep_offset = 0.01*mm;
+  G4double sep_size   = lxe_depth_ - chdet_thickn_ - chdet_offset_ - sep_offset;
+  G4Tubs* sep_z_solid =
+    new G4Tubs("SEPARATOR_Z", inner_radius_, inner_radius_ + sep_size,
+               sep_thickn/2., 0, twopi);
+  G4Box* sep_phi_solid =
+    new G4Box("SEPARATOR_PHI", sep_thickn/2., sep_size/2., axial_length_/2.);
+
+  G4double union_r = inner_radius_ + sep_size/2.;
+  G4double union_z = axial_length_/2. - segm_sep_z;
+  G4ThreeVector union_pos(0, union_r, union_z);
+  G4UnionSolid* sep_solid = new G4UnionSolid("SEPARATOR", sep_z_solid, sep_phi_solid,
+                                             0, union_pos);
+
+  G4RotationMatrix union_rot;
+
+  for (G4int i=1; i<n_sep_phi_; i++) {
+    union_rot.rotateZ(sep_angle);
+    G4double union_angle = i * sep_angle;
+    union_pos.setX(-union_r * sin(union_angle));
+    union_pos.setY(union_r * cos(union_angle));
+    sep_solid = new G4UnionSolid("SEPARATOR", sep_solid, sep_phi_solid,
+                                 G4Transform3D(union_rot, union_pos));
+  }
+
+  union_pos = G4ThreeVector(0, 0, 0);
+  for (G4int i=1; i<n_sep_z_-1; i++) {
+    G4double z = i*segm_sep_z;
+    union_pos.setZ(z);
+    sep_solid = new G4UnionSolid("SEPARATOR", sep_solid, sep_z_solid,
+                                 G4Transform3D(union_rot, union_pos));
+  }
+
+  G4LogicalVolume* sep_logic =
+    new G4LogicalVolume(sep_solid, teflon, "SEPARATOR");
+
+  new G4PVPlacement(0, G4ThreeVector(0, 0, -axial_length_/2. + segm_sep_z),
+                    sep_logic, "SEPARATOR", active_logic_, false, 0, false);
+
+  G4OpticalSurface* teflon_optSurf =
+    new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
+  teflon_optSurf->SetMaterialPropertiesTable(petopticalprops::PTFE());
+  new G4LogicalSkinSurface("TEFLON_OPSURF", sep_logic, teflon_optSurf);
+
+  G4VisAttributes sep_col{{1. ,  .0 ,  .0 , .5}};
+  sep_col.SetForceSolid(true);
+  sep_logic->SetVisAttributes(sep_col);
+}
+
 
 void FullRingInfinity::BuildPhantom()
 {

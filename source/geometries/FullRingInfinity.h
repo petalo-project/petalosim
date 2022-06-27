@@ -15,6 +15,7 @@
 
 class G4GenericMessenger;
 class G4LogicalVolume;
+class G4Material;
 
 class SiPMpetVUV;
 
@@ -42,6 +43,8 @@ private:
   void BuildCryostat();
   void BuildQuadSensors();
   void BuildSensors();
+  void BuildWires();
+  void BuildSeparators();
   void BuildPhantom();
   void BuildPointfile(G4String pointFile);
   G4int binarySearchPt(G4int low, G4int high, G4double rnd) const;
@@ -61,6 +64,12 @@ private:
   G4double sipm_pitch_;
   G4int n_sipm_rows_;
   G4int instr_faces_; ///< number of instrumented faces
+  G4bool charge_det_;
+  G4bool separators_;
+  G4double wire_pitch_;
+  G4double wire_time_bin_;
+  G4double chdet_thickn_;
+  G4double chdet_offset_;
   G4double kapton_thickn_;
   G4double lxe_depth_;
 
@@ -71,13 +80,18 @@ private:
   G4double lxe_container_int_thickn_, lxe_container_ext_thickn_;
   G4double vessel_int_thickn_, vessel_ext_thickn_;
   G4double vacuum_thickn_;
+  G4double wall_refl_;
 
   G4double phantom_diam_;
   G4double phantom_length_;
 
   G4double max_step_size_;
 
-  SpherePointSampler *spheric_gen_;
+  G4int n_sep_z_, n_sep_phi_;
+
+  G4int n_sipm_ext_;
+
+  SpherePointSampler* spheric_gen_;
 
   G4ThreeVector specific_vertex_;
 
@@ -97,6 +111,8 @@ private:
   G4double sens_x_min_, sens_x_max_;
   G4double sens_y_min_, sens_y_max_;
   G4double sens_z_min_, sens_z_max_;
+
+  G4Material* LXe_;
 };
 
 #endif
