@@ -44,7 +44,6 @@ class JaszczakPhantom: public GeometryBase
   G4GenericMessenger *msg_;
   G4Navigator* geom_navigator_;
 
-  SpherePointSampler* spheric_gen_;
   CylinderPointSampler2020* cyl_gen_;
 
   G4double bckg_activity_;
