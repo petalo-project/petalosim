@@ -148,6 +148,7 @@ void JaszczakPhantom::BuildRods(unsigned long n, G4double r, G4double z_pos,
 
     // Sector displacement from centre, to accommodate gap between sectors
     auto gap =  14.4 * mm;
+    if (n == 0)  {gap = 12. * mm;}
     auto dx  = gap * cos(pi/6);
     auto dy  = gap * sin(pi/6);
     // Displacement of first rod WRT sector corner
@@ -157,12 +158,13 @@ void JaszczakPhantom::BuildRods(unsigned long n, G4double r, G4double z_pos,
     const auto Ax = 2.0, Ay = 0.0;
     const auto Bx = 1.0, By = sqrt(3);
     auto a = 0;
-    for (bool did_b=true ; did_b; a+=1) {
+    for (bool did_b=true; did_b; a+=1) {
       did_b = false;
       for (auto b = 0; /*break when touches the cylinder*/; b+=1, did_b = true) {
         auto x_pos = (a*Ax + b*Bx) * diam + dx;
         auto y_pos = (a*Ay + b*By) * diam + dy;
         auto margin = 0.1 * mm;
+        if (((a == 5) && (b == 11)) || ((a == 11) && (b == 5))) { break;}
         if (sqrt(x_pos*x_pos + y_pos*y_pos) + r + margin >= cylinder_inner_diam_/2.) { break; }
         auto label = "ROD" + std::to_string(n);
         auto rod_solid = new G4Tubs(label, 0, r, rod_height_/2, 0, twopi);
