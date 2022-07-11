@@ -142,6 +142,7 @@ void PetBox::BuildBox()
       new G4Box("BOX", box_size_/2., box_size_/2., box_size_/2.);
 
   G4Material *aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+  aluminum->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   G4LogicalVolume *box_logic =
       new G4LogicalVolume(box_solid, aluminum, "BOX");
 
@@ -217,6 +218,7 @@ void PetBox::BuildBox()
       new G4Tubs("SOURCE_TUBE", 0, source_tube_ext_radius, source_tube_length/2., 0, twopi);
 
   G4Material *carbon_fiber = petmaterials::CarbonFiber();
+  carbon_fiber->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   G4LogicalVolume *source_tube_logic =
       new G4LogicalVolume(source_tube_solid, carbon_fiber, "SOURCE_TUBE");
 
@@ -229,6 +231,7 @@ void PetBox::BuildBox()
       new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, air_source_tube_len/2., 0, twopi);
 
   G4Material *air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+  air->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   G4LogicalVolume *air_source_tube_logic =
       new G4LogicalVolume(air_source_tube_solid, air, "AIR_SOURCE_TUBE");
 
@@ -330,6 +333,7 @@ void PetBox::BuildBox()
         new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2., panel_thickness_/2.);
 
     G4Material *pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
+    pyrex->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     //pyrex->SetMaterialPropertiesTable(petopticalprops::Pyrex_vidrasa());
 
     G4LogicalVolume *entry_panel_logic =
@@ -518,6 +522,7 @@ void PetBox::BuildBox()
     G4double block_z_pos = ih_z_size_/2. + teflon_block_thick/2.;
 
     G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume *teflon_block_logic =
        new G4LogicalVolume(teflon_block_solid, teflon, "TEFLON_BLOCK");
