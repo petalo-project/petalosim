@@ -136,7 +136,7 @@ void JaszczakPhantom::BuildSpheres(unsigned long n, G4double r, G4double r_pos, 
   auto x_pos = r_pos * cos(angle);
   auto y_pos = r_pos * sin(angle);
   new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), sphere_logic,
-                    sphere_name, mother_logic, false, 0, true);
+                    sphere_name, mother_logic, false, 0, false);
 }
 
 
@@ -171,7 +171,7 @@ void JaszczakPhantom::BuildRods(unsigned long n, G4double r, G4double z_pos,
         auto rod_logic = new G4LogicalVolume(rod_solid, mat, label);
         G4ThreeVector pos = G4ThreeVector(x_pos, y_pos, z_pos);
         G4ThreeVector newpos = pos.rotateZ(n*pi/3);
-        new G4PVPlacement(0, newpos, rod_logic, label, mother_logic, false, 0, true);
+        new G4PVPlacement(0, newpos, rod_logic, label, mother_logic, false, 0, false);
 
         G4VisAttributes col = nexus::Blue();
         col.SetForceSolid(true);
