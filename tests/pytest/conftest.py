@@ -21,7 +21,6 @@ def output_tmpdir(tmpdir_factory):
 def base_name_full_body():
     return 'PET_full_body_sd_test'
 
-
 @pytest.fixture(scope = 'session')
 def petalosim_params_full_body(output_tmpdir, base_name_full_body):
     n_sipm          = 102304
@@ -29,6 +28,7 @@ def petalosim_params_full_body(output_tmpdir, base_name_full_body):
     sipms_per_board = 0
     board_ordering  = 0
     return os.path.join(output_tmpdir, base_name_full_body+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
+
 
 @pytest.fixture(scope = 'session')
 def base_name_nest():
@@ -46,10 +46,19 @@ def petalosim_params_nest(output_tmpdir, base_name_nest):
     board_ordering  = 0
     return os.path.join(output_tmpdir, base_name_nest+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
 
+
+@pytest.fixture(scope = 'session')
+def base_name_phantom():
+    return 'PET_phantom_test'
+
+@pytest.fixture(scope = 'session')
+def file_name_phantom(output_tmpdir, base_name_phantom):
+    return os.path.join(output_tmpdir, base_name_phantom+'.h5')
+
+
 @pytest.fixture(scope = 'session')
 def base_name_ring_tiles():
     return 'PET_ring_tiles_sd_test'
-
 
 @pytest.fixture(scope = 'session')
 def petalosim_params_ring_tiles(output_tmpdir, base_name_ring_tiles):

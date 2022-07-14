@@ -11,6 +11,7 @@
 #include "SiPMpetVUV.h"
 #include "PetOpticalMaterialProperties.h"
 #include "ChargeSD.h"
+#include "JaszczakPhantom.h"
 
 #include "nexus/SpherePointSampler.h"
 #include "nexus/IonizationSD.h"
@@ -105,7 +106,7 @@ FullRingInfinity::FullRingInfinity() :
   msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
   msg_->DeclareProperty("charge_detector", charge_det_, "True if charge is detected");
   msg_->DeclareProperty("separators", separators_, "True if separator panels are present");
-  msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
+  msg_->DeclareProperty("phantom", phantom_, "True if Jaszczak phantom is used");
 
   G4GenericMessenger::Command& wire_pitch_cmd =
       msg_->DeclareProperty("wire_pitch", wire_pitch_, "Pitch of wires");
@@ -580,16 +581,20 @@ void FullRingInfinity::BuildSeparators()
 
 void FullRingInfinity::BuildPhantom()
 {
-  phantom_diam_ = 6. * cm;
+  jas_phantom_ = new JaszczakPhantom();
+  jas_phantom_->Construct();
+  G4LogicalVolume* phantom_logic = jas_phantom_->GetLogicalVolume();
+  new G4PVPlacement(0, G4ThreeVector(0, 0, 0), phantom_logic, "JASZCZAK", lab_logic_, false, 0, true);
+  // phantom_diam_ = 6. * cm;
 
-  G4Orb *phantom_solid = new G4Orb("PHANTOM", phantom_diam_ / 2.);
-  G4LogicalVolume *phantom_logic =
-      new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
-  G4ThreeVector phantom_origin = specific_vertex_;
-  new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);
+  // G4Orb *phantom_solid = new G4Orb("PHANTOM", phantom_diam_ / 2.);
+  // G4LogicalVolume *phantom_logic =
+  //     new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
+  // G4ThreeVector phantom_origin = specific_vertex_;
+  // new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);
 
-  spheric_gen_ =
-      new SpherePointSampler(0., phantom_diam_ / 2, phantom_origin);
+  // spheric_gen_ =
+  //     new SpherePointSampler(0., phantom_diam_ / 2, phantom_origin);
 }
 
 G4ThreeVector FullRingInfinity::GenerateVertex(const G4String &region) const
@@ -605,9 +610,9 @@ G4ThreeVector FullRingInfinity::GenerateVertex(const G4String &region) const
   {
     vertex = specific_vertex_;
   }
-  else if (region == "PHANTOM")
+  else if (region == "JPHANTOM")
   {
-    vertex = spheric_gen_->GenerateVertex("VOLUME");
+    vertex = jas_phantom_->GenerateVertex("JPHANTOM");
   }
   else if (region == "CUSTOM")
   {
