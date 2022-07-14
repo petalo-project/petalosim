@@ -37,4 +37,4 @@
 /nexus/persistency/start_id 0
 /nexus/persistency/sns_only false
 /nexus/persistency/tof_time 5. nanosecond
-/nexus/persistency/outputFile full_body_nest
+/nexus/persistency/outputFile full_body_nest_phantom

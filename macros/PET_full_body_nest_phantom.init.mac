@@ -20,4 +20,4 @@
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
 
-/nexus/RegisterMacro macros/PET_full_body_nest_jas.config.mac
+/nexus/RegisterMacro macros/PET_full_body_nest_phantom.config.mac
