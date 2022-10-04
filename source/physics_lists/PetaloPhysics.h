@@ -28,6 +28,8 @@ public:
   /// Construct all required physics processes (Geant4 mandatory method)
   virtual void ConstructProcess();
 
+  VDetector *petalo_;
+
 private:
   G4bool risetime_; ///< Rise time for LYSO
 
