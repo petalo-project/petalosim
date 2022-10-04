@@ -35,6 +35,8 @@ private:
 
   G4bool nest_; ///< Switch on/off NEST
 
+  G4bool prod_th_el_; ///< If true, NEST thermal electrons are produced
+
   G4GenericMessenger *msg_;
   WavelengthShifting *wls_;
   PositronAnnihilation* pos_annihil_;
