@@ -25,6 +25,7 @@
 
 /process/optical/processActivation Scintillation false
 /PhysicsList/Petalo/nest true
+#/PhysicsList/Petalo/thermal_electrons false
 
 
 ### VERBOSITIES
