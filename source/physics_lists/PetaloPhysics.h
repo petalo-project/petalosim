@@ -37,6 +37,8 @@ private:
 
   G4bool prod_th_el_; ///< If true, NEST thermal electrons are produced
 
+  G4String petalo_detector_;
+
   G4GenericMessenger *msg_;
   WavelengthShifting *wls_;
   PositronAnnihilation* pos_annihil_;

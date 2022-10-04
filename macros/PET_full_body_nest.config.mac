@@ -26,6 +26,7 @@
 /process/optical/processActivation Scintillation false
 /PhysicsList/Petalo/nest true
 #/PhysicsList/Petalo/thermal_electrons false
+#/PhysicsList/Petalo/petalo_detector FullRing
 
 
 ### VERBOSITIES

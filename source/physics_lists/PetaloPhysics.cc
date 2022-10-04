@@ -32,7 +32,8 @@ G4_DECLARE_PHYSCONSTR_FACTORY(PetaloPhysics);
 
 PetaloPhysics::PetaloPhysics() : G4VPhysicsConstructor("PetaloPhysics"),
                                  risetime_(false), noCompt_(false),
-                                 nest_(false), prod_th_el_(false)
+                                 nest_(false), prod_th_el_(false),
+                                 petalo_detector_("FullRing")
 {
   msg_ = new G4GenericMessenger(this, "/PhysicsList/Petalo/",
                                 "Control commands of the nexus physics list.");
@@ -48,6 +49,9 @@ PetaloPhysics::PetaloPhysics() : G4VPhysicsConstructor("PetaloPhysics"),
 
   msg_->DeclareProperty("thermal_electrons", prod_th_el_,
                         "If true, NEST thermal electrons are produced.");
+
+  msg_->DeclareProperty("petalo_detector", petalo_detector_,
+                        "Detector geometry chosen.");
 }
 
 PetaloPhysics::~PetaloPhysics()
