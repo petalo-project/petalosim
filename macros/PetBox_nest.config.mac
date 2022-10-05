@@ -22,8 +22,8 @@
 /Actions/PetSensorsEventAction/min_charge 50
 
 ### PHYSICS
-#/process/optical/processActivation Scintillation true
-#/process/optical/processActivation Cerenkov      true
+/process/optical/processActivation Scintillation false
+/process/optical/processActivation Cerenkov      true
 /PhysicsList/Petalo/nest true
 /PhysicsList/Petalo/thermal_electrons false
 /PhysicsList/Petalo/petalo_detector Petit
