@@ -10,6 +10,7 @@
 #define PETALO_PHYSICS_H
 
 #include <G4VPhysicsConstructor.hh>
+#include <VDetector.hh>
 
 class G4GenericMessenger;
 class WavelengthShifting;

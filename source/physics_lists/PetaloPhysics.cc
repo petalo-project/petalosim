@@ -14,7 +14,7 @@
 #include <NESTProc.hh>
 #include <VDetector.hh>
 #include <PetaloDetector.hh>
-//#include <PetitDetector.hh>
+#include <PetitDetector.hh>
 
 #include <G4Scintillation.hh>
 #include <G4GenericMessenger.hh>
@@ -116,8 +116,8 @@ void PetaloPhysics::ConstructProcess()
   if (nest_) {
     if (petalo_detector_ == "FullRing"){
       petalo_ = new PetaloDetector();
-    // } else if (petalo_detector_ == "Petit") {
-      // PetaloDetector* petalo = new PetitDetector();
+    } else if (petalo_detector_ == "Petit") {
+      petalo_ = new PetitDetector();
     } else {
       G4Exception("[PetaloPhysics]", "ConstructProcess()", FatalException,
                   "Unknown PETALO detector!");
