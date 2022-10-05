@@ -1,3 +1,11 @@
+tag v2_00_00 - 5 Oct 2022
+	- Add NEST dependency
+	- Fix PETit dimensions
+	- Eliminate gsl dependency
+	- Add charge detectors to the ring geometry
+	- Add Jaszczak phantom geometry
+	- Fix random crash in materials with no material properties table
+
 tag v1_01_00 - 10 May 2022
 	- Add teflon blocks to PETit
 	- Add possibility of saving only events with a minimum charge
