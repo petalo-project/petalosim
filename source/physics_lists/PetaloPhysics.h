@@ -10,6 +10,7 @@
 #define PETALO_PHYSICS_H
 
 #include <G4VPhysicsConstructor.hh>
+#include <VDetector.hh>
 
 class G4GenericMessenger;
 class WavelengthShifting;
@@ -28,6 +29,8 @@ public:
   /// Construct all required physics processes (Geant4 mandatory method)
   virtual void ConstructProcess();
 
+  VDetector *petalo_;
+
 private:
   G4bool risetime_; ///< Rise time for LYSO
 
@@ -36,6 +39,8 @@ private:
   G4bool nest_; ///< Switch on/off NEST
 
   G4bool prod_th_el_; ///< If true, NEST thermal electrons are produced
+
+  G4String petalo_detector_;
 
   G4GenericMessenger *msg_;
   WavelengthShifting *wls_;

@@ -12,7 +12,9 @@
 #include "PetaloPersistencyManager.h"
 
 #include <NESTProc.hh>
+#include <VDetector.hh>
 #include <PetaloDetector.hh>
+#include <PetitDetector.hh>
 
 #include <G4Scintillation.hh>
 #include <G4GenericMessenger.hh>
@@ -32,7 +34,8 @@ G4_DECLARE_PHYSCONSTR_FACTORY(PetaloPhysics);
 
 PetaloPhysics::PetaloPhysics() : G4VPhysicsConstructor("PetaloPhysics"),
                                  risetime_(false), noCompt_(false),
-                                 nest_(false), prod_th_el_(false)
+                                 nest_(false), prod_th_el_(false),
+                                 petalo_detector_("FullRing")
 {
   msg_ = new G4GenericMessenger(this, "/PhysicsList/Petalo/",
                                 "Control commands of the nexus physics list.");
@@ -48,6 +51,9 @@ PetaloPhysics::PetaloPhysics() : G4VPhysicsConstructor("PetaloPhysics"),
 
   msg_->DeclareProperty("thermal_electrons", prod_th_el_,
                         "If true, NEST thermal electrons are produced.");
+
+  msg_->DeclareProperty("petalo_detector", petalo_detector_,
+                        "Detector geometry chosen.");
 }
 
 PetaloPhysics::~PetaloPhysics()
@@ -108,14 +114,22 @@ void PetaloPhysics::ConstructProcess()
 
 
   if (nest_) {
-    PetaloDetector* petalo = new PetaloDetector();
-    G4double e_field = petalo->FitEF(0, 0, 0);
+    if (petalo_detector_ == "FullRing"){
+      petalo_ = new PetaloDetector();
+    } else if (petalo_detector_ == "Petit") {
+      petalo_ = new PetitDetector();
+    } else {
+      G4Exception("[PetaloPhysics]", "ConstructProcess()", FatalException,
+                  "Unknown PETALO detector!");
+    }
+
+    G4double e_field = petalo_->FitEF(0, 0, 0);
     PetaloPersistencyManager* pm =
       dynamic_cast<PetaloPersistencyManager*>(G4VPersistencyManager::GetPersistencyManager());
     pm->SetElectricField(e_field);
-    NEST::NESTcalc* petaloCalc = new NEST::NESTcalc(petalo);
+    NEST::NESTcalc* petaloCalc = new NEST::NESTcalc(petalo_);
     NEST::NESTProc* theNESTScintillationProcess =
-      new NEST::NESTProc("S1", fElectromagnetic, petaloCalc, petalo);
+      new NEST::NESTProc("S1", fElectromagnetic, petaloCalc, petalo_);
     theNESTScintillationProcess->SetDetailedSecondaries(true); // this is to use the full scintillation spectrum of LXe.
     theNESTScintillationProcess->SetStackElectrons(prod_th_el_); //false if only light is collected
 
