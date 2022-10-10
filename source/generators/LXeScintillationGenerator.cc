@@ -14,6 +14,7 @@
 #include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
 #include "nexus/OpticalMaterialProperties.h"
+#include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -30,6 +31,8 @@
 
 using namespace nexus;
 using namespace CLHEP;
+
+REGISTER_CLASS(LXeScintillationGenerator, G4VPrimaryGenerator)
 
 
 LXeScintillationGenerator::LXeScintillationGenerator() :
@@ -69,7 +72,7 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   G4MaterialPropertiesTable* mpt = opticalprops::LXe();
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
-  G4MaterialPropertyVector* spectrum = mpt->GetProperty("FASTCOMPONENT");
+  G4MaterialPropertyVector* spectrum = mpt->GetProperty("SCINTILLATIONCOMPONENT1");
   G4PhysicsOrderedFreeVector* spectrum_integral =
       new G4PhysicsOrderedFreeVector();
   ComputeCumulativeDistribution(*spectrum, *spectrum_integral);
