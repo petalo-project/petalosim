@@ -16,6 +16,7 @@
 /nexus/RegisterRunAction PetAnalysisRunAction
 /nexus/RegisterEventAction PetAnalysisEventAction
 /nexus/RegisterTrackingAction PetAnalysisTrackingAction
+/nexus/RegisterSteppingAction PetAnalysisSteppingAction
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
 

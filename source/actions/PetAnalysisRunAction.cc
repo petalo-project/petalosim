@@ -28,10 +28,17 @@ PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction()
   // but it's not used anywhere.
   analysisManager->SetFileName("OptTrackInfo");
 
-  // Book histograms
+  // Book 1D histograms
   analysisManager->CreateH1("CherLambda","Wavelengths of Cherenkov photons (nm)", 1000, 0, 1500.); // histo ID = 0
   analysisManager->CreateH1("ScintLambda","Wavelengths of scintillation photons (nm)", 1000, 0, 800.); // histo ID = 1
   analysisManager->CreateH1("ScintillationTime", "Scintillation time (ps)", 8000, 0, 40000.); // histo ID = 2
+  analysisManager->CreateH1("PhVelocity", "Velocity of detected photons (mm/ps)", 1000, 0, 0.4); // histo ID = 3
+  analysisManager->CreateH1("PhLambdaDet", "Detection wavelength (nm)", 1000, 0, 1500.); // histo ID = 4
+
+  // Book 2D histograms
+   analysisManager->CreateH2("PhLambdaV", "Wavelength (nm) vs velocity (mm/ps) of detected photons", 1000., 0, 0.4, 1000, 0, 1500.); // histo ID = 0
+  analysisManager->CreateH2("PhVelTime", "Velocity (mm/ps) vs arrival time of detected photons (ps)", 1000, 0, 1000, 1000., 0, 0.4); // histo ID = 1
+
 
   // Book event observables to save (Object ID = 0)
   analysisManager->CreateNtuple("OptEvt", "Number of produced optical photon");

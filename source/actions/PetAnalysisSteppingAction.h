@@ -21,9 +21,6 @@
 
 class G4Step;
 class G4GenericMessenger;
-class TH1F;
-class TH2F;
-
 
 class PetAnalysisSteppingAction : public G4UserSteppingAction
 {
@@ -41,14 +38,6 @@ private:
 
   std::vector<double> times;
   std::vector<double> wavelengths;
-
-  TH1F *hVelocity;
-  TH2F *hVE;
-  TH2F *hTV;
-  TH1F *hCherLambdaDet;
-
-  G4GenericMessenger *msg_;
-  G4int file_no_;
 
   typedef std::map<G4String, int> detectorCounts;
   detectorCounts my_counts;
