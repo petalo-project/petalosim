@@ -47,15 +47,15 @@ void PetAnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
   if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
 
-    auto g4_analysis_man = G4AnalysisManager::Instance();
+    auto analysisManager = G4AnalysisManager::Instance();
 
     if (track->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
       //track->CalculateVelocityForOpticalPhoton()
-      g4_analysis_man->FillH1(0, h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+      analysisManager->FillH1(0, h_Planck*c_light/track->GetKineticEnergy()/nanometer);
     }
     else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
-      g4_analysis_man->FillH1(1, h_Planck*c_light/track->GetKineticEnergy()/nanometer);
-      g4_analysis_man->FillH1(2, track->GetGlobalTime()/picosecond);
+      analysisManager->FillH1(1, h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+      analysisManager->FillH1(2, track->GetGlobalTime()/picosecond);
     }
   }
 

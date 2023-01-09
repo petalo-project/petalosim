@@ -114,10 +114,10 @@ void PetAnalysisEventAction::EndOfEventAction(const G4Event *event)
     {
       pm->StoreCurrentEvent(true);
 
-      auto g4_analysis_man = G4AnalysisManager::Instance();
+      auto analysisManager = G4AnalysisManager::Instance();
 
-      g4_analysis_man->FillNtupleDColumn(0, 0, n_opt_photons);
-      g4_analysis_man->AddNtupleRow(0);
+      analysisManager->FillNtupleDColumn(0, 0, n_opt_photons);
+      analysisManager->AddNtupleRow(0);
     }
     else
     {
