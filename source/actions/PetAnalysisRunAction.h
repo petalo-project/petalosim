@@ -1,8 +1,9 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloRunAction.h
+// petalosim | PetAnalysisRunAction.h
 //
-// This is the default run action of the PETALO simulations.
-// The G4 analysis manager is opened and closed.
+// This is the run action used for optical photon analyses.
+// The G4 analysis manager is opened and closed and the histograms and n-tuples
+// to be saved are declared.
 // A message at the beginning and at the end of the simulation is also printed.
 //
 // The PETALO Collaboration

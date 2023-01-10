@@ -5,7 +5,7 @@
 // all kinds of photosensors at the end of the run.
 // It produces histograms with photon velocities and wavelengths.
 // It also shows examples of information that can be accessed at the stepping
-// level, so it is useful for debugging.
+// level, useful for debugging.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
