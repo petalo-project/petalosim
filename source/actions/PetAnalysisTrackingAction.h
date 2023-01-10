@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | PetAnalysisTrackingAction.h
 //
-// This class produces a csv file with histogram information of the wavelengths 
+// This class produces csv files with histogram information of the wavelengths 
 // and the time of production of the optical photons.
 //
 // The PETALO Collaboration

@@ -3,7 +3,8 @@
 //
 // This class allows the user to print the total number of photons detected by
 // all kinds of photosensors at the end of the run.
-// It produces histograms with photon velocities and wavelengths.
+// It produces csv files with histogram information of photon velocities
+// and wavelengths.
 // It also shows examples of information that can be accessed at the stepping
 // level, useful for debugging.
 //
@@ -22,9 +23,6 @@
 #include <G4Electron.hh>
 #include <G4GenericMessenger.hh>
 #include <G4AnalysisManager.hh>
-
-//#include "CLHEP/Units/SystemOfUnits.h"
-//#include "CLHEP/Units/PhysicalConstants.h"
 
 namespace nexus {}
 using namespace nexus;

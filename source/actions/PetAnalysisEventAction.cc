@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | PetAnalysisEventAction.cc
 //
-// This class is based on DefaultEventAction and modified to produce
+// This class is based on PetaloEventAction and modified to produce
 // a csv file with the number of scintillation photons event by event.
 //
 // The PETALO Collaboration
