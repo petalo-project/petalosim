@@ -38,7 +38,7 @@ private:
   G4int not_det;
 
   std::vector<double> times;
-  std::vector<double> wavelengths;
+  std::vector<double> velocities;
 
   typedef std::map<G4String, int> detectorCounts;
   detectorCounts my_counts;

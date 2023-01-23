@@ -36,7 +36,7 @@ PetAnalysisSteppingAction::PetAnalysisSteppingAction(): G4UserSteppingAction()
   not_det = 0;
 
   times.clear();
-  wavelengths.clear();
+  velocities.clear();
 }
 
 
@@ -51,7 +51,7 @@ PetAnalysisSteppingAction::~PetAnalysisSteppingAction()
 
   auto analysisManager = G4AnalysisManager::Instance();
   for (unsigned int i=0; i<times.size(); ++i) {
-    analysisManager->FillH2(1, (times[i] - first_time)/picosecond, wavelengths[i]/mm*picosecond);
+    analysisManager->FillH2(1, (times[i] - first_time)/picosecond, velocities[i]/mm*picosecond);
   }
 
   G4double total_counts = 0;
@@ -118,7 +118,7 @@ void PetAnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 	analysisManager->FillH2(0, distance/step->GetDeltaTime()/mm*picosecond, lambda);
 	analysisManager->FillH1(4, h_Planck*c_light/step->GetTrack()->GetKineticEnergy()/nanometer);
 	times.push_back(step->GetDeltaTime());
-	wavelengths.push_back(distance/step->GetDeltaTime());
+	velocities.push_back(distance/step->GetDeltaTime());
 
 	G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
 	//G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
