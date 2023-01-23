@@ -34,9 +34,6 @@ PetAnalysisSteppingAction::PetAnalysisSteppingAction(): G4UserSteppingAction()
 {
   detected = 0;
   not_det = 0;
-
-  times.clear();
-  velocities.clear();
 }
 
 
@@ -45,14 +42,6 @@ PetAnalysisSteppingAction::~PetAnalysisSteppingAction()
 {
   G4cout << "Detected photons = " << detected << G4endl;
   G4cout << "Non detected photons = " << not_det << G4endl;
-
-  auto first_it = std::min_element(times.begin(), times.end());
-  G4double first_time = *first_it;
-
-  auto analysisManager = G4AnalysisManager::Instance();
-  for (unsigned int i=0; i<times.size(); ++i) {
-    analysisManager->FillH2(1, (times[i] - first_time)/picosecond, velocities[i]/mm*picosecond);
-  }
 
   G4double total_counts = 0;
   detectorCounts::iterator it = my_counts.begin();
@@ -115,10 +104,7 @@ void PetAnalysisSteppingAction::UserSteppingAction(const G4Step* step)
         auto analysisManager = G4AnalysisManager::Instance();
 
 	analysisManager->FillH1(3, distance/step->GetDeltaTime()/mm*picosecond);
-	analysisManager->FillH2(0, distance/step->GetDeltaTime()/mm*picosecond, lambda);
-	analysisManager->FillH1(4, h_Planck*c_light/step->GetTrack()->GetKineticEnergy()/nanometer);
-	times.push_back(step->GetDeltaTime());
-	velocities.push_back(distance/step->GetDeltaTime());
+	analysisManager->FillH1(4, lambda);
 
 	G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
 	//G4cout << "##### Sensitive Volume: " << detector_name << G4endl;

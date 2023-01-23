@@ -36,10 +36,11 @@ PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction()
   analysisManager->CreateH1("PhVelocity", "Velocity of detected photons (mm/ps)", 1000, 0, 0.4); // histo ID = 3
   analysisManager->CreateH1("PhLambdaDet", "Detection wavelength (nm)", 1000, 0, 1500.); // histo ID = 4
 
-  // Book 2D histograms
-  analysisManager->CreateH2("PhLambdaV", "Wavelength (nm) vs velocity (mm/ps) of detected photons", 1000., 0, 0.4, 1000, 0, 1500.); // histo ID = 0
-  analysisManager->CreateH2("PhVelTime", "Velocity (mm/ps) vs arrival time of detected photons (ps)", 1000, 0, 1000, 1000., 0, 0.4); // histo ID = 1
-
+  /*
+  // Example of how to book 2D histograms
+  //  analysisManager->CreateH2("PhLambdaV", "Wavelength (nm) vs velocity (mm/ps) of detected photons", 1000., 0, 0.4, 1000, 0, 1500.); // histo ID = 0
+  //  analysisManager->CreateH2("PhVelTime", "Velocity (mm/ps) vs arrival time of detected photons (ps)", 1000, 0, 1000, 1000., 0, 0.4); // histo ID = 1
+  */
 
   // Book event observables to save (Object ID = 0)
   analysisManager->CreateNtuple("OptEvt", "Number of produced optical photon");
