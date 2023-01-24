@@ -56,6 +56,7 @@ void PetAnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
     else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
       analysisManager->FillH1(1, h_Planck*c_light/track->GetKineticEnergy()/nanometer);
       analysisManager->FillH1(2, track->GetGlobalTime()/picosecond);
+      analysisManager->FillH1(3, track->CalculateVelocityForOpticalPhoton()/mm*picosecond);
     }
   }
 

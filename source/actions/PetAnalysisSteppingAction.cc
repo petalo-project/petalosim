@@ -102,8 +102,6 @@ void PetAnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 	G4double lambda = h_Planck*c_light/step->GetTrack()->GetKineticEnergy()/nanometer;
 
         auto analysisManager = G4AnalysisManager::Instance();
-
-	analysisManager->FillH1(3, distance/step->GetDeltaTime()/mm*picosecond);
 	analysisManager->FillH1(4, lambda);
 
 	G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
@@ -115,9 +113,6 @@ void PetAnalysisSteppingAction::UserSteppingAction(const G4Step* step)
       } else {
 	not_det = not_det + 1;
       }
-
-      //	G4cout << "check: " << velocity << ", " << track_velocity << G4endl;
-
 
   }
 

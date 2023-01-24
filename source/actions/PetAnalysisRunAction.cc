@@ -30,11 +30,11 @@ PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction()
   analysisManager->SetFileName("OptTrackInfo");
 
   // Book 1D histograms
-  analysisManager->CreateH1("CherLambda","Wavelengths of Cherenkov photons (nm)", 1000, 0, 1500.); // histo ID = 0
-  analysisManager->CreateH1("ScintLambda","Wavelengths of scintillation photons (nm)", 1000, 0, 800.); // histo ID = 1
+  analysisManager->CreateH1("CherLambda","Wavelength of Cherenkov photons (nm)", 1000, 0, 1500.); // histo ID = 0
+  analysisManager->CreateH1("ScintLambda","Wavelength of scintillation photons (nm)", 1000, 0, 800.); // histo ID = 1
   analysisManager->CreateH1("ScintillationTime", "Scintillation time (ps)", 8000, 0, 40000.); // histo ID = 2
-  analysisManager->CreateH1("PhVelocity", "Velocity of detected photons (mm/ps)", 1000, 0, 0.4); // histo ID = 3
-  analysisManager->CreateH1("PhLambdaDet", "Detection wavelength (nm)", 1000, 0, 1500.); // histo ID = 4
+  analysisManager->CreateH1("PhVelocity", "Velocity of scintillation photons (mm/ps)", 1000, 0, 0.4); // histo ID = 3
+  analysisManager->CreateH1("PhLambdaDet", "Wavelength of detected photons (nm)", 1000, 0, 1500.); // histo ID = 4
 
   /*
   // Example of how to book 2D histograms
