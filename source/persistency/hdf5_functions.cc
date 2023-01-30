@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | hdf5_functions.cc
 //
-// Collection of functions to create h5 tables for nexus output.
+// Collection of functions to create h5 tables for petalosim output.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------

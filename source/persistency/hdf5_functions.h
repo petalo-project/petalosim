@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | hdf5_functions.h
 //
-// Collection of functions to create h5 tables for nexus output.
+// Collection of functions to create h5 tables for petalosim output.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 
   typedef struct{
     int32_t event_id;
-    int sensor_id;
+    unsigned int sensor_id;
     float time;
     unsigned int track_id;
   } sns_tof_t;
