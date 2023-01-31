@@ -167,12 +167,17 @@ G4MaterialPropertiesTable* GlassEpoxy()
     G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
     const G4int ri_entries = 200;
-    G4double eWidth =
-      (opticalprops::optPhotMaxE_ - opticalprops::optPhotMinE_) / ri_entries;
+    // This is the range where Cerenkov photons are produced by G4.
+    // Since the recommendation is to use the PDE range of the photosensors used in the simulation,
+    // we choose that of Hamamatsu S15779(ES1) arrays as a typical range.
+    const G4double minE_n = 1.38 * eV; // corresponds to 900 nm, where Hamamatsu's pde go to zero
+    const G4double maxE_n = 8.21 * eV; // corresponds to 151 nm, where Hamamatsu's pde go to zero
+    // + above this value A(omega) starts to diverge
+    G4double eWidth = (maxE_n - minE_n) / ri_entries;
 
     std::vector<G4double> ri_energy;
     for (int i=0; i<ri_entries; i++) {
-      ri_energy.push_back(opticalprops::optPhotMinE_ + i * eWidth);
+      ri_energy.push_back(minE_n + i * eWidth);
     }
 
     G4double density = GetLXeDensity(pressure);
@@ -189,12 +194,13 @@ G4MaterialPropertiesTable* GlassEpoxy()
 
     // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
     const G4int sc_entries = 500;
-    const G4double minE = 6.20625*eV;
-    eWidth = (opticalprops::optPhotMaxE_ - minE) / sc_entries;
+    const G4double minE_sc = 6.20625*eV;
+    const G4double maxE_sc = 8.21*eV;
+    eWidth = (maxE_sc - minE_sc) / sc_entries;
 
     std::vector<G4double> sc_energy;
     for (G4int j=0; j<sc_entries; j++){
-      sc_energy.push_back(minE + j * eWidth);
+      sc_energy.push_back(minE_sc + j * eWidth);
     }
     std::vector<G4double> intensity;
     for (G4int i=0; i<sc_entries; i++) {
