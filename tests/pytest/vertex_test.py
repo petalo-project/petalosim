@@ -14,4 +14,4 @@ def test_vertices_are_generated_in_phantom(file_name_phantom):
                        'ROD5', 'SPHERE0', 'SPHERE1', 'SPHERE2', 'SPHERE3',
                        'SPHERE4', 'SPHERE5']
 
-    assert volumes.all() in correct_volumes
+    assert all(elem in correct_volumes for elem in volumes)
