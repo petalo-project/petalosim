@@ -36,6 +36,6 @@
 /nexus/random_seed 132323
 
 ### OUTPUT FILE
-/nexus/persistency/start_id 0
-/nexus/persistency/outputFile petbox.pet
+/petalosim/persistency/start_id 0
+/petalosim/persistency/outputFile petbox.pet
 

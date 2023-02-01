@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloUtils.cc
+// petalosim | PetaloUtils.cc
 //
 // Functions used in more than one class in the code.
 //

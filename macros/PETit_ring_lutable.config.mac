@@ -28,5 +28,5 @@
 /nexus/random_seed 132313
 
 ### OUTPUT FILE
-/nexus/persistency/start_id 10
-/nexus/persistency/outputFile full_ring_lut.pet
+/petalosim/persistency/start_id 10
+/petalosim/persistency/outputFile full_ring_lut.pet

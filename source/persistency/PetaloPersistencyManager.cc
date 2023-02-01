@@ -50,7 +50,7 @@ PetaloPersistencyManager::PetaloPersistencyManager():
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
   save_tot_charge_(true), h5writer_(0)
 {
-  msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
+  msg_ = new G4GenericMessenger(this, "/petalosim/persistency/");
   msg_->DeclareMethod("outputFile", &PetaloPersistencyManager::OpenFile, "");
   msg_->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");

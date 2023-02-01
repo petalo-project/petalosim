@@ -33,7 +33,7 @@
 /nexus/random_seed 132313
 
 ### OUTPUT FILE
-/nexus/persistency/start_id 10
-/nexus/persistency/sns_only false
-/nexus/persistency/tof_time 50. nanosecond
-/nexus/persistency/outputFile petit_ring.pet
+/petalosim/persistency/start_id 10
+/petalosim/persistency/sns_only false
+/petalosim/persistency/tof_time 50. nanosecond
+/petalosim/persistency/outputFile petit_ring.pet
