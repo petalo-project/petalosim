@@ -16,9 +16,6 @@
 #include <G4Run.hh>
 #include <G4AnalysisManager.hh>
 
-namespace nexus {}
-using namespace nexus;
-
 REGISTER_CLASS(PetAnalysisRunAction, G4UserRunAction)
 
 PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction()
