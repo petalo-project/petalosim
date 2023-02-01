@@ -18,9 +18,7 @@ class G4Event;
 class G4ParticleDefinition;
 
 
-namespace nexus {
-
-  class GeometryBase;
+namespace nexus { class GeometryBase; }
 
   class DoubleParticle: public G4VPrimaryGenerator
   {
@@ -51,13 +49,13 @@ namespace nexus {
     G4double energy_min_; ///< Minimum kinetic energy
     G4double max_energy_; ///< Maximum kinetic energy
 
-    const GeometryBase* geom_; ///< Pointer to the detector geometry
+    const nexus::GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4String region_;
 
 
   };
 
-} // end namespace nexus
+//} // end namespace nexus
 
 #endif

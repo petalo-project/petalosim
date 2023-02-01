@@ -23,9 +23,7 @@ namespace nexus
 /* namespace nexus {class SiPMpetVUV;} */
 /* namespace nexus {class SiPMpetTPB;} */
 
-using namespace nexus;
-
-class PetLYSOCell : public GeometryBase
+class PetLYSOCell : public nexus::GeometryBase
 {
 public:
   /// Constructor
@@ -63,20 +61,20 @@ private:
   G4double max_step_size_; /// Maximum Step Size
 
   //Vertex generator
-  BoxPointSampler *active_gen_;
+  nexus::BoxPointSampler *active_gen_;
 
   /// Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 
   /// Vertex generator from a surface just outside the detector walls
-  BoxPointSampler *surf_gen_;
+  nexus::BoxPointSampler *surf_gen_;
 
   // Dice class
   // PetKDBFixedPitch* db_;
   PetPlainDice *pdb_;
 
   //SiPMpetVUV* sipm_;
-  GeometryBase *sipm_;
+  nexus::GeometryBase *sipm_;
 
   G4double pdb_z_;
 
