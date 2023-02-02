@@ -105,13 +105,6 @@ PetBox::PetBox() : GeometryBase(),
   msg_->DeclareProperty("single_tile_coinc_plane", single_tile_coinc_plane_,
                         "If 1, one tile centered in coinc plane");
 
-  G4GenericMessenger::Command &time_cmd =
-      msg_->DeclareProperty("sipm_time_binning", time_binning_,
-                            "Time binning for the sensor");
-  time_cmd.SetUnitCategory("Time");
-  time_cmd.SetParameterName("sipm_time_binning", false);
-  time_cmd.SetRange("sipm_time_binning>0.");
-
   msg_->DeclareProperty("add_teflon_block", add_teflon_block_,
     "Boolean to add a teflon block that reduces the xenon volume");
 
@@ -303,7 +296,6 @@ void PetBox::BuildBox()
   // Construct the tile for the distances in the active
   tile_->SetTileVisibility(tile_vis_);
   tile_->SetTileReflectivity(tile_refl_);
-  tile_->SetTimeBinning(time_binning_);
 
   tile_->Construct();
   tile_thickn_ = tile_->GetDimensions().z();
@@ -329,7 +321,6 @@ void PetBox::BuildBox()
     tile2_->SetBoxGeom(1);
     tile2_->SetTileVisibility(tile_vis_);
     tile2_->SetTileReflectivity(tile_refl_);
-    tile2_->SetTimeBinning(time_binning_);
 
     tile2_->Construct();
     tile2_thickn_ = tile2_->GetDimensions().z();

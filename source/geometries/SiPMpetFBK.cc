@@ -34,7 +34,6 @@ SiPMpetFBK::SiPMpetFBK() : GeometryBase(),
                            visibility_(0),
                            refr_index_(1.54),
                            eff_(1.),
-                           time_binning_(5. * picosecond),
                            sipm_size_(3. * mm),
                            sensor_depth_(-1),
                            mother_depth_(0),
@@ -46,12 +45,6 @@ SiPMpetFBK::SiPMpetFBK() : GeometryBase(),
   msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
   msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
   msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
-
-  G4GenericMessenger::Command &time_cmd =
-      msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
-  time_cmd.SetUnitCategory("Time");
-  time_cmd.SetParameterName("time_binning", false);
-  time_cmd.SetRange("time_binning>0.");
 
   G4GenericMessenger::Command &size_cmd =
       msg_->DeclareProperty("size", sipm_size_, "Size of SiPMs");
@@ -153,7 +146,6 @@ void SiPMpetFBK::Construct()
     sipmsd->SetDetectorVolumeDepth(sensor_depth_);
     sipmsd->SetMotherVolumeDepth(mother_depth_);
     sipmsd->SetDetectorNamingOrder(naming_order_);
-    sipmsd->SetTimeBinning(time_binning_);
     G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
     active_logic->SetSensitiveDetector(sipmsd);
   }

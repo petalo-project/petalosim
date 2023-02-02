@@ -31,7 +31,6 @@ public:
   void Construct();
 
   void SetVisibility(G4bool vis);
-  void SetTimeBinning(G4double time_binning);
   void SetSensorDepth(G4int sensor_depth);
   void SetMotherDepth(G4int mother_depth);
   void SetNamingOrder(G4int naming_order);
@@ -40,7 +39,6 @@ public:
 private:
   G4bool visibility_;
 
-  G4double time_binning_;
   G4int sensor_depth_;
   G4int mother_depth_;
   G4int naming_order_;
@@ -50,11 +48,6 @@ private:
 inline void SiPMHamamatsuBlue::SetVisibility(G4bool vis)
 {
   visibility_ = vis;
-}
-
-inline void SiPMHamamatsuBlue::SetTimeBinning(G4double time_binning)
-{
-  time_binning_ = time_binning;
 }
 
 inline void SiPMHamamatsuBlue::SetSensorDepth(G4int sensor_depth)

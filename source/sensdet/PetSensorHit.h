@@ -21,7 +21,7 @@ public:
   /// Default constructor
   PetSensorHit();
   /// Constructor providing the detector ID and position
-  PetSensorHit(G4int ID, const G4ThreeVector& position, G4double bin_size);
+  PetSensorHit(G4int ID, const G4ThreeVector& position);
   /// Copy-constructor
   PetSensorHit(const PetSensorHit&);
   /// Destructor
@@ -47,26 +47,18 @@ public:
   /// Sets the position of the detector
   void SetPosition(const G4ThreeVector&);
 
-  /// Returns the bin size of the histogram
-  G4double GetBinSize() const;
-  /// Sets the bin size of the histogram. This can only be done
-  /// while the histogram is empty (rebinning is not supported).
-  void SetBinSize(G4double);
-
-  /// Adds counts to a given time bin
-  void Fill(G4double time, G4int counts=1);
+  /// Add detected photon
   void AddPhoton(G4double time, G4int track_id);
 
-  const std::map<G4double, G4int>& GetHistogram() const;
+  G4int GetDetPhotons() const;
   const std::map<G4double, G4int>& GetPhotonMap() const;
+
+  /// Number of detected photons
+  G4int counts_;
 
 private:
   G4int sns_id_;           ///< Detector ID number
-  G4double bin_size_;      ///< Size of time bin
   G4ThreeVector position_; ///< Detector position
-
-  /// Sparse histogram with number of photons detected per time bin
-  std::map<G4double, G4int> histogram_;
 
   /// Map with time and track id of detected photons
   std::map<G4double, G4int> phot_;
@@ -88,14 +80,11 @@ inline void PetSensorHit::operator delete(void* hit)
 inline G4int PetSensorHit::GetSnsID() const { return sns_id_; }
 inline void PetSensorHit::SetSnsID(G4int id) { sns_id_ = id; }
 
-inline G4double PetSensorHit::GetBinSize() const { return bin_size_; }
-
 inline G4ThreeVector PetSensorHit::GetPosition() const { return position_; }
 inline void PetSensorHit::SetPosition(const G4ThreeVector& p) { position_ = p; }
 
-inline const std::map<G4double, G4int>& PetSensorHit::GetHistogram() const
-{ return histogram_; }
-
+inline G4int PetSensorHit::GetDetPhotons() const
+{ return counts_; }
 inline const std::map<G4double, G4int>& PetSensorHit::GetPhotonMap() const
 { return phot_; }
 

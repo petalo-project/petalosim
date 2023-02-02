@@ -29,7 +29,6 @@ public:
 
   void SetVisibility(G4bool vis);
   void SetPDE(G4double eff);
-  void SetTimeBinning(G4double time_binning);
   void SetSensorDepth(G4int sensor_depth);
   void SetMotherDepth(G4int mother_depth);
   void SetNamingOrder(G4int naming_order);
@@ -41,7 +40,6 @@ private:
   // PDE for the sensor
   G4double eff_;
 
-  G4double time_binning_;
   G4int sensor_depth_;
   G4int mother_depth_;
   G4int naming_order_;
@@ -56,11 +54,6 @@ inline void SiPMFBKVUV::SetVisibility(G4bool vis)
 inline void SiPMFBKVUV::SetPDE(G4double eff)
 {
   eff_ = eff;
-}
-
-inline void SiPMFBKVUV::SetTimeBinning(G4double time_binning)
-{
-  time_binning_ = time_binning;
 }
 
 inline void SiPMFBKVUV::SetSensorDepth(G4int sensor_depth)

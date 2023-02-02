@@ -2,10 +2,9 @@
 // petalosim | ToFSD.cc
 //
 // This class is the sensitive detector used for PETALO.
-// Each time a photoelectron is detected by a sensor, two PetSensorHit instances
-// are created (if needed): one to store the full response with large time
-// binning and the other one with a fine time binning, which stores only
-// the first part of the waveform.
+// The first time a photoelectron is detected by a particular sensor,
+// a PetSensorHit instance is created with two tasks:
+// storing the total charge response and the times of the individual photons.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
@@ -80,8 +79,8 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
       HC_->insert(hit);
     }
 
+  hit->counts_ += 1;
   G4double time = step->GetPostStepPoint()->GetGlobalTime();
-  hit->Fill(time);
   hit->AddPhoton(time, step->GetTrack()->GetTrackID());
 
   return true;

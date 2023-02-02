@@ -284,99 +284,43 @@ void PetaloPersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
 void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 {
-  std::map<G4int, PetSensorHit*> mapOfHits;
-
   PetSensorHitsCollection* hits = dynamic_cast<PetSensorHitsCollection*>(hc);
   if (!hits) return;
 
-  std::vector<G4int > sensor_ids;
   for (size_t i=0; i<hits->entries(); i++) {
 
     PetSensorHit* hit = dynamic_cast<PetSensorHit*>(hits->GetHit(i));
     if (!hit) continue;
 
-    int s_id  = hit->GetSnsID();
-    mapOfHits[s_id] = hit;
+    G4int s_id   = hit->GetSnsID();
+    G4int charge = hit->GetDetPhotons();
 
-    const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-    std::map<G4double, G4int>::const_iterator it;
-
-    G4double amplitude = 0.;
-    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-      amplitude = amplitude + (*it).second;
-    }
-    G4int sens_id;
-    sens_id = hit->GetSnsID();
-
-    if (amplitude > thr_charge_){
-      sensor_ids.push_back(sens_id);
-    }
-  }
-
-  for (G4int s_id: sensor_ids){
-    std::string sdname = hits->GetSDname();
-
-    PetSensorHit* hit = mapOfHits[s_id];
-    G4ThreeVector xyz = hit->GetPosition();
-
-    const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-    std::map<G4double, G4int>::const_iterator it;
-
-    if (save_tot_charge_ == true) {
-      G4double charge = 0.;
-      for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-        charge = charge + (*it).second;
+    if (charge > thr_charge_){
+      std::string sdname = hits->GetSDname();
+      G4ThreeVector xyz = hit->GetPosition();
+      if (save_tot_charge_ == true) {
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)s_id, (unsigned int)charge);
       }
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetSnsID(), charge);
-    }
-
-    if (hit->GetSnsID() >= 0) {
       std::vector<G4int>::iterator pos_it =
-	std::find(sns_posvec_.begin(), sns_posvec_.end(), hit->GetSnsID());
+        std::find(sns_posvec_.begin(), sns_posvec_.end(), s_id);
       if (pos_it == sns_posvec_.end()) {
-	h5writer_->WriteSensorPosInfo((unsigned int)hit->GetSnsID(), sdname.c_str(),
+        h5writer_->WriteSensorPosInfo((unsigned int)s_id, sdname.c_str(),
                                       (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-	sns_posvec_.push_back(hit->GetSnsID());
+        sns_posvec_.push_back(s_id);
       }
-
       // Save also individual photons
       const std::map<G4double, G4int>& phot = hit->GetPhotonMap();
-
+      std::map<G4double, G4int>::const_iterator it;
       for (it = phot.begin(); it != phot.end(); ++it) {
         if (it->first <= tof_time_){
-          h5writer_->WriteSensorTofInfo(nevt_, hit->GetSnsID(), it->first, it->second);
+          h5writer_->WriteSensorTofInfo(nevt_, (unsigned int)s_id, (float)it->first,
+                                        (unsigned int)it->second);
         }
         else {
           break;
         }
       }
     }
-
-    /*
-    const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
-    std::map<G4double, G4double>::const_iterator w;
-
-    std::vector<double > value;
-    int count =0;
-    std::ostringstream strs;
-    strs << hit->GetSnsID();
-    std::string sens_id = strs.str();
-    //   G4cout << "Longitud = " << wvls.size() << G4endl;
-    for (w = wvls.begin(); w != wvls.end(); ++w) {
-      if (count < 100) {
-	value.clear();
-	std::ostringstream strs2;
-	strs2 << count;
-	std::string order = strs2.str();
-	std::string key = sens_id + '_' + order;
-	value.push_back(w->first/CLHEP::picosecond);
-	value.push_back(w->second/CLHEP::nanometer);
-	//	G4cout << key << ", " << value[0] << ", " << value[1] << G4endl;
-	ievt->fstore(key, value);
-	count++;
-      }
-    }
-    */
   }
 }
 
@@ -437,14 +381,14 @@ void PetaloPersistencyManager::StoreSteps()
     for (size_t step_id=0; step_id < it->second.size(); ++step_id) {
       h5writer_->WriteStep(nevt_, track_id, particle_name, step_id,
                            initial_volumes[key][step_id],
-                             final_volumes[key][step_id],
-                                proc_names[key][step_id],
+                           final_volumes[key][step_id],
+                           proc_names[key][step_id],
                            initial_poss   [key][step_id].x(),
                            initial_poss   [key][step_id].y(),
                            initial_poss   [key][step_id].z(),
-                             final_poss   [key][step_id].x(),
-                             final_poss   [key][step_id].y(),
-                             final_poss   [key][step_id].z());
+                           final_poss   [key][step_id].x(),
+                           final_poss   [key][step_id].y(),
+                           final_poss   [key][step_id].z());
     }
   }
   sa->Reset();
@@ -501,10 +445,8 @@ void PetaloPersistencyManager::SaveConfigurationInfo(G4String file_name)
     std::getline(ss, value);
 
     if (key != "") {
-      auto found_binning = key.find("binning");
       auto found_other_macro = key.find("/control/execute");
-      if ((found_binning == std::string::npos) &&
-          (found_other_macro == std::string::npos)) {
+      if (found_other_macro == std::string::npos) {
         if (key[0] == '\n') {
           key.erase(0, 1);
         }
