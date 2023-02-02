@@ -359,7 +359,7 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
     std::vector<double > value;
     int count =0;
     std::ostringstream strs;
-    strs << hit->GetPmtID();
+    strs << hit->GetSnsID();
     std::string sens_id = strs.str();
     //   G4cout << "Longitud = " << wvls.size() << G4endl;
     for (w = wvls.begin(); w != wvls.end(); ++w) {
@@ -461,8 +461,6 @@ G4bool PetaloPersistencyManager::Store(const G4Run*)
   h5writer_->WriteRunInfo(key, std::to_string(num_events).c_str());
   key = "saved_events";
   h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
-  key = "tof_bin_size";
-  h5writer_->WriteRunInfo(key, (std::to_string(tof_bin_size_/picosecond)+" ps").c_str());
 
   if (save_int_e_numb_) {
     key = "interacting_events";
