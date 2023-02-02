@@ -9,9 +9,6 @@
 #include "PetSensorHit.h"
 
 
-using namespace nexus;
-
-
 G4Allocator<PetSensorHit> PetSensorHitAllocator;
 
 

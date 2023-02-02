@@ -22,8 +22,6 @@ class G4VTouchable;
 class G4TouchableHistory;
 class G4OpBoundaryProcess;
 
-using namespace nexus;
-
 class ToFSD : public G4VSensitiveDetector
 {
 public:
