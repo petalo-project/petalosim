@@ -74,7 +74,7 @@ private:
 
   size_t irun_;     ///< counter for configuration parameters
   size_t ismp_;     ///< counter for total charge
-  size_t ismp_tof_; ///< counter for waveforms (first bins only)
+  size_t ismp_tof_; ///< counter for waveforms (first photons only)
   size_t ihit_;     ///< counter for true information
   size_t ipart_;    ///< counter for particle information
   size_t ipos_;     ///< counter for sensor positions
