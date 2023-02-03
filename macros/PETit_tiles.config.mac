@@ -27,5 +27,5 @@
 /nexus/random_seed 132345
 
 ### OUTPUT FILE
-/nexus/persistency/start_id 10
-/nexus/persistency/outputFile full_ring_3cm.next
+/petalosim/persistency/start_id 10
+/petalosim/persistency/outputFile full_ring_3cm.next

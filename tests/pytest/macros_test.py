@@ -52,7 +52,7 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
             lines = f.readlines()
             for l in lines:
                 l1 = l.split(' ')
-                if l1[0] == '/nexus/persistency/outputFile':
+                if l1[0] == '/petalosim/persistency/outputFile':
                     l2 = l1[1].split('/')
                     f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
                 else:

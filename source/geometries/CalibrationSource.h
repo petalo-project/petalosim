@@ -15,9 +15,7 @@
 
 class G4GenericMessenger;
 
-namespace nexus {
-
-  class CalibrationSource: public GeometryBase {
+class CalibrationSource: public nexus::GeometryBase {
   public:
     /// Constructor
     CalibrationSource();
@@ -56,5 +54,4 @@ namespace nexus {
 
 
   };
-}
 #endif

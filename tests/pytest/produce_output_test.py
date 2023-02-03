@@ -5,7 +5,7 @@ import subprocess
 
 
 @pytest.mark.order(1)
-def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALODIR, base_name_full_body):
+def test_create_petalo_output_file_full_body(config_tmpdir, output_tmpdir, PETALODIR, base_name_full_body):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -58,7 +58,7 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALO
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_full_body}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_full_body}
 /nexus/random_seed 16062020
 
 """
@@ -126,7 +126,7 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_ring_tiles}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_ring_tiles}
 /nexus/random_seed 16062020
 
 """
@@ -198,7 +198,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name}
 
 /nexus/random_seed 23102022
 """
@@ -215,7 +215,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 
 @pytest.mark.order(4)
-def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, base_name_nest):
+def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, base_name_nest):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -272,7 +272,7 @@ def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, 
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_nest}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_nest}
 /nexus/random_seed 16062020
 
 """
@@ -289,7 +289,7 @@ def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, 
 
 
 @pytest.mark.order(4)
-def test_create_nexus_output_file_phantom(config_tmpdir, output_tmpdir, PETALODIR, base_name_phantom):
+def test_create_petalo_output_file_phantom(config_tmpdir, output_tmpdir, PETALODIR, base_name_phantom):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -339,7 +339,7 @@ def test_create_nexus_output_file_phantom(config_tmpdir, output_tmpdir, PETALODI
 
 /Generator/Back2back/region JPHANTOM
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_phantom}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_phantom}
 /nexus/random_seed 16062020
 
 """

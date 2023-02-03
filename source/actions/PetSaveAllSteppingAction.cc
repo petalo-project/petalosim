@@ -17,8 +17,6 @@
 #include <G4ProcessManager.hh>
 #include <G4ParticleTable.hh>
 
-using namespace nexus;
-
 REGISTER_CLASS(PetSaveAllSteppingAction, G4UserSteppingAction)
 
 PetSaveAllSteppingAction::PetSaveAllSteppingAction():
