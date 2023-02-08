@@ -31,12 +31,10 @@ using namespace CLHEP;
 
 SiPMHamamatsuVUV::SiPMHamamatsuVUV() : GeometryBase(),
                                        visibility_(1),
-                                       time_binning_(5. * picosecond),
                                        sensor_depth_(-1),
                                        mother_depth_(0),
                                        naming_order_(0),
                                        box_geom_(0)
-
 {
 }
 
@@ -166,7 +164,6 @@ void SiPMHamamatsuVUV::Construct()
     sipmsd->SetDetectorVolumeDepth(sensor_depth_);
     sipmsd->SetMotherVolumeDepth(mother_depth_);
     sipmsd->SetDetectorNamingOrder(naming_order_);
-    sipmsd->SetTimeBinning(time_binning_);
     sipmsd->SetBoxGeom(box_geom_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);

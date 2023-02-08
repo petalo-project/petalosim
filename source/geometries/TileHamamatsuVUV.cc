@@ -74,7 +74,6 @@ void TileHamamatsuVUV::Construct()
   sipm_->SetBoxGeom(GetBoxGeom());
   // The SiPMs will have the same visibility as the tile
   sipm_->SetVisibility(GetTileVisibility());
-  sipm_->SetTimeBinning(GetTimeBinning());
 
   sipm_->Construct();
   G4ThreeVector sipm_dim = sipm_->GetDimensions();

@@ -51,7 +51,6 @@ def test_create_petalo_output_file_full_body(config_tmpdir, output_tmpdir, PETAL
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 /Generator/Back2back/region AD_HOC
@@ -119,7 +118,6 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 3. mm
 
 /Generator/Back2back/region CENTER
@@ -187,7 +185,6 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /Geometry/PetBox/tile_type_c {tile_type2}
 /Geometry/PetBox/single_tile_coinc_plane 0
 /Geometry/PetBox/tile_refl 0.
-/Geometry/PetBox/sipm_time_binning 5. picosecond
 /Geometry/PetBox/sipm_pde 0.5
 
 /Generator/IonGenerator/region SOURCE
@@ -262,7 +259,6 @@ def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR,
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 /Generator/Back2back/region AD_HOC
@@ -334,7 +330,6 @@ def test_create_petalo_output_file_phantom(config_tmpdir, output_tmpdir, PETALOD
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 /Generator/Back2back/region JPHANTOM

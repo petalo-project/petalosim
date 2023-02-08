@@ -60,7 +60,6 @@ private:
 
   G4String tile_type_d_, tile_type_c_;
   G4bool single_tile_coinc_plane_;
-  G4double time_binning_;
 
   G4double box_size_, box_thickness_;
 
