@@ -685,8 +685,8 @@ G4MaterialPropertiesTable* LYSO()
   mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity);
 
   // S Seifert et al 2012 JINST 7 P09004
-  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
-  mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
+  mpt->AddConstProperty("SCINTILLATIONRISETIME1", 0.072*ns); //1.7/Ln(9)
+  mpt->AddConstProperty("SCINTILLATIONYIELD1", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 41*ns);
 
@@ -742,8 +742,8 @@ G4MaterialPropertiesTable* LYSO_nconst()
   mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity);
 
   // S Seifert et al 2012 JINST 7 P09004
-  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
-  mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
+  mpt->AddConstProperty("SCINTILLATIONRISETIME1", 0.072*ns); //1.7/Ln(9)
+  mpt->AddConstProperty("SCINTILLATIONYIELD1", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 41*ns);
 

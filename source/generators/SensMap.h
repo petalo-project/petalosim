@@ -17,10 +17,7 @@ class G4GenericMessenger;
 class G4Event;
 
 
-namespace nexus {
-
-  class GeometryBase;
-
+namespace nexus { class GeometryBase; }
 
   class SensMap: public G4VPrimaryGenerator
   {
@@ -37,11 +34,9 @@ namespace nexus {
 
   private:
     G4GenericMessenger* msg_; ///< Pointer to UI messenger
-    const GeometryBase* geom_; ///< Pointer to the detector geometry
+    const nexus::GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4int num_gammas_;
   };
-
-} // end namespace nexus
 
 #endif

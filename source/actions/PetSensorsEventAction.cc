@@ -9,10 +9,10 @@
 
 #include "PetSensorsEventAction.h"
 #include "PetaloPersistencyManager.h"
+#include "ToFSD.h"
 
 #include "nexus/Trajectory.h"
 #include "nexus/FactoryBase.h"
-#include "nexus/SensorSD.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -103,33 +103,26 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     G4HCtable* hct = sdmgr->GetHCtable();
 
-    // Get only the SensorHitsCollection --> 1
+    // Get only the PetSensorHitsCollection --> 1
     G4String hcname = hct->GetHCname(1);
     G4String sdname = hct->GetSDname(1);
     int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
 
-    if (hcname == SensorSD::GetCollectionUniqueName()){
+    if (hcname == ToFSD::GetCollectionUniqueName()){
       G4VHitsCollection* SensHits = hce->GetHC(hcid);
-      SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(SensHits);
+      PetSensorHitsCollection* hits = dynamic_cast<PetSensorHitsCollection*>(SensHits);
       if (!hits) return;
       for (size_t i=0; i<hits->entries(); i++) {
-        SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
+        PetSensorHit* hit = dynamic_cast<PetSensorHit*>(hits->GetHit(i));
         if (!hit) continue;
 
-        // Reject TOF hits
-        if (hit->GetPmtID() >= 0) {
-          const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-          std::map<G4double, G4int>::const_iterator it;
-
-          for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-            amplitude = amplitude + (*it).second;
-          }
-        } else continue;
+        amplitude += hit->GetDetPhotons();
       }
+
       if (amplitude>min_charge_){
         charge_above_th = true;
       }
-  }
+    }
 
     PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 

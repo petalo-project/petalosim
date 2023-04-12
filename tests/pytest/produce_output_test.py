@@ -5,7 +5,7 @@ import subprocess
 
 
 @pytest.mark.order(1)
-def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALODIR, base_name_full_body):
+def test_create_petalo_output_file_full_body(config_tmpdir, output_tmpdir, PETALODIR, base_name_full_body):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -51,14 +51,13 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, PETALO
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 /Generator/Back2back/region AD_HOC
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_full_body}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_full_body}
 /nexus/random_seed 16062020
 
 """
@@ -119,14 +118,13 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 3. mm
 
 /Generator/Back2back/region CENTER
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_ring_tiles}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_ring_tiles}
 /nexus/random_seed 16062020
 
 """
@@ -187,7 +185,6 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /Geometry/PetBox/tile_type_c {tile_type2}
 /Geometry/PetBox/single_tile_coinc_plane 0
 /Geometry/PetBox/tile_refl 0.
-/Geometry/PetBox/sipm_time_binning 5. picosecond
 /Geometry/PetBox/sipm_pde 0.5
 
 /Generator/IonGenerator/region SOURCE
@@ -198,7 +195,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name}
 
 /nexus/random_seed 23102022
 """
@@ -215,7 +212,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 
 @pytest.mark.order(4)
-def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, base_name_nest):
+def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, base_name_nest):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -262,7 +259,6 @@ def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, 
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 /Generator/Back2back/region AD_HOC
@@ -272,7 +268,7 @@ def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, 
 
 /process/optical/processActivation Cerenkov false
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_nest}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_nest}
 /nexus/random_seed 16062020
 
 """
@@ -289,7 +285,7 @@ def test_create_nexus_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, 
 
 
 @pytest.mark.order(4)
-def test_create_nexus_output_file_phantom(config_tmpdir, output_tmpdir, PETALODIR, base_name_phantom):
+def test_create_petalo_output_file_phantom(config_tmpdir, output_tmpdir, PETALODIR, base_name_phantom):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -334,12 +330,11 @@ def test_create_nexus_output_file_phantom(config_tmpdir, output_tmpdir, PETALODI
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 /Generator/Back2back/region JPHANTOM
 
-/nexus/persistency/outputFile {output_tmpdir}/{base_name_phantom}
+/petalosim/persistency/outputFile {output_tmpdir}/{base_name_phantom}
 /nexus/random_seed 16062020
 
 """

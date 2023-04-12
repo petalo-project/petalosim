@@ -9,10 +9,10 @@
 // ----------------------------------------------------------------------------
 
 #include "DoubleParticle.h"
-
-#include "nexus/DetectorConstruction.h"
 #include "Pet2boxes.h"
 
+#include "nexus/DetectorConstruction.h"
+#include "nexus/GeometryBase.h"
 #include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>

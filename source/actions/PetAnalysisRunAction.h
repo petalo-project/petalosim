@@ -14,21 +14,18 @@
 
 #include <G4UserRunAction.hh>
 
-namespace nexus {
 
-  class PetAnalysisRunAction: public G4UserRunAction
-  {
-  public:
-    /// Constructor
-    PetAnalysisRunAction();
-    /// Destructor
-    ~PetAnalysisRunAction();
+class PetAnalysisRunAction: public G4UserRunAction
+{
+public:
+  /// Constructor
+  PetAnalysisRunAction();
+  /// Destructor
+  ~PetAnalysisRunAction();
+  
+  virtual void BeginOfRunAction(const G4Run*);
+  virtual void EndOfRunAction(const G4Run*);
 
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void EndOfRunAction(const G4Run*);
-
-  };
-
-}
+};
 
 #endif

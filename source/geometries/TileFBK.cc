@@ -68,7 +68,6 @@ void TileFBK::Construct()
   sipm_->SetMotherDepth(2);
   sipm_->SetBoxGeom(GetBoxGeom());
   sipm_->SetVisibility(GetTileVisibility());
-  sipm_->SetTimeBinning(GetTimeBinning());
   sipm_->SetPDE(GetPDE());
 
   sipm_->Construct();

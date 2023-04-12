@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PetaloUtils.h
+// petalosim | PetaloUtils.h
 //
 // Functions used in more than one class in the code.
 //

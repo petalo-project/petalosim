@@ -8,7 +8,6 @@
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
 /Geometry/Tile/visibility true
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 3. mm
 
 ### GENERATOR
@@ -27,5 +26,5 @@
 /nexus/random_seed 132345
 
 ### OUTPUT FILE
-/nexus/persistency/start_id 10
-/nexus/persistency/outputFile full_ring_3cm.next
+/petalosim/persistency/start_id 10
+/petalosim/persistency/outputFile full_ring_3cm.next

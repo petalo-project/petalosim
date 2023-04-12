@@ -37,8 +37,6 @@ private:
   // PDE for the sensor
   G4double eff_;
 
-  G4double time_binning_;
-
   // Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 };

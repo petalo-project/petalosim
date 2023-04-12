@@ -71,8 +71,8 @@ def test_hdf5_structure(petalosim_files):
 
          assert 'event_id'  in tscolumns
          assert 'sensor_id' in tscolumns
-         assert 'time_bin'  in tscolumns
-         assert 'charge'    in tscolumns
+         assert 'time'  in tscolumns
+         assert 'track_id'    in tscolumns
 
 
          sposcolumns = h5out.root.MC.sns_positions.colnames
@@ -117,12 +117,3 @@ def test_primary_always_exists(petalosim_files):
      primary   = particles.primary.unique()
 
      assert 1 in primary
-
-
-def test_sensor_binning_is_saved(petalosim_files):
-     """Check that the sensor binning is saved in the configuration table."""
-     filename = petalosim_files
-     conf = pd.read_hdf(filename, 'MC/configuration')
-     parameters = conf.param_key.values
-
-     assert any('tof_bin_size' in p for p in parameters)

@@ -46,7 +46,6 @@ private:
   // Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 
-  G4double time_binning_;
   G4double sipm_size_;
   G4int sensor_depth_, mother_depth_, naming_order_;
 };

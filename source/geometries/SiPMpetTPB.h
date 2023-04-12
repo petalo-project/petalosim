@@ -41,8 +41,6 @@ private:
 
   G4bool phys_;
 
-  G4double time_binning_;
-
   // Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 };

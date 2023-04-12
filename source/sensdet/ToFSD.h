@@ -2,10 +2,9 @@
 // petalosim | ToFSD.h
 //
 // This class is the sensitive detector used for PETALO.
-// Each time a photoelectron is detected by a sensor, two SensorHit instances
-// are created (if needed): one to store the full response with large time
-// binning and the other one with a fine time binning, which stores only
-// the first part of the waveform.
+// The first time a photoelectron is detected by a particular sensor,
+// a PetSensorHit instance is created with two tasks:
+// storing the total charge response and the times of the individual photons.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
@@ -13,16 +12,14 @@
 #ifndef TOF_SD_H
 #define TOF_SD_H
 
+#include "PetSensorHit.h"
 #include <G4VSensitiveDetector.hh>
-#include "nexus/SensorHit.h"
 
 class G4Step;
 class G4HCofThisEvent;
 class G4VTouchable;
 class G4TouchableHistory;
 class G4OpBoundaryProcess;
-
-using namespace nexus;
 
 class ToFSD : public G4VSensitiveDetector
 {
@@ -59,11 +56,6 @@ public:
   /// Return the depth of the SD's grandmother volume in the geometry hierarchy
   G4int GetGrandMotherVolumeDepth() const;
 
-  /// Return the time binning chosen for the pmt hits
-  G4double GetTimeBinning() const;
-  /// Set a time binning for the pmt hits
-  void SetTimeBinning(G4double);
-
   /// Set the box geometry parameter
   void SetBoxGeom(G4int);
 
@@ -82,11 +74,9 @@ private:
   G4int mother_depth_;      ///< Depth of the SD's mother in the geometry tree
   G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-  G4double timebinning_; ///< Time bin width for TOF table
-
   G4int box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
 
-  SensorHitsCollection *HC_; ///< Pointer to the collection of hits
+  PetSensorHitsCollection *HC_; ///< Pointer to the collection of hits
 };
 
 // INLINE METHODS //////////////////////////////////////////////////
@@ -102,9 +92,6 @@ inline G4int ToFSD::GetDetectorNamingOrder() const { return naming_order_; }
 
 inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; }
 inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
-
-inline G4double ToFSD::GetTimeBinning() const { return timebinning_; }
-inline void ToFSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
 
 inline void ToFSD::SetBoxGeom(G4int bg) { box_geom_ = bg; }
 

@@ -15,7 +15,6 @@
 
 /Geometry/SiPMpet/efficiency 0.3
 /Geometry/SiPMpet/visibility false
-/Geometry/SiPMpet/time_binning 5. picosecond
 /Geometry/SiPMpet/size 6. mm
 
 
@@ -40,7 +39,7 @@
 
 ### OUTPUT FILE
 
-/nexus/persistency/start_id 0
-/nexus/persistency/sns_only false
-/nexus/persistency/tof_time 5. nanosecond
-/nexus/persistency/outputFile full_body_nest
+/petalosim/persistency/start_id 0
+/petalosim/persistency/sns_only false
+/petalosim/persistency/tof_time 5. nanosecond
+/petalosim/persistency/outputFile full_body_nest

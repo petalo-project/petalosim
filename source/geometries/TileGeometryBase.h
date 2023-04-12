@@ -31,9 +31,6 @@ public:
   void SetTileReflectivity(G4double refl);
   G4double GetTileReflectivity() const;
 
-  void SetTimeBinning(G4double tb);
-  G4double GetTimeBinning() const;
-
   void SetPDE(G4double eff);
   G4double GetPDE() const;
 
@@ -51,7 +48,6 @@ private:
   G4int box_geom_;
   G4bool tile_vis_;
   G4double tile_refl_;
-  G4double time_binning_;
   G4double sipm_pde_;
 };
 
@@ -68,9 +64,6 @@ inline G4bool TileGeometryBase::GetTileVisibility() const { return tile_vis_; }
 
 inline void TileGeometryBase::SetTileReflectivity(G4double refl) { tile_refl_ = refl; }
 inline G4double TileGeometryBase::GetTileReflectivity() const { return tile_refl_; }
-
-inline void TileGeometryBase::SetTimeBinning(G4double tb) { time_binning_ = tb; }
-inline G4double TileGeometryBase::GetTimeBinning() const { return time_binning_; }
 
 inline void TileGeometryBase::SetPDE(G4double eff) { sipm_pde_ = eff; }
 inline G4double TileGeometryBase::GetPDE() const { return sipm_pde_; }

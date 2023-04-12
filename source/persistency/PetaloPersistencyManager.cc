@@ -9,13 +9,13 @@
 
 #include "PetaloPersistencyManager.h"
 #include "HDF5Writer.h"
+#include "ToFSD.h"
 #include "ChargeSD.h"
 #include "PetSaveAllSteppingAction.h"
 
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
 #include "nexus/IonizationSD.h"
-#include "nexus/SensorSD.h"
 #include "nexus/NexusApp.h"
 #include "nexus/DetectorConstruction.h"
 #include "nexus/FactoryBase.h"
@@ -50,7 +50,7 @@ PetaloPersistencyManager::PetaloPersistencyManager():
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
   save_tot_charge_(true), h5writer_(0)
 {
-  msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
+  msg_ = new G4GenericMessenger(this, "/petalosim/persistency/");
   msg_->DeclareMethod("outputFile", &PetaloPersistencyManager::OpenFile, "");
   msg_->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");
@@ -233,7 +233,6 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
     G4String hcname = hct->GetHCname(i);
     G4String sdname = hct->GetSDname(i);
     int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
-
     // Fetch collection using the id number
     G4VHitsCollection* hits = hce->GetHC(hcid);
 
@@ -242,7 +241,7 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
 	StoreIonizationHits(hits);
       }
     }
-    else if (hcname == SensorSD::GetCollectionUniqueName())
+    else if (hcname == ToFSD::GetCollectionUniqueName())
       StoreSensorHits(hits);
     else if (hcname == ChargeSD::GetCollectionUniqueName())
       StoreChargeHits(hits);
@@ -285,112 +284,47 @@ void PetaloPersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
 void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 {
-  std::map<G4int, SensorHit*> mapOfHits;
-
-  SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(hc);
+  PetSensorHitsCollection* hits = dynamic_cast<PetSensorHitsCollection*>(hc);
   if (!hits) return;
 
-  std::vector<G4int > sensor_ids;
   for (size_t i=0; i<hits->entries(); i++) {
 
-    SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
+    PetSensorHit* hit = dynamic_cast<PetSensorHit*>(hits->GetHit(i));
     if (!hit) continue;
 
-    int s_id  = hit->GetPmtID();
-    mapOfHits[s_id] = hit;
+    G4int s_id   = hit->GetSnsID();
+    G4int charge = hit->GetDetPhotons();
 
-    const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-    std::map<G4double, G4int>::const_iterator it;
-
-    G4double amplitude = 0.;
-    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-      amplitude = amplitude + (*it).second;
-    }
-    if (hit->GetPmtID() >= 0) {
-      G4int sens_id;
-      sens_id = hit->GetPmtID();
-
-      if (amplitude > thr_charge_){
-        sensor_ids.push_back(sens_id);
+    if (charge > thr_charge_){
+      std::string sdname = hits->GetSDname();
+      G4ThreeVector xyz = hit->GetPosition();
+      if (save_tot_charge_ == true) {
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)s_id, (unsigned int)charge);
       }
-    } else if (hit->GetPmtID()<0) {
-      tof_bin_size_ = hit->GetBinSize();
-    }
-  }
-
-  for (G4int s_id: sensor_ids){
-    std::string sdname = hits->GetSDname();
-
-    SensorHit* hit = mapOfHits[s_id];
-    G4ThreeVector xyz = hit->GetPosition();
-
-    const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
-    std::map<G4double, G4int>::const_iterator it;
-
-    if (save_tot_charge_ == true) {
-      G4double charge = 0.;
-      for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-        charge = charge + (*it).second;
-      }
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), charge);
-    }
-
-    if (hit->GetPmtID() >= 0) {
       std::vector<G4int>::iterator pos_it =
-	std::find(sns_posvec_.begin(), sns_posvec_.end(), hit->GetPmtID());
+        std::find(sns_posvec_.begin(), sns_posvec_.end(), s_id);
       if (pos_it == sns_posvec_.end()) {
-	h5writer_->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
+        h5writer_->WriteSensorPosInfo((unsigned int)s_id, sdname.c_str(),
                                       (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-	sns_posvec_.push_back(hit->GetPmtID());
+        sns_posvec_.push_back(s_id);
+      }
+      // Save also individual photons
+      const std::map<G4double, G4int>& phot = hit->GetPhotonMap();
+      std::map<G4double, G4int>::const_iterator it;
+      for (it = phot.begin(); it != phot.end(); ++it) {
+        if (it->first <= tof_time_){
+          h5writer_->WriteSensorTofInfo(nevt_, (unsigned int)s_id, (float)it->first,
+                                        (unsigned int)it->second);
+        }
+        else {
+          break;
+        }
       }
     }
-
-
-    // TOF
-    SensorHit* hitTof = mapOfHits[-s_id];
-    const std::map<G4double, G4int>& wvfmTof = hitTof->GetHistogram();
-
-    double binsize_tof = hitTof->GetBinSize();
-
-    for (it = wvfmTof.begin(); it != wvfmTof.end(); ++it) {
-
-      if (((*it).first) <= tof_time_){
-        unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
-        unsigned int charge_tof = (unsigned int)((*it).second+0.5);
-        h5writer_->WriteSensorTofInfo(nevt_, hitTof->GetPmtID(), time_bin_tof, charge_tof);
-      }
-      else {
-        break;
-      }
-    }
-
-    /*
-    const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
-    std::map<G4double, G4double>::const_iterator w;
-
-    std::vector<double > value;
-    int count =0;
-    std::ostringstream strs;
-    strs << hit->GetPmtID();
-    std::string sens_id = strs.str();
-    //   G4cout << "Longitud = " << wvls.size() << G4endl;
-    for (w = wvls.begin(); w != wvls.end(); ++w) {
-      if (count < 100) {
-	value.clear();
-	std::ostringstream strs2;
-	strs2 << count;
-	std::string order = strs2.str();
-	std::string key = sens_id + '_' + order;
-	value.push_back(w->first/CLHEP::picosecond);
-	value.push_back(w->second/CLHEP::nanometer);
-	//	G4cout << key << ", " << value[0] << ", " << value[1] << G4endl;
-	ievt->fstore(key, value);
-	count++;
-      }
-    }
-    */
   }
 }
+
+
 
 
 void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
@@ -447,14 +381,14 @@ void PetaloPersistencyManager::StoreSteps()
     for (size_t step_id=0; step_id < it->second.size(); ++step_id) {
       h5writer_->WriteStep(nevt_, track_id, particle_name, step_id,
                            initial_volumes[key][step_id],
-                             final_volumes[key][step_id],
-                                proc_names[key][step_id],
+                           final_volumes[key][step_id],
+                           proc_names[key][step_id],
                            initial_poss   [key][step_id].x(),
                            initial_poss   [key][step_id].y(),
                            initial_poss   [key][step_id].z(),
-                             final_poss   [key][step_id].x(),
-                             final_poss   [key][step_id].y(),
-                             final_poss   [key][step_id].z());
+                           final_poss   [key][step_id].x(),
+                           final_poss   [key][step_id].y(),
+                           final_poss   [key][step_id].z());
     }
   }
   sa->Reset();
@@ -471,8 +405,6 @@ G4bool PetaloPersistencyManager::Store(const G4Run*)
   h5writer_->WriteRunInfo(key, std::to_string(num_events).c_str());
   key = "saved_events";
   h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
-  key = "tof_bin_size";
-  h5writer_->WriteRunInfo(key, (std::to_string(tof_bin_size_/picosecond)+" ps").c_str());
 
   if (save_int_e_numb_) {
     key = "interacting_events";
@@ -513,10 +445,8 @@ void PetaloPersistencyManager::SaveConfigurationInfo(G4String file_name)
     std::getline(ss, value);
 
     if (key != "") {
-      auto found_binning = key.find("binning");
       auto found_other_macro = key.find("/control/execute");
-      if ((found_binning == std::string::npos) &&
-          (found_other_macro == std::string::npos)) {
+      if (found_other_macro == std::string::npos) {
         if (key[0] == '\n') {
           key.erase(0, 1);
         }

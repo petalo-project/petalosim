@@ -18,10 +18,7 @@ class PetKDBFixedPitch;
 class PetPlainDice;
 namespace nexus {class BoxPointSampler;}
 
-
-using namespace nexus;
-
-class Pet2boxes : public GeometryBase
+class Pet2boxes : public nexus::GeometryBase
 {
 public:
   /// Constructor
@@ -59,13 +56,13 @@ private:
   G4double max_step_size_; /// Maximum Step Size
 
   //Vertex generator
-  BoxPointSampler *active_gen_;
+  nexus::BoxPointSampler *active_gen_;
 
   /// Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 
   /// Vertex generator from a surface just outside the detector walls
-  BoxPointSampler *surf_gen_;
+  nexus::BoxPointSampler *surf_gen_;
 
   // Dice class
   PetKDBFixedPitch *db_;

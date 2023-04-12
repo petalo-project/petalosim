@@ -11,18 +11,16 @@
 
 #include "DiskSource.h"
 
-namespace nexus {
+class Na22Source: public DiskSource {
+public:
+  /// Constructor
+  Na22Source();
+  
+  /// Destructor
+  ~Na22Source();
+  
+  void Construct();
 
-  class Na22Source: public DiskSource {
-  public:
-    /// Constructor
-    Na22Source();
+};
 
-    /// Destructor
-    ~Na22Source();
-
-    void Construct();
-
-  };
-}
 #endif
