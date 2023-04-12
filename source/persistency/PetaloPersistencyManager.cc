@@ -10,6 +10,7 @@
 #include "PetaloPersistencyManager.h"
 #include "HDF5Writer.h"
 #include "ChargeSD.h"
+#include "PetSaveAllSteppingAction.h"
 
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
@@ -17,7 +18,6 @@
 #include "nexus/SensorSD.h"
 #include "nexus/NexusApp.h"
 #include "nexus/DetectorConstruction.h"
-#include "nexus/SaveAllSteppingAction.h"
 #include "nexus/FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -109,7 +109,7 @@ G4bool PetaloPersistencyManager::Store(const G4Event* event)
   if (!store_evt_) {
     TrajectoryMap::Clear();
     if (store_steps_) {
-      SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
+      PetSaveAllSteppingAction* sa = (PetSaveAllSteppingAction*)
         G4RunManager::GetRunManager()->GetUserSteppingAction();
       sa->Reset();
     }
@@ -429,7 +429,7 @@ void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
 
 void PetaloPersistencyManager::StoreSteps()
 {
-  SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
+  PetSaveAllSteppingAction* sa = (PetSaveAllSteppingAction*)
     G4RunManager::GetRunManager()->GetUserSteppingAction();
 
   StepContainer<G4String> initial_volumes = sa->get_initial_volumes();
