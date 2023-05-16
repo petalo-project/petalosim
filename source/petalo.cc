@@ -9,8 +9,7 @@
 #include "nexus/NexusApp.h"
 
 #include <G4UImanager.hh>
-#include <G4UIterminal.hh>
-#include <G4UItcsh.hh>
+#include <G4UIExecutive.hh>
 #include <G4VisExecutive.hh>
 
 #include <getopt.h>
@@ -112,15 +111,12 @@ G4int main(int argc, char** argv)
 
   // visual mode
   if (!batch) {
-    G4VisManager* vismgr = new G4VisExecutive();
-    vismgr->Initialize();
+    std::unique_ptr<G4UIExecutive> ui{new G4UIExecutive{1, argv}};
+    std::unique_ptr<G4VisManager> visManager{new G4VisExecutive};
+    visManager->Initialize();
 
-    G4UIsession* session = new G4UIterminal(new G4UItcsh);
     UI->ApplyCommand("/control/execute macros/vis.mac");
-    session->SessionStart();
-
-    delete session;
-    delete vismgr;
+    ui->SessionStart();
   }
   else {
     app->BeamOn(nevents);

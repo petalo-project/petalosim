@@ -1,8 +1,7 @@
-### ------------------------------------------------------------------
-###  $Id$
-###
-###  Default macro file for the interactive (visual) mode of NEXUS.
-### ------------------------------------------------------------------
+### --------------------------------------------------------
+###  Default macro file for the interactive (visual) mode
+###  of petalosim.
+### --------------------------------------------------------
 
 ### Set some default verbosity
 /control/verbose 2
@@ -12,7 +11,7 @@
 
 ### Create an empty scene and a scene handles (OpenGL)
 /vis/scene/create
-/vis/open OGLIX
+/vis/open OGL
 /vis/viewer/create ! ! 900
 
 ### Setting drawing style to "wireframe" / "surface"
