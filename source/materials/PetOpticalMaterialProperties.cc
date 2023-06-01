@@ -686,13 +686,19 @@ G4MaterialPropertiesTable* LYSO()
 
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("SCINTILLATIONRISETIME1", 0.072*ns); //1.7/Ln(9)
-  mpt->AddConstProperty("SCINTILLATIONYIELD1", 32000./MeV);
+  mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 41*ns);
+  mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 41*ns);
 
+  // https://www.ipen.br/biblioteca/2009/eventos/14492.pdf
+  // Bonifacio D. et al, 2009 IEEE NSS Conference Record
   std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
-  std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
+  std::vector<G4double> abs_length = {50*cm, 50*cm};
   mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
+
+  std::vector<G4double> rayleigh_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> rayleigh_length = {260.*cm, 260.*cm};
+  mpt->AddProperty("RAYLEIGH", rayleigh_energy, rayleigh_length);
 
   return mpt;
 }
