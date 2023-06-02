@@ -632,13 +632,16 @@ G4MaterialPropertiesTable* LYSO()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
+  G4double const lyso_minE = 1.9630 * eV; // this value should be changed to the lower limit of detection of the specific photosensor used
+  G4double const lyso_maxE = 3.3429 * eV; // this value should be changed to the upper limit of detection of the specific photosensor used
+
   // Refractive index taken by "Optical and Scintillation Properties of Inorganic Scintillators in High Energy Physics", R. Mao, Liyuan Zhang, and Ren-Yuan Zhu, IEEE TRANSACTIONS ON NUCLEAR SCIENCE, VOL. 55, NO. 4, AUGUST 2008
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
   // Scintillation spectrum extracted from
   // https://www.crystals.saint-gobain.com/sites/imdf.crystals.com/files/documents/lyso-material-data-sheet.pdf
-  std::vector<G4double> ri_energy = {lyso_minE_, 2.2708*eV, 2.4028*eV, 2.5511*eV,
+  std::vector<G4double> ri_energy = {lyso_minE, 2.2708*eV, 2.4028*eV, 2.5511*eV,
                                      2.6895*eV, 2.8437*eV, 2.9520*eV, 3.0613*eV,
-                                     lyso_maxE_};
+                                     lyso_maxE};
   std::vector<G4double> ri_index = {1.806, 1.806, 1.810, 1.813,
                                     1.818, 1.822, 1.827, 1.833,
                                     1.833};
@@ -650,7 +653,7 @@ G4MaterialPropertiesTable* LYSO()
   mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   std::vector<G4double> sc_energy =
-   {lyso_minE_, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
+   {lyso_minE, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
     2.075153360986118*eV, 2.1108921203127564*eV, 2.131530815691394*eV, 2.1549516183402426*eV,
     2.1788791714153226*eV, 2.2008686890176556*eV, 2.225818446565337*eV, 2.2461704051922378*eV,
     2.2774394451688957*eV, 2.2933838194379406*eV, 2.309537681443672*eV, 2.3287011454278184*eV,
@@ -665,7 +668,7 @@ G4MaterialPropertiesTable* LYSO()
     3.048094952090428*eV, 3.057784590715629*eV, 3.0675360309025064*eV, 3.0870759513756334*eV,
     3.1271371999622284*eV, 3.1373650393337758*eV, 3.1527828353680922*eV, 3.1734564909877436*eV,
     3.189158818959311*eV, 3.199797076377322*eV, 3.2210492254756646*eV, 3.242646039884366*eV,
-    3.2699528217360423*eV, 3.2976765066977722*eV, lyso_maxE_};
+    3.2699528217360423*eV, 3.2976765066977722*eV, lyso_maxE};
 
 
   std::vector<G4double> intensity =
@@ -692,11 +695,11 @@ G4MaterialPropertiesTable* LYSO()
 
   // https://www.ipen.br/biblioteca/2009/eventos/14492.pdf
   // Bonifacio D. et al, 2009 IEEE NSS Conference Record
-  std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> abs_energy = {lyso_minE, lyso_maxE};
   std::vector<G4double> abs_length = {50*cm, 50*cm};
   mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
-  std::vector<G4double> rayleigh_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> rayleigh_energy = {lyso_minE, lyso_maxE};
   std::vector<G4double> rayleigh_length = {260.*cm, 260.*cm};
   mpt->AddProperty("RAYLEIGH", rayleigh_energy, rayleigh_length);
 
@@ -707,14 +710,17 @@ G4MaterialPropertiesTable* LYSO_nconst()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
+  G4double const lyso_minE = 1.9630 * eV; // this value should be changed to the lower limit of detection of the specific photosensor used
+  G4double const lyso_maxE = 3.3429 * eV; // this value should be changed to the upper limit of detection of the specific photosensor used
+
   // Refractive index taken by "Optical and Scintillation Properties of Inorganic Scintillators in High Energy Physics", R. Mao, Liyuan Zhang, and Ren-Yuan Zhu, IEEE TRANSACTIONS ON NUCLEAR SCIENCE, VOL. 55, NO. 4, AUGUST 2008
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
-  std::vector<G4double> ri_energy = {lyso_minE_, lyso_maxE_};
+  std::vector<G4double> ri_energy = {lyso_minE, lyso_maxE};
   std::vector<G4double> ri_index    = {1.8, 1.8};
   mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   std::vector<G4double> sc_energy =
-    {lyso_minE_, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
+    {lyso_minE, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
      2.075153360986118*eV, 2.1108921203127564*eV, 2.131530815691394*eV, 2.1549516183402426*eV,
      2.1788791714153226*eV, 2.2008686890176556*eV, 2.225818446565337*eV, 2.2461704051922378*eV,
      2.2774394451688957*eV, 2.2933838194379406*eV, 2.309537681443672*eV, 2.3287011454278184*eV,
@@ -729,7 +735,7 @@ G4MaterialPropertiesTable* LYSO_nconst()
      3.048094952090428*eV, 3.057784590715629*eV, 3.0675360309025064*eV, 3.0870759513756334*eV,
      3.1271371999622284*eV, 3.1373650393337758*eV, 3.1527828353680922*eV, 3.1734564909877436*eV,
      3.189158818959311*eV, 3.199797076377322*eV, 3.2210492254756646*eV, 3.242646039884366*eV,
-     3.2699528217360423*eV, 3.2976765066977722*eV, lyso_maxE_};
+     3.2699528217360423*eV, 3.2976765066977722*eV, lyso_maxE};
 
   std::vector<G4double> intensity =
     {0., 0.0704225352112644, 0.3521126760563362, 0.633802816901401, 0.7746478873239369,
@@ -749,13 +755,17 @@ G4MaterialPropertiesTable* LYSO_nconst()
 
   // S Seifert et al 2012 JINST 7 P09004
   mpt->AddConstProperty("SCINTILLATIONRISETIME1", 0.072*ns); //1.7/Ln(9)
-  mpt->AddConstProperty("SCINTILLATIONYIELD1", 32000./MeV);
+  mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT11", 41*ns);
+  mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 41*ns);
 
-  std::vector<G4double> abs_energy = {lyso_minE_, lyso_maxE_};
-  std::vector<G4double> abs_length = {41.2*cm, 41.2*cm};
+  std::vector<G4double> abs_energy = {lyso_minE, lyso_maxE};
+  std::vector<G4double> abs_length = {50.*cm, 50.*cm};
   mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
+
+  std::vector<G4double> rayleigh_energy = {lyso_minE, lyso_maxE};
+  std::vector<G4double> rayleigh_length = {260.*cm, 260.*cm};
+  mpt->AddProperty("RAYLEIGH", rayleigh_energy, rayleigh_length);
 
 
   return mpt;

@@ -46,8 +46,8 @@ namespace petopticalprops
   //constexpr G4double optPhotMaxE_ = 8.21 * eV;
   //constexpr G4double noAbsLength_ = 1.e8 * m;
 
-  constexpr G4double lyso_minE_ = 1.9630 * eV;
-  constexpr G4double lyso_maxE_ = 3.3429 * eV;
+  //constexpr G4double lyso_minE_ = 1.9630 * eV;
+  //constexpr G4double lyso_maxE_ = 3.3429 * eV;
 }
 
 #endif
