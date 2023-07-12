@@ -121,8 +121,6 @@ G4int main(int argc, char** argv)
   else {
     app->BeamOn(nevents);
   }
-  G4cout << "Here 0" << G4endl;
   delete app;
-  G4cout << "Here 1" << G4endl;
   return EXIT_SUCCESS;
 }
