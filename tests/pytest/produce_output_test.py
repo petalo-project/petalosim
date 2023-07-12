@@ -57,7 +57,7 @@ def test_create_petalo_output_file_full_body(config_tmpdir, output_tmpdir, PETAL
 
 /process/optical/processActivation Cerenkov false
 
-/petalosim/persistency/outputFile {output_tmpdir}/{base_name_full_body}
+/petalosim/persistency/output_file {output_tmpdir}/{base_name_full_body}
 /nexus/random_seed 16062020
 
 """
@@ -124,7 +124,7 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 /process/optical/processActivation Cerenkov false
 
-/petalosim/persistency/outputFile {output_tmpdir}/{base_name_ring_tiles}
+/petalosim/persistency/output_file {output_tmpdir}/{base_name_ring_tiles}
 /nexus/random_seed 16062020
 
 """
@@ -195,7 +195,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /process/optical/processActivation Cerenkov false
 
-/petalosim/persistency/outputFile {output_tmpdir}/{base_name}
+/petalosim/persistency/output_file {output_tmpdir}/{base_name}
 
 /nexus/random_seed 23102022
 """
@@ -268,7 +268,7 @@ def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR,
 
 /process/optical/processActivation Cerenkov false
 
-/petalosim/persistency/outputFile {output_tmpdir}/{base_name_nest}
+/petalosim/persistency/output_file {output_tmpdir}/{base_name_nest}
 /nexus/random_seed 16062020
 
 """
@@ -334,7 +334,7 @@ def test_create_petalo_output_file_phantom(config_tmpdir, output_tmpdir, PETALOD
 
 /Generator/Back2back/region JPHANTOM
 
-/petalosim/persistency/outputFile {output_tmpdir}/{base_name_phantom}
+/petalosim/persistency/output_file {output_tmpdir}/{base_name_phantom}
 /nexus/random_seed 16062020
 
 """

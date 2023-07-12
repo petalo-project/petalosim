@@ -36,5 +36,5 @@
 
 ### OUTPUT FILE
 /petalosim/persistency/start_id 0
-/petalosim/persistency/outputFile petbox.pet
+/petalosim/persistency/output_file petbox.pet
 

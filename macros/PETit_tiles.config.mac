@@ -27,4 +27,4 @@
 
 ### OUTPUT FILE
 /petalosim/persistency/start_id 10
-/petalosim/persistency/outputFile full_ring_3cm.next
+/petalosim/persistency/output_file full_ring_3cm.next

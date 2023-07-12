@@ -31,4 +31,4 @@
 /petalosim/persistency/start_id 0
 /petalosim/persistency/sns_only false
 /petalosim/persistency/tof_time 50. nanosecond
-/petalosim/persistency/outputFile full_body.pet
+/petalosim/persistency/output_file full_body.pet

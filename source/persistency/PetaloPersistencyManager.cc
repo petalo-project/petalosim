@@ -43,15 +43,16 @@ using namespace CLHEP;
 REGISTER_CLASS(PetaloPersistencyManager, PersistencyManagerBase)
 
 PetaloPersistencyManager::PetaloPersistencyManager():
-  PersistencyManagerBase(), msg_(0), ready_(false), store_evt_(true),
-  store_steps_(false), interacting_evt_(false), save_int_e_numb_(false),
+  PersistencyManagerBase(), msg_(0), output_file_("petalo_out"),
+  store_evt_(true), store_steps_(false),
+  interacting_evt_(false), save_int_e_numb_(false),
   efield_(0), event_type_("other"),
   saved_evts_(0), interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
   save_tot_charge_(true), h5writer_(0)
 {
   msg_ = new G4GenericMessenger(this, "/petalosim/persistency/");
-  msg_->DeclareMethod("outputFile", &PetaloPersistencyManager::OpenFile, "");
+  msg_->DeclareProperty("output_file", output_file_, "Path of output file.");
   msg_->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");
   msg_->DeclareProperty("start_id", start_id_,
@@ -82,10 +83,10 @@ PetaloPersistencyManager::~PetaloPersistencyManager()
 
 
 
-void PetaloPersistencyManager::OpenFile(G4String filename)
+void PetaloPersistencyManager::OpenFile()
 {
   h5writer_ = new HDF5Writer();
-  G4String hdf5file = filename + ".h5";
+  G4String hdf5file = output_file_ + ".h5";
   h5writer_->Open(hdf5file, store_steps_);
   return;
 }

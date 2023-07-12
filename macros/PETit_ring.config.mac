@@ -35,4 +35,4 @@
 /petalosim/persistency/start_id 10
 /petalosim/persistency/sns_only false
 /petalosim/persistency/tof_time 50. nanosecond
-/petalosim/persistency/outputFile petit_ring.pet
+/petalosim/persistency/output_file petit_ring.pet

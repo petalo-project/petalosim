@@ -49,7 +49,7 @@ public:
   virtual G4bool Retrieve(G4VPhysicalVolume *&);
 
 public:
-  void OpenFile(G4String);
+  void OpenFile();
   void CloseFile();
 
 private:
@@ -64,10 +64,10 @@ private:
 
 private:
   G4GenericMessenger *msg_; ///< User configuration messenger
+  G4String output_file_; ///< Output file name
 
   std::vector<G4String> secondary_macros_;
 
-  G4bool ready_;           ///< Is the PetaloPersistencyManager ready to go?
   G4bool store_evt_;       ///< Should we store the current event?
   G4bool store_steps_;     ///< Should we store the steps for the current event?
   G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?

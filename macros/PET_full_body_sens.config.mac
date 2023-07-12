@@ -36,4 +36,4 @@
 ### OUTPUT FILE
 
 /petalosim/persistency/start_id 0
-/petalosim/persistency/outputFile full_body_sens.pet
+/petalosim/persistency/output_file full_body_sens.pet

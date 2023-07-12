@@ -36,4 +36,4 @@
 /petalosim/persistency/start_id 0
 /petalosim/persistency/sns_only false
 /petalosim/persistency/tof_time 5. nanosecond
-/petalosim/persistency/outputFile full_body_nest_phantom
+/petalosim/persistency/output_file full_body_nest_phantom
