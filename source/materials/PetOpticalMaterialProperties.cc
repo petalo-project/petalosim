@@ -379,7 +379,7 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
                                h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
                                h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
                                h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
-                               h_Planck * c_light / (100. * nm),  opticalprops::optPhotMaxE_};
+                               opticalprops::optPhotMaxE_};
 
   std::vector<G4double> WLS_absLength = {
                               opticalprops::noAbsLength_,
@@ -390,7 +390,7 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
                               400. * nm,     400. * nm,     // 250 , 230 nm
                               350. * nm,     250. * nm,     // 210 , 190 nm
                               350. * nm,     400. * nm,     // 170 , 150 nm
-                              400. * nm,     opticalprops::noAbsLength_ };// 100 nm
+                              400. * nm};// ~108 nm
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
 
   // WLS EMISSION SPECTRUM
