@@ -20,8 +20,9 @@
 using namespace CLHEP;
 
 ToFSD::ToFSD(G4String sdname) : G4VSensitiveDetector(sdname),
-                                naming_order_(0), sensor_depth_(0), mother_depth_(0),
-                                box_geom_(0)
+                                naming_order_(0), sensor_depth_(0),
+                                mother_depth_(0),
+                                box_geom_(0), sipm_cells_(0)
 {
   // Register the name of the collection of hits
   collectionName.insert(GetCollectionUniqueName());
@@ -98,8 +99,17 @@ G4int ToFSD::FindID(const G4VTouchable *touchable)
   { // Hamamatsu & FBK
     std::vector<G4int> init_ids({0, 4, 40, 44, 100, 104, 140, 144});
     G4int motherid = touchable->GetCopyNumber(mother_depth_);
-    G4int first_id = (init_ids)[motherid];
-    snsid = first_id + snsid;
+    if (sipm_cells_ == 1) {// each cell is an individual photosensor
+      G4int pxlid         = touchable->GetCopyNumber(sensor_depth_);
+      G4int grandmotherid = touchable->GetCopyNumber(grandmother_depth_);
+      G4int first_id = (init_ids)[grandmotherid];
+      snsid = first_id + motherid; // this is the SiPM ID
+      
+      snsid = snsid * 10000 + pxlid;
+    } else {
+      G4int first_id = (init_ids)[motherid];
+      snsid = first_id + snsid;
+    }
   }
   return snsid;
 }
