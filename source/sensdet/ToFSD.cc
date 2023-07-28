@@ -96,9 +96,15 @@ G4int ToFSD::FindID(const G4VTouchable *touchable)
   }
   if (box_geom_ == 1)
   { // Hamamatsu & FBK
-    std::vector<G4int> init_ids({0, 4, 40, 44, 100, 104, 140, 144});
+    std::vector<G4int> init_ids_d({0, 4, 40, 44});
+    std::vector<G4int> init_ids_c({100, 104, 140, 144});
     G4int motherid = touchable->GetCopyNumber(mother_depth_);
-    G4int first_id = (init_ids)[motherid];
+    G4int first_id;
+    if (motherid < 10) {
+      first_id = (init_ids_d)[motherid];
+    } else {
+      first_id = (init_ids_c)[motherid - 10];
+    }
     snsid = first_id + snsid;
   }
   return snsid;

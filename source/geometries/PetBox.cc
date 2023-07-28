@@ -669,6 +669,8 @@ void PetBox::BuildSensors()
   G4RotationMatrix rot;
   rot.rotateY(pi);
 
+  copy_no = 10;
+
   if (tile_type_d_ != tile_type_c_) { // Different type of tile
 
     G4LogicalVolume* tile2_logic = tile2_->GetLogicalVolume();
