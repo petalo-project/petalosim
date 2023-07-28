@@ -48,7 +48,8 @@ PetBox::PetBox() : GeometryBase(),
                    source_pos_{},
                    tile_type_d_("HamamatsuVUV"),
                    tile_type_c_("HamamatsuVUV"),
-                   single_tile_coinc_plane_(0),
+                   single_tile_d_(0),
+                   single_tile_c_(0),
                    box_size_(194.4 * mm),
                    box_thickness_(2. * cm),
                    ih_x_size_(6. * cm),
@@ -102,7 +103,9 @@ PetBox::PetBox() : GeometryBase(),
   msg_->DeclareProperty("tile_type_c", tile_type_c_,
                         "Type of the tile in the coincidence plane");
 
-  msg_->DeclareProperty("single_tile_coinc_plane", single_tile_coinc_plane_,
+  msg_->DeclareProperty("single_tile_d", single_tile_d_,
+                        "If 1, one tile centered in detection plane");
+  msg_->DeclareProperty("single_tile_c", single_tile_c_,
                         "If 1, one tile centered in coinc plane");
 
   msg_->DeclareProperty("add_teflon_block", add_teflon_block_,
@@ -623,54 +626,62 @@ void PetBox::BuildBox()
 
 void PetBox::BuildSensors()
 {
-  // SiPMs /////////////////////////////////////////////////////
+  // We can have 2 configurations (8 tiles - 4 per side,
+  // or 4 tiles on one side and 1 tile on the other one).
+  // In the second case, we can have the single tile in the "detection"
+  // or in the "coincidence" plane. In the simulation, the only difference is the
+  // order of placement, which reflects into the numbering of the SiPMs.
+  
+  /// "Detection" plane ///
 
   G4double tile_size_x = tile_->GetDimensions().x();
   G4double tile_size_y = tile_->GetDimensions().y();
   full_row_size_ = n_tile_columns_ * tile_size_x;
   full_col_size_ = n_tile_rows_ * tile_size_y;
 
-  G4LogicalVolume *tile_logic = tile_->GetLogicalVolume();
-
+  G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
   G4String vol_name;
   G4int copy_no = 0;
-
   G4double z_pos = -box_size_/2. + box_thickness_ + dist_dice_flange_ + tile_thickn_/2.;
-  for (G4int j = 0; j < n_tile_rows_; j++)
-  {
-    G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
-    for (G4int i = 0; i < n_tile_columns_; i++)
-    {
-      G4double x_pos = -full_row_size_/2. + tile_size_x/2. + i*tile_size_x;
-      vol_name = "TILE_" + std::to_string(copy_no);
 
-      new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
-                        vol_name, active_logic_, false, copy_no, false);
-      copy_no += 1;
-    }
+  if (single_tile_d_) { // Single tile centered
+    vol_name = "TILE_" + std::to_string(copy_no);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos),
+                      tile_logic, vol_name, active_logic_, false, copy_no, false);
+  } else { // 4 tiles
+    for (G4int j = 0; j < n_tile_rows_; j++)
+      {
+        G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+        for (G4int i = 0; i < n_tile_columns_; i++)
+          {
+            G4double x_pos = -full_row_size_/2. + tile_size_x/2. + i*tile_size_x;
+            vol_name = "TILE_" + std::to_string(copy_no);
+            
+            new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
+                              vol_name, active_logic_, false, copy_no, false);
+            copy_no += 1;
+          }
+      }
   }
 
+  /// "Coincidence" plane ///
+  
   G4RotationMatrix rot;
   rot.rotateY(pi);
 
-  if (tile_type_d_ != tile_type_c_) {
+  copy_no = 10;
+
+  if (tile_type_d_ != tile_type_c_) { // Different type of tile
 
     G4LogicalVolume* tile2_logic = tile2_->GetLogicalVolume();
 
     G4double z_pos2 = -box_size_/2. + box_thickness_ + dist_dice_flange2_ + tile2_thickn_/2.;
 
-    if (single_tile_coinc_plane_) {
-
-      /// SINGLE TILE CENTERED IN X AND Y (COINCIDENCE PLANE)
+    if (single_tile_c_) { // Single tile centered
       vol_name = "TILE_" + std::to_string(copy_no);
-      G4double x_pos = 0.;
-      G4double y_pos = 0.;
-
-      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos2)),
+      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., -z_pos2)),
                         tile2_logic, vol_name, active_logic_, false, copy_no, false);
     } else {
-
-      /// 4 TILES
       for (G4int j=0; j<n_tile_rows_; j++) {
         G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
         for (G4int i=0; i<n_tile_columns_; i++) {
@@ -683,17 +694,12 @@ void PetBox::BuildSensors()
         }
       }
     }
-  } else {
-    if (single_tile_coinc_plane_) {
-
-      /// SINGLE TILE CENTERED IN X AND Y (COINCIDENCE PLANE)
+  } else { // Same type of tile in both sides
+    if (single_tile_c_) { // Single tile centered
       vol_name = "TILE_" + std::to_string(copy_no);
-      G4double x_pos = 0.;
-      G4double y_pos = 0.;
-
-      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
+      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., -z_pos)),
                         tile_logic, vol_name, active_logic_, false, copy_no, false);
-    } else {
+    } else { 
 
       /// 4 TILES
       for (G4int j=0; j<n_tile_rows_; j++) {

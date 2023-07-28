@@ -59,7 +59,7 @@ private:
   G4ThreeVector source_pos_;
 
   G4String tile_type_d_, tile_type_c_;
-  G4bool single_tile_coinc_plane_;
+  G4bool single_tile_d_, single_tile_c_;
 
   G4double box_size_, box_thickness_;
 

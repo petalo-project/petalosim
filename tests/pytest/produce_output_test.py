@@ -183,7 +183,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /Geometry/PetBox/tile_type_d {tile_type1}
 /Geometry/PetBox/tile_type_c {tile_type2}
-/Geometry/PetBox/single_tile_coinc_plane 0
+/Geometry/PetBox/single_tile_c 0
 /Geometry/PetBox/tile_refl 0.
 /Geometry/PetBox/sipm_pde 0.5
 
