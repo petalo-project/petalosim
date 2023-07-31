@@ -665,6 +665,11 @@ void PetBox::BuildSensors()
   }
 
   /// "Coincidence" plane ///
+
+  tile_size_x = tile2_->GetDimensions().x();
+  tile_size_y = tile2_->GetDimensions().y();
+  full_row_size_ = n_tile_columns_ * tile_size_x;
+  full_col_size_ = n_tile_rows_ * tile_size_y;
   
   G4RotationMatrix rot;
   rot.rotateY(pi);
