@@ -75,8 +75,6 @@ private:
 
   G4double efield_; ///< Value of the electric field used in NEST
 
-  G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
-
   std::vector<G4int> sns_posvec_;
   std::vector<G4int> charge_posvec_;
 
