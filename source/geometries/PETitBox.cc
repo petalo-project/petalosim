@@ -17,7 +17,6 @@
 #include "nexus/SpherePointSampler.h"
 #include "nexus/IonizationSD.h"
 
-#include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -50,9 +49,6 @@ PETitBox::PETitBox() : GeometryBase(),
                        max_step_size_(1. * mm),
                        pressure_(1 * bar)
 {
-  msg_ = new G4GenericMessenger(this, "/Geometry/PETitBox/",
-                                "Control commands of geometry PETitBox.");
-  msg_->DeclareProperty("visibility", visibility_, "Visibility");
 }
 
 PETitBox::~PETitBox()

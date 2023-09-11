@@ -12,7 +12,6 @@
 
 #include "nexus/GeometryBase.h"
 
-class G4GenericMessenger;
 class G4Material;
 
 namespace nexus
@@ -38,6 +37,7 @@ class PETitBox : public GeometryBase
   void SetIoniSD(IonizationSD* ionisd);
   void SetMaxStepSize(G4double step_size);
   void SetLXePressure(G4double pressure);
+  void SetVisibility(G4bool vis);
 
   G4LogicalVolume* GetActiveVolume() const;
   G4double GetHatZSize() const;
@@ -54,8 +54,6 @@ private:
 
   G4double  max_step_size_, pressure_;
 
-  G4GenericMessenger* msg_;
-
   SpherePointSampler* source_gen_;
 
   G4Material* LXe_mat_;
@@ -68,6 +66,8 @@ inline void PETitBox::SetXeMaterial(G4Material* mat) {LXe_mat_ = mat;}
 inline void PETitBox::SetIoniSD(IonizationSD* ionisd) {ionisd_ = ionisd;}
 inline void PETitBox::SetMaxStepSize(G4double step_size) {max_step_size_ = step_size;}
 inline void PETitBox::SetLXePressure(G4double pressure) {pressure_ = pressure;}
+inline void PETitBox::SetVisibility(G4bool vis) {visibility_ = vis;}
+
 inline G4LogicalVolume* PETitBox::GetActiveVolume() const {return active_logic_;}
 inline G4double PETitBox::GetHatZSize() const {return ih_z_size_;}
 
