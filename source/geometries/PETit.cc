@@ -43,6 +43,7 @@ PETit::PETit() : GeometryBase(),
                  box_vis_(0),
                  tile_vis_(1),
                  tile_refl_(0.),
+                 source_pos_{},
                  max_step_size_(1. * mm),
                  pressure_(1 * bar),
                  dist_dice_flange_(18.6 * mm),
@@ -57,6 +58,9 @@ PETit::PETit() : GeometryBase(),
   msg_->DeclareProperty("box_vis", box_vis_, "Visibility of the basic structure");
   msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
   msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
+
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  source_pos_,
+                                "Set generation vertex.");
 
   G4GenericMessenger::Command &press_cmd =
     msg_->DeclareProperty("pressure", pressure_,
@@ -110,7 +114,7 @@ void PETit::BuildBox()
                     box_logic, "ALUMINUM_BOX", lab_logic_,
                     false, 0, false);
 
-  G4LogicalVolume* active_logic = box_->GetActiveVolume();
+  active_logic_ = box_->GetActiveVolume();
   G4double ih_z_size = box_->GetHatZSize();
 
   TeflonBlockHamamatsu teflon_block_hama = TeflonBlockHamamatsu();
@@ -123,13 +127,13 @@ void PETit::BuildBox()
   G4double teflon_block_thick = teflon_block_hama.GetTeflonThickness();
   G4double block_z_pos = ih_z_size/2. + teflon_block_thick/2.;
   new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                    "TEFLON_BLOCK_HAMA", active_logic, false, 0, false);
+                    "TEFLON_BLOCK_HAMA", active_logic_, false, 0, false);
 
   G4RotationMatrix rot_teflon;
   rot_teflon.rotateY(pi);
   new G4PVPlacement(G4Transform3D(rot_teflon, G4ThreeVector(0., 0., block_z_pos)),
                     teflon_block_logic,
-                    "TEFLON_BLOCK_HAMA", active_logic, false, 1, false);
+                    "TEFLON_BLOCK_HAMA", active_logic_, false, 1, false);
 
   // Optical surface for teflon
   G4OpticalSurface* teflon_optSurf =
