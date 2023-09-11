@@ -1,5 +1,8 @@
 ### GEOMETRY
-/Geometry/PETitBox/visibility true
+/Geometry/PETit/box_vis true
+/Geometry/PETit/tile_vis true
+
+/Geometry/PETit/tile_refl 0
 
 ### GENERATOR
 /Generator/IonGenerator/region CENTER

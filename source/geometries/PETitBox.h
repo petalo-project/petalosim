@@ -41,6 +41,8 @@ class PETitBox : public GeometryBase
 
   G4LogicalVolume* GetActiveVolume() const;
   G4double GetHatZSize() const;
+  G4double GetBoxSize() const;
+  G4double GetBoxThickness() const;
 
 private:
   G4bool visibility_;
@@ -70,6 +72,8 @@ inline void PETitBox::SetVisibility(G4bool vis) {visibility_ = vis;}
 
 inline G4LogicalVolume* PETitBox::GetActiveVolume() const {return active_logic_;}
 inline G4double PETitBox::GetHatZSize() const {return ih_z_size_;}
+inline G4double PETitBox::GetBoxSize() const {return box_size_;}
+inline G4double PETitBox::GetBoxThickness() const {return box_thickness_;}
 
 
 #endif

@@ -9,11 +9,8 @@
 #include "PETit.h"
 #include "PETitBox.h"
 #include "TileHamamatsuVUV.h"
-#include "TileHamamatsuBlue.h"
-#include "TileFBK.h"
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
-#include "Na22Source.h"
 #include "TeflonBlockHamamatsu.h"
 
 #include "nexus/Visibilities.h"
@@ -42,15 +39,24 @@ using namespace nexus;
 REGISTER_CLASS(PETit, GeometryBase)
 
 PETit::PETit() : GeometryBase(),
-                   visibility_(0),
-                   max_step_size_(1. * mm),
-                   pressure_(1 * bar)
+                 visibility_(0),
+                 box_vis_(0),
+                 tile_vis_(1),
+                 tile_refl_(0.),
+                 max_step_size_(1. * mm),
+                 pressure_(1 * bar),
+                 dist_dice_flange_(18.6 * mm),
+                 n_tile_rows_(2),
+                 n_tile_columns_(2)
 
 {
   // Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/PETit/",
                                 "Control commands of geometry PETit.");
   msg_->DeclareProperty("visibility", visibility_, "Visibility");
+  msg_->DeclareProperty("box_vis", box_vis_, "Visibility of the basic structure");
+  msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
+  msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
 
   G4GenericMessenger::Command &press_cmd =
     msg_->DeclareProperty("pressure", pressure_,
@@ -59,7 +65,7 @@ PETit::PETit() : GeometryBase(),
   press_cmd.SetParameterName("pressure", false);
   press_cmd.SetRange("pressure>0.");
 
-  box_ = new PETitBox();
+
 
 }
 
@@ -92,9 +98,11 @@ void PETit::BuildBox()
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
 
+  box_ = new PETitBox();
   box_->SetLXePressure(pressure_);
   box_->SetXeMaterial(LXe);
   box_->SetIoniSD(ionisd);
+  box_->SetVisibility(box_vis_);
   box_->Construct();
   G4LogicalVolume* box_logic = box_->GetLogicalVolume();
 
@@ -128,10 +136,59 @@ void PETit::BuildBox()
     new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
   teflon_optSurf->SetMaterialPropertiesTable(petopticalprops::PTFE());
   new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
+
+  if (visibility_) {
+    G4VisAttributes block_col = nexus::LightBlue();
+    teflon_block_logic->SetVisAttributes(block_col);
+  }
 }
 
 void PETit::BuildSensors()
 {
+  TileHamamatsuVUV tile = TileHamamatsuVUV();
+  tile.SetBoxGeom(1);
+  tile.SetTileVisibility(tile_vis_);
+  tile.SetTileReflectivity(tile_refl_);
+  tile.Construct();
+
+  G4double tile_size_x = tile.GetDimensions().x();
+  G4double tile_size_y = tile.GetDimensions().y();
+  G4double tile_thickn = tile.GetDimensions().z();
+  G4double full_row_size = n_tile_columns_ * tile_size_x;
+  G4double full_col_size = n_tile_rows_ * tile_size_y;
+
+  G4LogicalVolume* tile_logic = tile.GetLogicalVolume();
+  G4String vol_name;
+  G4int copy_no = 0;
+  G4double z_pos = -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_ + tile_thickn/2.;
+
+  for (G4int j = 0; j < n_tile_rows_; j++) {
+    G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
+    for (G4int i = 0; i < n_tile_columns_; i++) {
+      G4double x_pos = -full_row_size/2. + tile_size_x/2. + i*tile_size_x;
+      vol_name = "TILE_" + std::to_string(copy_no);
+
+      new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
+                        vol_name, active_logic_, false, copy_no, false);
+      copy_no += 1;
+    }
+  }
+
+  G4RotationMatrix rot;
+  rot.rotateY(pi);
+
+  for (G4int j=0; j<n_tile_rows_; j++) {
+    G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
+    for (G4int i=0; i<n_tile_columns_; i++) {
+      G4double x_pos = full_row_size/2. - tile_size_x/2. - i*tile_size_x;
+      vol_name = "TILE_" + std::to_string(copy_no);
+
+      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
+                        tile_logic, vol_name, active_logic_, false, copy_no, false);
+      copy_no += 1;
+    }
+  }
+
 }
 
 G4ThreeVector PETit::GenerateVertex(const G4String &region) const
