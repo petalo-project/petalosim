@@ -19,6 +19,7 @@ class G4VPhysicalVolume;
 class TileHamamatsuVUV;
 class TileHamamatsuBlue;
 class TileFBK;
+class PETitBox;
 
 using namespace nexus;
 
@@ -81,6 +82,8 @@ private:
   G4double max_step_size_;
 
   G4double pressure_;
+
+  PETitBox* box_;
 
   /// Messenger for the definition of control commands
   G4GenericMessenger* msg_;
