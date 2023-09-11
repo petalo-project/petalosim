@@ -16,8 +16,6 @@
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
-#include "nexus/MaterialsList.h"
-#include "nexus/OpticalMaterialProperties.h"
 #include "nexus/SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
@@ -26,13 +24,11 @@
 #include <G4VisAttributes.hh>
 #include <G4NistManager.hh>
 #include <G4Box.hh>
-#include <G4Tubs.hh>
 #include <G4Material.hh>
 #include <G4SDManager.hh>
 #include <G4UserLimits.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4SubtractionSolid.hh>
 
 using namespace nexus;
 
