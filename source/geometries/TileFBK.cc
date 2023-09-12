@@ -105,10 +105,18 @@ void TileFBK::Construct()
       G4String vol_name = "SiPMFBKVUV_" + std::to_string(copy_no);
 
       if (sipm_naming_order_>0) {
+        // In this case, SiPM IDs are as follows:
+        // 100, 101, ..., 163
+        // 200, 201, ..., 263
+        // ...
         new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
                           sipm_logic, vol_name, tile_logic, false, counter, false);
         counter++;
       } else {
+        // In this case, SiPM IDs are as follows:
+        // 111, 112, ..., 144. The SiPMs are read in groups of four
+        // and only one ID is assigned to a group.
+        // This way we mimic what the electronic does.
         new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
                           sipm_logic, vol_name, tile_logic, false, copy_no, false);
       }
