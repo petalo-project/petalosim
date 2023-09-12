@@ -39,7 +39,7 @@ PETit::PETit() : GeometryBase(),
                  box_vis_(0),
                  tile_vis_(1),
                  tile_refl_(0.),
-                 source_pos_{},
+                 specific_vertex_{},
                  max_step_size_(1. * mm),
                  pressure_(1 * bar),
                  dist_dice_flange_(18.6 * mm),
@@ -55,7 +55,7 @@ PETit::PETit() : GeometryBase(),
   msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
   msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
 
-  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  source_pos_,
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
                                 "Set generation vertex.");
 
   G4GenericMessenger::Command &press_cmd =
@@ -199,7 +199,7 @@ G4ThreeVector PETit::GenerateVertex(const G4String &region) const
   if (region == "CENTER") {
     return vertex;
   } else if (region == "AD_HOC") {
-    vertex = source_pos_;
+    vertex = specific_vertex_;
   } else if (region == "SOURCE") {
     vertex = box_->GenerateVertex("SOURCE");
   } else {

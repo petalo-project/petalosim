@@ -10,14 +10,12 @@
 #define PETIT_H
 
 #include "nexus/GeometryBase.h"
-#include "TileGeometryBase.h"
 
 class G4GenericMessenger;
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 
 class PETitBox;
-class TileHamamatsuVUV;
 
 using namespace nexus;
 
@@ -33,8 +31,6 @@ public:
   /// Generate a vertex within a given region of the geometry
   G4ThreeVector GenerateVertex(const G4String &region) const;
 
-  TileGeometryBase* tile_;
-
 private:
   void Construct();
   void BuildBox();
@@ -48,7 +44,7 @@ private:
   G4bool box_vis_, tile_vis_;
   G4double tile_refl_;
 
-  G4ThreeVector source_pos_;
+  G4ThreeVector specific_vertex_;
 
   G4double n_tile_rows_, n_tile_columns_;
   G4double tile_thickn_;
