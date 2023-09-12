@@ -20,8 +20,9 @@
 using namespace CLHEP;
 
 ToFSD::ToFSD(G4String sdname) : G4VSensitiveDetector(sdname),
-                                naming_order_(0), sensor_depth_(0), mother_depth_(0),
-                                box_geom_(0)
+                                naming_order_(0), sensor_depth_(0),
+                                mother_depth_(0),
+                                box_conf_(0)
 {
   // Register the name of the collection of hits
   collectionName.insert(GetCollectionUniqueName());
@@ -88,19 +89,21 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
 G4int ToFSD::FindID(const G4VTouchable *touchable)
 {
+  // This is valid for full-body PET and FBK-only
   G4int snsid = touchable->GetCopyNumber(sensor_depth_);
   if (naming_order_ != 0)
   {
     G4int motherid = touchable->GetCopyNumber(mother_depth_);
     snsid = naming_order_ * motherid + snsid;
   }
-  if (box_geom_ == 1)
-  { // Hamamatsu & FBK
+  if (box_conf_ == hama)
+  { // Hamamatsu 2x2 and FBK centered
     std::vector<G4int> init_ids({0, 4, 40, 44, 100, 104, 140, 144});
     G4int motherid = touchable->GetCopyNumber(mother_depth_);
     G4int first_id = (init_ids)[motherid];
     snsid = first_id + snsid;
   }
+
   return snsid;
 }
 

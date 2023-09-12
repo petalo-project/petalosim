@@ -12,6 +12,7 @@
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 #include "TeflonBlockHamamatsu.h"
+#include "PetaloUtils.h"
 
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
@@ -146,7 +147,7 @@ void PETit::BuildBox()
 void PETit::BuildSensors()
 {
   TileHamamatsuVUV tile = TileHamamatsuVUV();
-  tile.SetBoxGeom(1);
+  tile.SetBoxConf(hama);
   tile.SetTileVisibility(tile_vis_);
   tile.SetTileReflectivity(tile_refl_);
   tile.Construct();

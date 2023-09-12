@@ -20,5 +20,7 @@ G4ThreeVector GenerateNonCollinearVector(G4ThreeVector dir, G4double angle);
 // produced in the annihilation of a positron in a body tissue
 std::tuple<G4ThreeVector, G4double, G4double> CalculateNonCollinearKinematicInBodyTissue(G4ThreeVector dir);
 
+enum petit_conf {hama, fbk, four_hama_one_fbk};
+
 
 #endif

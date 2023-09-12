@@ -13,6 +13,7 @@
 #define TOF_SD_H
 
 #include "PetSensorHit.h"
+#include "PetaloUtils.h"
 #include <G4VSensitiveDetector.hh>
 
 class G4Step;
@@ -57,7 +58,7 @@ public:
   G4int GetGrandMotherVolumeDepth() const;
 
   /// Set the box geometry parameter
-  void SetBoxGeom(G4int);
+  void SetBoxConf(petit_conf);
 
   /// Return the unique name of the hits collection created
   /// by this sensitive detector. This will be used by the
@@ -74,9 +75,9 @@ private:
   G4int mother_depth_;      ///< Depth of the SD's mother in the geometry tree
   G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-  G4int box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
+  G4int box_conf_; ///< Type of configuration
 
-  PetSensorHitsCollection *HC_; ///< Pointer to the collection of hits
+  PetSensorHitsCollection* HC_; ///< Pointer to the collection of hits
 };
 
 // INLINE METHODS //////////////////////////////////////////////////
@@ -93,6 +94,6 @@ inline G4int ToFSD::GetDetectorNamingOrder() const { return naming_order_; }
 inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; }
 inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
 
-inline void ToFSD::SetBoxGeom(G4int bg) { box_geom_ = bg; }
+inline void ToFSD::SetBoxConf(petit_conf bc) { box_conf_ = bc; }
 
 #endif

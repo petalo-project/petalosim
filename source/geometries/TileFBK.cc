@@ -49,7 +49,8 @@ void TileFBK::Construct()
 {
   SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));
 
-  G4Box *tile_solid = new G4Box("TILE_PLASTIC", tile_x_ / 2., tile_y_ / 2., tile_z_ / 2);
+  G4Box *tile_solid =
+    new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2., tile_z_/2);
 
   G4Material *fr4 = petmaterials::FR4();
   G4LogicalVolume *tile_logic =
@@ -66,7 +67,8 @@ void TileFBK::Construct()
 
   sipm_->SetSensorDepth(1);
   sipm_->SetMotherDepth(2);
-  sipm_->SetBoxGeom(GetBoxGeom());
+  sipm_->SetNamingOrder(100);
+  sipm_->SetBoxConf(GetBoxConf());
   sipm_->SetVisibility(GetTileVisibility());
   sipm_->SetPDE(GetPDE());
 
@@ -95,9 +97,9 @@ void TileFBK::Construct()
       {
         copy_no += 1;
       }
-      G4double x_pos = -tile_x_ / 2. + offset_x + sipm_dim.x() / 2. + j * sipm_pitch_;
-      G4double y_pos = tile_y_ / 2. - offset_y - sipm_dim.y() / 2. - i * sipm_pitch_;
-      G4double z_pos = tile_z_ / 2. - sipm_dim.z() / 2.;
+      G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + j * sipm_pitch_;
+      G4double y_pos = tile_y_/2. - offset_y - sipm_dim.y()/2. - i * sipm_pitch_;
+      G4double z_pos = tile_z_/2. - sipm_dim.z()/2.;
       G4String vol_name = "SiPMpetFBK_" + std::to_string(copy_no);
       new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
                         sipm_logic, vol_name, tile_logic, false, copy_no, false);
