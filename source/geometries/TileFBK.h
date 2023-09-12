@@ -32,6 +32,8 @@ using namespace nexus;
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
+    void SetNamingOrder(G4int nord);
+
   private:
 
     // Tile dimensions
@@ -43,8 +45,12 @@ using namespace nexus;
     // Rows and columns of SiPMs
     G4int n_rows_, n_columns_;
 
+    G4int sipm_naming_order_;
+
     SiPMFBKVUV* sipm_;
 
   };
+
+inline void TileFBK::SetNamingOrder(G4int nord) {sipm_naming_order_ = nord;}
 
 #endif

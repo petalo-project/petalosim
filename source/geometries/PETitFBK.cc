@@ -152,6 +152,7 @@ void PETitFBK::BuildSensors()
 {
   TileFBK tile = TileFBK();
   tile.SetBoxConf(fbk);
+  tile.SetNamingOrder(100);
   tile.SetTileVisibility(tile_vis_);
   tile.SetTileReflectivity(tile_refl_);
   tile.SetPDE(sipm_pde_);
