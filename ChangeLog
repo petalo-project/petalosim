@@ -1,3 +1,10 @@
+tag v3_00_00 - 12 Sept 2023
+        - Save info of individual photons in the TOF table instead of binning
+	- Allow not to specifiy a persistency manager
+	- Use Qt for visualization
+	- Use LXe L-V saturation data to calculate temperature from pressure (optional)
+	- Replace ROOT histogram system with csv files
+
 tag v2_00_00 - 5 Oct 2022
 	- Add NEST dependency
 	- Fix PETit dimensions
