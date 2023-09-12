@@ -44,6 +44,8 @@ class PETitBox : public GeometryBase
   G4double GetBoxSize() const;
   G4double GetBoxThickness() const;
 
+  G4ThreeVector GenerateVertex(const G4String &region) const;
+
 private:
   G4bool visibility_;
   G4ThreeVector source_pos_;

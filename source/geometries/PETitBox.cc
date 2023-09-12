@@ -218,3 +218,16 @@ void PETitBox::Construct()
     source_tube_inside_box_logic->SetVisAttributes(air_source_tube_inside_box_col);
   }
 }
+
+G4ThreeVector PETitBox::GenerateVertex(const G4String &region) const
+{
+  G4ThreeVector vertex;
+  if (region == "SOURCE") {
+      vertex = source_gen_->GenerateVertex("VOLUME");
+  } else {
+    G4Exception("[PETitBox]", "GenerateVertex()", FatalException,
+                "Unknown vertex generation region!");
+  }
+  return vertex;
+}
+

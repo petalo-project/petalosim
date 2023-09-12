@@ -160,7 +160,8 @@ void PETit::BuildSensors()
   G4LogicalVolume* tile_logic = tile.GetLogicalVolume();
   G4String vol_name;
   G4int copy_no = 0;
-  G4double z_pos = -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_ + tile_thickn/2.;
+  G4double z_pos =
+    -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_ + tile_thickn/2.;
 
   for (G4int j = 0; j < n_tile_rows_; j++) {
     G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
@@ -195,22 +196,15 @@ G4ThreeVector PETit::GenerateVertex(const G4String &region) const
 {
   G4ThreeVector vertex(0., 0., 0.);
 
-  if (region == "CENTER")
-    {
-      return vertex;
-    }
-  else if (region == "AD_HOC")
-    {
-      vertex = source_pos_;
-    }
-  else if (region == "SOURCE")
-    {
-      //vertex = source_gen_->GenerateVertex("VOLUME");
-    }
-  else
-    {
-      G4Exception("[PETit]", "GenerateVertex()", FatalException,
-                  "Unknown vertex generation region!");
-    }
+  if (region == "CENTER") {
+    return vertex;
+  } else if (region == "AD_HOC") {
+    vertex = source_pos_;
+  } else if (region == "SOURCE") {
+    vertex = box_->GenerateVertex("SOURCE");
+  } else {
+    G4Exception("[PETit]", "GenerateVertex()", FatalException,
+                "Unknown vertex generation region!");
+  }
   return vertex;
 }
