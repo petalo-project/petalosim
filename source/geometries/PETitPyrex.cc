@@ -47,7 +47,6 @@ PETitPyrex::PETitPyrex() : GeometryBase(),
                            specific_vertex_{},
                            max_step_size_(1. * mm),
                            pressure_(1 * bar),
-                           dist_dice_flange_(18.6 * mm),
                            n_tile_rows_(2),
                            n_tile_columns_(2),
                            dist_lat_panels_(69. * mm),
@@ -305,7 +304,7 @@ void PETitPyrex::BuildSensors()
 
   G4double tile_size_x = tile_->GetDimensions().x();
   G4double tile_size_y = tile_->GetDimensions().y();
-  G4double tile_thickn = tile_->GetDimensions().z();
+
   G4double full_row_size = n_tile_columns_ * tile_size_x;
   G4double full_col_size = n_tile_rows_ * tile_size_y;
 
@@ -313,7 +312,7 @@ void PETitPyrex::BuildSensors()
   G4String vol_name;
   G4int copy_no = 0;
   G4double z_pos =
-    -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_ + tile_thickn/2.;
+    -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_ + tile_thickn_/2.;
 
   for (G4int j = 0; j < n_tile_rows_; j++) {
     G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
