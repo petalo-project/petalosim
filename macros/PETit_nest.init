@@ -7,7 +7,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/nexus/RegisterGeometry PetBox
+/nexus/RegisterGeometry PETit
 
 ### GENERATOR
 /nexus/RegisterGenerator IonGenerator
@@ -21,4 +21,4 @@
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
 
-/nexus/RegisterMacro macros/PetBox_nest.config.mac
+/nexus/RegisterMacro macros/PETit_nest.config.mac
