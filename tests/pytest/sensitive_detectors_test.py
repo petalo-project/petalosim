@@ -29,11 +29,58 @@ def test_sensor_ids(petalosim_params):
 
 def test_sensor_ids_pet_box(petalosim_pet_box_params):
      """
-     Check that sensors are correctly numbered for the PetBox geometry,
+     Check that sensors are correctly numbered for the geometry,
      the charge of the event is above a threshold and that the true
      information is stored if charge is detected by the sensors.
      """
-     filename, _, _, _, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_pet_box_params
+     filename, _, _, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_pet_box_params
+
+     sns_response = pd.read_hdf(filename, 'MC/sns_response')
+     sipm_ids     = sns_response.sensor_id.unique()
+     sipm_ids1    = sipm_ids[sipm_ids < 100]
+     sipm_ids2    = sipm_ids[sipm_ids > 100]
+
+     assert 1 < len(sipm_ids) <= nsipms
+
+     # No sensor position is repeated
+     sns_positions = pd.read_hdf(filename, 'MC/sns_positions')
+     assert len(sns_positions) == len(sns_positions.sensor_id.unique())
+     assert min(sipm_ids) >= init_sns_id1
+
+     if len(sensor_name) == 2:
+         assert sns_positions.sensor_name.nunique() == 2
+     else:
+         assert sns_positions.sensor_name.unique() == sensor_name
+
+     first_id_second_plane = 111
+     sns_z_pos_left  = sns_positions[ sns_positions.sensor_id<first_id_second_plane].z.values
+     sns_z_pos_right = sns_positions[~sns_positions.sensor_id<first_id_second_plane].z.values
+     if len(sns_z_pos_left) > 0:
+         assert len(np.unique(sns_z_pos_left)) == 1
+         assert     np.unique(sns_z_pos_left)  < 0
+         assert len(sns_z_pos_left) <= sipms_per_tile*4
+
+     if len(sns_z_pos_right) > 0:
+         assert len(np.unique(sns_z_pos_right)) == 1
+         assert     np.unique(sns_z_pos_right)  < 0
+         assert len(sns_z_pos_right) <= sipms_per_tile*4
+
+     # Charge of the whole event above a certain threshold
+     for evt_charge in sns_response.groupby('event_id').charge.sum():
+         assert evt_charge >= min_charge_evt
+
+     # Check that all the stored events have detected charge
+     mcparticles = pd.read_hdf(filename, 'MC/particles')
+     assert mcparticles.event_id.nunique() == sns_response.event_id.nunique()
+
+
+def test_sensor_ids_petit_pyrex_blue(petalosim_params_pyrex_HamamatsuBlue):
+     """
+     Check that sensors are correctly numbered for the geometry,
+     the charge of the event is above a threshold and that the true
+     information is stored if charge is detected by the sensors.
+     """
+     filename, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_params_pyrex_HamamatsuBlue
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()

@@ -143,7 +143,7 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 @pytest.mark.order(3)
 def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_params):
 
-     _, base_name, tile_type1, tile_type2, _, _, _, _, _, min_charge_evt = petalosim_pet_box_params
+     _, base_name, geom_type, _, _, _, _, _, min_charge_evt = petalosim_pet_box_params
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -154,7 +154,7 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/nexus/RegisterGeometry PetBox
+/nexus/RegisterGeometry {geom_type}
 
 ### GENERATOR
 /nexus/RegisterGenerator IonGenerator
@@ -181,12 +181,6 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
 /process/em/verbose 0
 
-/Geometry/PetBox/tile_type_d {tile_type1}
-/Geometry/PetBox/tile_type_c {tile_type2}
-/Geometry/PetBox/single_tile_coinc_plane 0
-/Geometry/PetBox/tile_refl 0.
-/Geometry/PetBox/sipm_pde 0.5
-
 /Generator/IonGenerator/region SOURCE
 /Generator/IonGenerator/atomic_number 11
 /Generator/IonGenerator/mass_number 22
@@ -207,11 +201,76 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 
      my_env    = os.environ
      petalo_exe = PETALODIR + '/bin/petalo'
-     command   = [petalo_exe, '-b', '-n', '20', init_path]
+     command   = [petalo_exe, '-b', '-n', '50', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
 
 @pytest.mark.order(4)
+def test_create_petalo_output_file_petit_pyrex(config_tmpdir, output_tmpdir, PETALODIR, base_name_pyrex):
+
+     init_text = f"""
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics PetaloPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+### GEOMETRY
+/nexus/RegisterGeometry PETitPyrex
+
+### GENERATOR
+/nexus/RegisterGenerator IonGenerator
+#/nexus/RegisterGenerator SingleParticleGenerator
+
+### ACTIONS
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction PetSensorsEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
+
+/nexus/RegisterMacro {config_tmpdir}/{base_name_pyrex}.config.mac
+"""
+     init_path = os.path.join(config_tmpdir, base_name_pyrex+'.init.mac')
+     init_file = open(init_path,'w')
+     init_file.write(init_text)
+     init_file.close()
+
+     config_text = f"""
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+/Geometry/PETitPyrex/blue_tiles true
+
+/Generator/IonGenerator/region SOURCE
+/Generator/IonGenerator/atomic_number 11
+/Generator/IonGenerator/mass_number 22
+
+/Actions/PetSensorsEventAction/min_charge 50
+
+/process/optical/processActivation Cerenkov false
+
+/petalosim/persistency/output_file {output_tmpdir}/{base_name_pyrex}
+
+/nexus/random_seed 23102022
+"""
+
+     config_path = os.path.join(config_tmpdir, base_name_pyrex+'.config.mac')
+     config_file = open(config_path,'w')
+     config_file.write(config_text)
+     config_file.close()
+
+     my_env    = os.environ
+     petalo_exe = PETALODIR + '/bin/petalo'
+     command   = [petalo_exe, '-b', '-n', '20', init_path]
+     p         = subprocess.run(command, check=True, env=my_env)
+
+
+@pytest.mark.order(5)
 def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR, base_name_nest):
 
      init_text = f"""
@@ -284,7 +343,7 @@ def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR,
      p         = subprocess.run(command, check=True, env=my_env)
 
 
-@pytest.mark.order(4)
+@pytest.mark.order(6)
 def test_create_petalo_output_file_phantom(config_tmpdir, output_tmpdir, PETALODIR, base_name_phantom):
 
      init_text = f"""
