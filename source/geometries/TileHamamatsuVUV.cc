@@ -10,6 +10,8 @@
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 #include "SiPMHamamatsuVUV.h"
+#include "SiPMCells.h"
+#include "MicroCellHmtsuVUV.h"
 
 #include "nexus/Visibilities.h"
 #include "nexus/IonizationSD.h"
@@ -43,7 +45,6 @@ TileHamamatsuVUV::TileHamamatsuVUV() : TileGeometryBase(),
                                        quartz_thick_(0.6 * mm)
 
 {
-  sipm_ = new SiPMHamamatsuVUV();
 }
 
 TileHamamatsuVUV::~TileHamamatsuVUV()
@@ -69,14 +70,28 @@ void TileHamamatsuVUV::Construct()
 
   new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
-  sipm_->SetSensorDepth(1);
-  sipm_->SetMotherDepth(2);
-  sipm_->SetBoxConf(GetBoxConf());
-  // The SiPMs will have the same visibility as the tile
-  sipm_->SetVisibility(GetTileVisibility());
+  SiPMCells sipm_cells;
+  SiPMHamamatsuVUV sipm;
 
-  sipm_->Construct();
-  G4ThreeVector sipm_dim = sipm_->GetDimensions();
+  G4ThreeVector sipm_dim;
+
+  if (GetSiPMCells()) {
+    sipm_cells.SetDim(G4ThreeVector(5.95 * mm, 5.85 * mm, 0.35 * mm));
+    sipm_cells.SetNumbOfMicroCells(6162);
+    sipm_cells.SetPitch(0.075 * mm);
+    sipm_cells.SetMicroCell("MicroCellHmtsuVUV");
+    sipm_cells.Construct();
+    sipm_dim = sipm_cells.GetDimensions();
+  } else {
+    sipm.SetSensorDepth(1);
+    sipm.SetMotherDepth(2);
+    sipm.SetBoxConf(GetBoxConf());
+    // The SiPMs will have the same visibility as the tile
+    sipm.SetVisibility(GetTileVisibility());
+
+    sipm.Construct();
+    sipm_dim = sipm.GetDimensions();
+  }
 
   G4double offset_x = (tile_x_ - ((n_columns_ - 1)*sipm_pitch_) - sipm_dim.x())/2.;
   G4double offset_y = (tile_y_ - ((n_rows_ - 1)*sipm_pitch_) - sipm_dim.y())/2.;
@@ -129,7 +144,12 @@ void TileHamamatsuVUV::Construct()
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
   // SiPMs
-  G4LogicalVolume *sipm_logic = sipm_->GetLogicalVolume();
+  G4LogicalVolume* sipm_logic;
+  if (GetSiPMCells()) {
+    sipm_logic = sipm_cells.GetLogicalVolume();
+  } else {
+    sipm_logic = sipm.GetLogicalVolume();
+  }
 
   for (int j = 0; j < n_rows_; j++)
   {

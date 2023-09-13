@@ -47,6 +47,7 @@ private:
   G4ThreeVector specific_vertex_;
 
   G4double n_tile_rows_, n_tile_columns_;
+  G4bool sipm_cells_;
   G4double tile_thickn_;
   G4double dist_dice_flange_;
 
