@@ -245,6 +245,7 @@ void PETitPyrexMix::BuildSensors()
   tile0.SetBoxConf(hama);
   tile0.SetTileVisibility(tile_vis_);
   tile0.SetTileReflectivity(tile_refl_);
+  tile0.SetSiPMCells(false);
 
   tile0.Construct();
 
@@ -277,6 +278,7 @@ void PETitPyrexMix::BuildSensors()
   tile2.SetBoxConf(hama); // we use hama because the IDs must be 111, 112, ... 118 etc.
   tile2.SetTileVisibility(tile_vis_);
   tile2.SetTileReflectivity(tile_refl_);
+  tile2.SetSiPMCells(false);
 
   tile2.Construct();
 

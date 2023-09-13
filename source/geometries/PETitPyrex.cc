@@ -156,6 +156,7 @@ void PETitPyrex::BuildBox()
   tile_->SetBoxConf(hama);
   tile_->SetTileVisibility(tile_vis_);
   tile_->SetTileReflectivity(tile_refl_);
+  tile_->SetSiPMCells(false);
 
   tile_->Construct();
   tile_thickn_ = tile_->GetDimensions().z();
