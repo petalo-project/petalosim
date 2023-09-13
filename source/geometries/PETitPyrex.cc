@@ -72,12 +72,14 @@ PETitPyrex::PETitPyrex() : GeometryBase(),
   msg_ = new G4GenericMessenger(this, "/Geometry/PETitPyrex/",
                                 "Control commands of geometry PETitPyrex.");
   msg_->DeclareProperty("visibility", visibility_, "Visibility");
-  msg_->DeclareProperty("box_vis", box_vis_, "Visibility of the basic structure");
+  msg_->DeclareProperty("box_vis", box_vis_,
+                        "Visibility of the basic structure");
   msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
   msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
-  msg_->DeclareProperty("panel_refl", panel_refl_, "Reflectivity of the panels");
+  msg_->DeclareProperty("panel_refl", panel_refl_,
+                        "Reflectivity of the panels");
   msg_->DeclareProperty("blue_tiles", blue_tiles_,
-                        "True if using Hamamatsu sensors not sensitive to VUV light");
+                        "True if using Hamamatsu SiPMs not sensitive to VUV");
 
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
                                 "Set generation vertex.");
@@ -138,7 +140,8 @@ void PETitPyrex::BuildBox()
   G4double ih_z_size = box_->GetHatZSize();
 
   G4Box* entry_panel_solid =
-    new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2., panel_thickness_/2.);
+    new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2.,
+              panel_thickness_/2.);
 
 
   // Construct here the tiles to use their distance to flange
@@ -157,7 +160,8 @@ void PETitPyrex::BuildBox()
   tile_thickn_ = tile_->GetDimensions().z();
 
 
-  G4Material* pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
+  G4Material* pyrex =
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
   pyrex->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
 
@@ -166,50 +170,60 @@ void PETitPyrex::BuildBox()
   G4LogicalVolume* entry_panel_logic =
     new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
 
-  G4double entry_panel_ypos = -box_->GetBoxSize()/2. + box_->GetBoxThickness() +
-                                dist_entry_panel_ground_ + entry_panel_y_size_/2.;
-  G4double entry_panel_zpos = box_->GetHatZSize()/2. + dist_ihat_entry_panel_ + panel_thickness_/2.;
+  G4double entry_panel_ypos =
+    -box_->GetBoxSize()/2. + box_->GetBoxThickness()
+    + dist_entry_panel_ground_ + entry_panel_y_size_/2.;
+  G4double entry_panel_zpos =
+    box_->GetHatZSize()/2. + dist_ihat_entry_panel_ + panel_thickness_/2.;
   
 
   new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, -entry_panel_zpos),
-                    entry_panel_logic, "ENTRY_PANEL", active_logic_, false, 1, false);
+                    entry_panel_logic, "ENTRY_PANEL", active_logic_,
+                    false, 1, false);
   
   new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, entry_panel_zpos),
-                    entry_panel_logic, "ENTRY_PANEL", active_logic_, false, 2, false);
+                    entry_panel_logic, "ENTRY_PANEL", active_logic_,
+                    false, 2, false);
 
   // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS //
 
   // Horizontal lateral panels
   G4Box* h_l_panel_solid =
-    new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2., h_l_panel_z_size_/2.);
+    new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2.,
+              h_l_panel_z_size_/2.);
   
   G4LogicalVolume* h_l_panel_logic =
     new G4LogicalVolume(h_l_panel_solid, pyrex, "LAT_PANEL");
   
-  G4double h_l_panel_ypos_bot = -box_->GetBoxSize()/2. + box_->GetBoxThickness() +
-    h_l_panel_y_pos_ + panel_thickness_/2.;
-  G4double h_l_panel_ypos_top = h_l_panel_ypos_bot + panel_thickness_ +
-    dist_lat_panels_;
-  G4double h_l_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
-    dist_entry_panel_h_panel_ + h_l_panel_z_size_/2.;
+  G4double h_l_panel_ypos_bot = -box_->GetBoxSize()/2. + box_->GetBoxThickness()
+    + h_l_panel_y_pos_ + panel_thickness_/2.;
+  G4double h_l_panel_ypos_top = h_l_panel_ypos_bot + panel_thickness_
+    + dist_lat_panels_;
+  G4double h_l_panel_zpos = entry_panel_zpos + panel_thickness_/2.
+    + dist_entry_panel_h_panel_ + h_l_panel_z_size_/2.;
   
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_bot, -h_l_panel_zpos),
-                    h_l_panel_logic, "LAT_PANEL", active_logic_, false, 1, false);
+                    h_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 1, false);
   
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_bot, h_l_panel_zpos),
-                    h_l_panel_logic, "LAT_PANEL", active_logic_, false, 2, false);
+                    h_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 2, false);
   
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_top, -h_l_panel_zpos),
-                    h_l_panel_logic, "LAT_PANEL", active_logic_, false, 3, false);
+                    h_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 3, false);
   
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_top, h_l_panel_zpos),
-                    h_l_panel_logic, "LAT_PANEL", active_logic_, false, 4, false);
+                    h_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 4, false);
   
   // Vertical lateral panels
   G4Box* v_l_panel_solid =
-    new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2., v_l_panel_z_size_/2.);
+    new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2.,
+              v_l_panel_z_size_/2.);
 
-  G4LogicalVolume *v_l_panel_logic =
+  G4LogicalVolume* v_l_panel_logic =
     new G4LogicalVolume(v_l_panel_solid, pyrex, "LAT_PANEL");
   
   G4double v_l_panel_xpos = dist_lat_panels_/2. + panel_thickness_/2.;
@@ -219,16 +233,20 @@ void PETitPyrex::BuildBox()
     dist_entry_panel_v_panel_ + v_l_panel_z_size_/2.;
   
   new G4PVPlacement(0, G4ThreeVector(-v_l_panel_xpos, v_l_panel_ypos, -v_l_panel_zpos),
-                    v_l_panel_logic, "LAT_PANEL", active_logic_, false, 1, false);
+                    v_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 1, false);
   
   new G4PVPlacement(0, G4ThreeVector(-v_l_panel_xpos, v_l_panel_ypos, v_l_panel_zpos),
-                    v_l_panel_logic, "LAT_PANEL", active_logic_, false, 2, false);
+                    v_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 2, false);
   
   new G4PVPlacement(0, G4ThreeVector(v_l_panel_xpos, v_l_panel_ypos, -v_l_panel_zpos),
-                    v_l_panel_logic, "LAT_PANEL", active_logic_, false, 3, false);
+                    v_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 3, false);
   
   new G4PVPlacement(0, G4ThreeVector(v_l_panel_xpos, v_l_panel_ypos, v_l_panel_zpos),
-                    v_l_panel_logic, "LAT_PANEL", active_logic_, false, 4, false);
+                    v_l_panel_logic, "LAT_PANEL", active_logic_,
+                    false, 4, false);
 
   // Optical surface for the panels
   G4OpticalSurface* panel_opsur = new G4OpticalSurface("OP_PANEL");
@@ -251,19 +269,21 @@ void PETitPyrex::BuildBox()
   // If SiPMs are not sensitive to VUV, a further panel must be placed in front
   // of them, coated with TPB
   if (blue_tiles_) {
-    G4Material* pyrex2 = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
+    G4Material* pyrex2 =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
     pyrex2->SetMaterialPropertiesTable(petopticalprops::Pyrex_vidrasa());
     
     G4Box* panel_sipms_solid =
-      new G4Box("PANEL_SiPMs", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2.,
+      new G4Box("SiPM_PANEL", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2.,
                 (panel_thickness_ + wls_depth_)/2.);
 
     G4LogicalVolume* panel_sipms_logic =
-      new G4LogicalVolume(panel_sipms_solid, pyrex2, "PANEL_SiPMs");
+      new G4LogicalVolume(panel_sipms_solid, pyrex2, "SiPM_PANEL");
 
     // WAVELENGTH SHIFTER LAYER ON THE PANEL //
     G4Box* wls_solid =
-      new G4Box("WLS", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2., wls_depth_/2);
+      new G4Box("WLS", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2.,
+                wls_depth_/2);
 
     G4Material* wls = materials::TPB();
     wls->SetMaterialPropertiesTable(petopticalprops::TPB());
@@ -275,21 +295,26 @@ void PETitPyrex::BuildBox()
                       "WLS", panel_sipms_logic, false, 0, false);
     
     // Optical surface for WLS
-    G4OpticalSurface* wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
-                                                         glisur, ground,
-                                                         dielectric_dielectric, .01);
+    G4OpticalSurface* wls_optSurf =
+      new G4OpticalSurface("WLS_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
     new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
 
-    G4double panel_sipms_zpos = box_->GetBoxSize()/2. - box_->GetBoxThickness() - dist_dice_flange_ -
-                tile_thickn_ - dist_sipms_panel_sipms_ - (panel_thickness_ + wls_depth_)/2.;
+    G4double panel_sipms_zpos =
+      box_->GetBoxSize()/2. - box_->GetBoxThickness() - dist_dice_flange_ -
+      tile_thickn_ - dist_sipms_panel_sipms_ -
+      (panel_thickness_ + wls_depth_)/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., -panel_sipms_zpos),
-                      panel_sipms_logic, "PANEL_SiPMs", active_logic_, false, 1, false);
+                      panel_sipms_logic, "SiPM_PANEL", active_logic_,
+                      false, 1, false);
 
     G4RotationMatrix rot_panel;
     rot_panel.rotateY(pi);
 
-    new G4PVPlacement(G4Transform3D(rot_panel, G4ThreeVector(0., 0., panel_sipms_zpos)),
-                          panel_sipms_logic, "PANEL_SiPMs", active_logic_, false, 2, false);
+    new G4PVPlacement(G4Transform3D(rot_panel,
+                                    G4ThreeVector(0., 0., panel_sipms_zpos)),
+                      panel_sipms_logic, "SiPM_PANEL", active_logic_,
+                      false, 2, false);
 
 
     if (visibility_){
@@ -312,7 +337,8 @@ void PETitPyrex::BuildSensors()
   G4String vol_name;
   G4int copy_no = 0;
   G4double z_pos =
-    -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_ + tile_thickn_/2.;
+    -box_->GetBoxSize()/2. + box_->GetBoxThickness() + dist_dice_flange_
+    + tile_thickn_/2.;
 
   for (G4int j = 0; j < n_tile_rows_; j++) {
     G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
@@ -336,7 +362,8 @@ void PETitPyrex::BuildSensors()
       vol_name = "TILE_" + std::to_string(copy_no);
 
       new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)),
-                        tile_logic, vol_name, active_logic_, false, copy_no, false);
+                        tile_logic, vol_name, active_logic_,
+                        false, copy_no, false);
       copy_no += 1;
     }
   }

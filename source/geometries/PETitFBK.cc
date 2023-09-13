@@ -53,10 +53,12 @@ PETitFBK::PETitFBK() : GeometryBase(),
   msg_ = new G4GenericMessenger(this, "/Geometry/PETitFBK/",
                                 "Control commands of geometry PETitFBK.");
   msg_->DeclareProperty("visibility", visibility_, "Visibility");
-  msg_->DeclareProperty("box_vis", box_vis_, "Visibility of the basic structure");
+  msg_->DeclareProperty("box_vis", box_vis_,
+                        "Visibility of the basic structure");
   msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
   msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
-  msg_->DeclareProperty("sipm_pde", sipm_pde_, "SiPM photodetection efficiency");
+  msg_->DeclareProperty("sipm_pde", sipm_pde_,
+                        "SiPM photodetection efficiency");
 
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
                                 "Set generation vertex.");
@@ -130,7 +132,8 @@ void PETitFBK::BuildBox()
 
   G4RotationMatrix rot_teflon;
   rot_teflon.rotateY(pi);
-  new G4PVPlacement(G4Transform3D(rot_teflon, G4ThreeVector(0., 0., block_z_pos)),
+  new G4PVPlacement(G4Transform3D(rot_teflon,
+                                  G4ThreeVector(0., 0., block_z_pos)),
                     teflon_block_logic,
                     "TEFLON_BLOCK_HAMA", active_logic_, false, 1, false);
 
@@ -191,7 +194,8 @@ void PETitFBK::BuildSensors()
       vol_name = "TILE_" + std::to_string(copy_no);
 
       new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, z_pos)),
-                        tile_logic, vol_name, active_logic_, false, copy_no, false);
+                        tile_logic, vol_name, active_logic_,
+                        false, copy_no, false);
       copy_no += 1;
     }
   }
