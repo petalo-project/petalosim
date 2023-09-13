@@ -43,6 +43,7 @@ private:
   G4double reflectivity_;
   G4bool box_vis_, tile_vis_;
   G4double tile_refl_, sipm_pde_;
+  G4bool sipm_cells_;
 
   G4ThreeVector specific_vertex_;
 

@@ -48,7 +48,7 @@ void ToFSD::Initialize(G4HCofThisEvent* HCE)
   HCE->AddHitsCollection(HCID, HC_);
 }
 
-G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
+G4bool ToFSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
   // Check whether the track is an optical photon
   G4ParticleDefinition *pdef = step->GetTrack()->GetDefinition();
@@ -57,9 +57,9 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
   const G4VTouchable *touchable =
     step->GetPostStepPoint()->GetTouchable();
-  
+
   G4int sns_id = FindID(touchable);
-  
+
   PetSensorHit* hit = 0;
   for (size_t i = 0; i < HC_->entries(); i++)
     {
@@ -69,7 +69,7 @@ G4bool ToFSD::ProcessHits(G4Step *step, G4TouchableHistory *)
           break;
         }
     }
-  
+
   // If no hit associated to this sensor exists already,
   // create it and set main properties
   if (!hit)

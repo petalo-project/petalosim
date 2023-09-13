@@ -41,12 +41,12 @@ void SiPMCells::Construct()
   // PACKAGE //
   G4ThreeVector sipm_dim = GetDim();
 
-  G4Box* sipm_solid = new G4Box("SiPMHmtsuVUV", sipm_dim.x()/2.,
+  G4Box* sipm_solid = new G4Box("SiPM", sipm_dim.x()/2.,
                                 sipm_dim.y()/2., sipm_dim.z()/2);
 
   G4Material* plastic = petmaterials::FR4();
   G4LogicalVolume* sipm_logic =
-      new G4LogicalVolume(sipm_solid, plastic, "SiPMHmtsuVUV");
+      new G4LogicalVolume(sipm_solid, plastic, "SiPM");
 
   this->SetLogicalVolume(sipm_logic);
 

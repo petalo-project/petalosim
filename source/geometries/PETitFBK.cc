@@ -46,7 +46,8 @@ PETitFBK::PETitFBK() : GeometryBase(),
                        pressure_(1 * bar),
                        dist_dice_flange_(18.6 * mm),
                        n_tile_rows_(2),
-                       n_tile_columns_(2)
+                       n_tile_columns_(2),
+                       sipm_cells_(false)
 
 {
   // Messenger
@@ -59,6 +60,8 @@ PETitFBK::PETitFBK() : GeometryBase(),
   msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
   msg_->DeclareProperty("sipm_pde", sipm_pde_,
                         "SiPM photodetection efficiency");
+  msg_->DeclareProperty("sipm_cells", sipm_cells_,
+                        "True if each cell of SiPMs is simulated");
 
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
                                 "Set generation vertex.");
@@ -159,6 +162,7 @@ void PETitFBK::BuildSensors()
   tile.SetTileVisibility(tile_vis_);
   tile.SetTileReflectivity(tile_refl_);
   tile.SetPDE(sipm_pde_);
+  tile.SetSiPMCells(sipm_cells_);
   tile.Construct();
 
   G4double tile_size_x = tile.GetDimensions().x();
