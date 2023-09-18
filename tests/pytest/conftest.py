@@ -55,6 +55,7 @@ def base_name_phantom():
 def file_name_phantom(output_tmpdir, base_name_phantom):
     return os.path.join(output_tmpdir, base_name_phantom+'.h5')
 
+
 @pytest.fixture(scope = 'session')
 def base_name_pyrex():
     return 'PETit_pyrex_test'
@@ -63,15 +64,24 @@ def base_name_pyrex():
 def file_name_pyrex(output_tmpdir, base_name_pyrex):
     return os.path.join(output_tmpdir, base_name_pyrex+'.h5')
 
+#@pytest.fixture(scope = 'session')
+#def petalosim_params_pyrex_HamamatsuBlue(output_tmpdir, base_name_pyrex):
+#    n_sipm         = 128
+#    sipms_per_tile =  16
+#    init_sns_id1   =  11
+#    init_sns_id2   = 111
+#    sensor_name    = 'SiPMHmtsuBlue'
+#    min_charge_evt = 50
+#    return os.path.join(output_tmpdir, base_name_pyrex+'.h5'),  n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
+
+
 @pytest.fixture(scope = 'session')
-def petalosim_params_pyrex_HamamatsuBlue(output_tmpdir, base_name_pyrex):
-    n_sipm         = 128
-    sipms_per_tile =  16
-    init_sns_id1   =  11
-    init_sns_id2   = 111
-    sensor_name    = 'SiPMHmtsuBlue'
-    min_charge_evt = 50
-    return os.path.join(output_tmpdir, base_name_pyrex+'.h5'),  n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
+def base_name_sat():
+    return 'PETit_sat_test'
+
+@pytest.fixture(scope = 'session')
+def file_name_sat(output_tmpdir, base_name_sat):
+    return os.path.join(output_tmpdir, base_name_sat+'.h5')
 
 
 @pytest.fixture(scope = 'session')

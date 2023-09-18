@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy  as np
+import os
 
 
 def test_sensor_ids(petalosim_params):
@@ -74,13 +75,19 @@ def test_sensor_ids_pet_box(petalosim_pet_box_params):
      assert mcparticles.event_id.nunique() == sns_response.event_id.nunique()
 
 
-def test_sensor_ids_petit_pyrex_blue(petalosim_params_pyrex_HamamatsuBlue):
+def test_sensor_ids_petit_pyrex_blue(output_tmpdir, base_name_pyrex):
      """
      Check that sensors are correctly numbered for the geometry,
      the charge of the event is above a threshold and that the true
      information is stored if charge is detected by the sensors.
      """
-     filename, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_params_pyrex_HamamatsuBlue
+
+     nsipms         = 128
+     sipms_per_tile =  16
+     init_sns_id1   =  11
+     sensor_name    = 'SiPMHmtsuBlue'
+     min_charge_evt = 50
+     filename = os.path.join(output_tmpdir, base_name_pyrex+'.h5')
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
