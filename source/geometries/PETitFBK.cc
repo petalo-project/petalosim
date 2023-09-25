@@ -128,14 +128,14 @@ void PETitFBK::BuildBox()
   G4double teflon_block_thick = teflon_block_fbk.GetTeflonThickness();
   G4double block_z_pos = ih_z_size/2. + 0.25*mm + teflon_block_thick/2.;
   new G4PVPlacement(0, G4ThreeVector(0., 0., -block_z_pos), teflon_block_logic,
-                    "TEFLON_BLOCK_HAMA", active_logic_, false, 0, false);
+                    "TEFLON_BLOCK_FBK", active_logic_, false, 0, false);
 
   G4RotationMatrix rot_teflon;
   rot_teflon.rotateY(pi);
   new G4PVPlacement(G4Transform3D(rot_teflon,
                                   G4ThreeVector(0., 0., block_z_pos)),
                     teflon_block_logic,
-                    "TEFLON_BLOCK_HAMA", active_logic_, false, 1, false);
+                    "TEFLON_BLOCK_FBK", active_logic_, false, 1, false);
 
   end_of_teflon_z_ = block_z_pos + teflon_block_thick/2.;
 

@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // petalosim | PETitPyrex.cc
 //
-// This class implements the geometry of a box of LXe.
+// This class implements the geometry of a continuous box of LXe
+// with pyrex panels to avoid reflections.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------

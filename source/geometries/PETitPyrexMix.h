@@ -1,7 +1,10 @@
 // ----------------------------------------------------------------------------
 // petalosim | PETitPyrexMix.h
 //
-// This class implements the geometry of a box of LXe.
+// This class implements the geometry of a continuous box of LXe
+// with 4 Hamamatsu tiles on one side and one centered FBK tile
+// on the other side. Pyrex panels avoid reflections in the walls
+// of the chamber.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------

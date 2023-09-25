@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // petalosim | PETit.cc
 //
-// This class implements the geometry of a box of LXe.
+// This class implements the geometry of a box of LXe with Hamamatsu tiles.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
