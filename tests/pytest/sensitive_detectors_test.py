@@ -127,3 +127,27 @@ def test_sensor_ids_petit_pyrex_blue(output_tmpdir, base_name_pyrex):
      # Check that all the stored events have detected charge
      mcparticles = pd.read_hdf(filename, 'MC/particles')
      assert mcparticles.event_id.nunique() == sns_response.event_id.nunique()
+
+
+def test_sensor_ids_petit_saturation(output_tmpdir, petit_sat_params):
+     """
+     Check that both pixels and sensors are correctly numbered for the geometry.
+     """
+
+     filename, _, _, npxls, nsipms, sep_pxls, sep_sipms = petit_sat_params
+
+     sns_response = pd.read_hdf(filename, 'MC/tof_sns_response')
+     pxl_ids     = sns_response.sensor_id.unique()
+     pxl_ids1    = pxl_ids[pxl_ids < sep_pxls]
+     pxl_ids2    = pxl_ids[pxl_ids > sep_pxls]
+
+     assert 1 <= len(pxl_ids1) <= npxls / 2.
+     assert 1 <= len(pxl_ids2) <= npxls / 2.
+
+     sipm_ids = sns_response.sensor_id // 10000
+
+     sipm_ids1 = sipm_ids[sipm_ids < sep_sipms]
+     sipm_ids2 = sipm_ids[sipm_ids > sep_sipms]
+
+     assert 1 <= len(set(sipm_ids1)) <= nsipms / 2.
+     assert 1 <= len(set(sipm_ids2)) <= nsipms / 2.

@@ -64,24 +64,41 @@ def base_name_pyrex():
 def file_name_pyrex(output_tmpdir, base_name_pyrex):
     return os.path.join(output_tmpdir, base_name_pyrex+'.h5')
 
-#@pytest.fixture(scope = 'session')
-#def petalosim_params_pyrex_HamamatsuBlue(output_tmpdir, base_name_pyrex):
-#    n_sipm         = 128
-#    sipms_per_tile =  16
-#    init_sns_id1   =  11
-#    init_sns_id2   = 111
-#    sensor_name    = 'SiPMHmtsuBlue'
-#    min_charge_evt = 50
-#    return os.path.join(output_tmpdir, base_name_pyrex+'.h5'),  n_sipm, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt
+
+@pytest.fixture(scope = 'session')
+def base_name_sat_hama():
+    return 'PETit_sat_hama_test'
+
+@pytest.fixture(scope = 'session')
+def file_name_sat_hama(output_tmpdir, base_name_sat_hama):
+    return os.path.join(output_tmpdir, base_name_sat_hama+'.h5')
+
+@pytest.fixture(scope = 'session')
+def petit_params_hama(output_tmpdir, base_name_sat_hama):
+    geom_type  = 'PETit'
+    n_pixels   = 788736
+    n_sipms    = 128
+    separation_pxls  = 1000000
+    separation_sipms = 100
+    return os.path.join(output_tmpdir, base_name_sat_hama+'.h5'), base_name_sat_hama, geom_type, n_pixels, n_sipms, separation_pxls, separation_sipms
 
 
 @pytest.fixture(scope = 'session')
-def base_name_sat():
-    return 'PETit_sat_test'
+def base_name_sat_fbk():
+    return 'PETit_sat_fbk_test'
 
 @pytest.fixture(scope = 'session')
-def file_name_sat(output_tmpdir, base_name_sat):
-    return os.path.join(output_tmpdir, base_name_sat+'.h5')
+def file_name_sat_fbk(output_tmpdir, base_name_sat_fbk):
+    return os.path.join(output_tmpdir, base_name_sat_fbk+'.h5')
+
+@pytest.fixture(scope = 'session')
+def petit_params_fbk(output_tmpdir, base_name_sat_fbk):
+    geom_type  = 'PETitFBK'
+    n_pixels   = 4221440
+    n_sipms    = 512
+    separation_pxls = 5000000
+    separation_sipms = 500
+    return os.path.join(output_tmpdir, base_name_sat_fbk+'.h5'), base_name_sat_fbk, geom_type, n_pixels, n_sipms, separation_pxls, separation_sipms
 
 
 @pytest.fixture(scope = 'session')
@@ -153,10 +170,13 @@ def petalosim_params_pet_box_mix_Ham_FBK(output_tmpdir):
 
 
 @pytest.fixture(scope="module",
-                params=["base_name_full_body", "base_name_nest", "base_name_ring_tiles",
+                params=["base_name_full_body", "base_name_nest",
+                        "base_name_ring_tiles",
                         "base_name_pet_box_HamamatsuVUV",
-                        "base_name_pet_box_FBK", "base_name_pet_box_mix_Ham_FBK", "base_name_pyrex"],
-                ids=["full_body", "nest", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_FBK", "pet_box_mix_Ham_FBK", "petit_pyrex"])
+                        "base_name_pet_box_FBK",
+                        "base_name_pet_box_mix_Ham_FBK", "base_name_pyrex"],
+                ids=["full_body", "nest", "ring_tiles", "pet_box_HamamatsuVUV",
+                     "pet_box_FBK", "pet_box_mix_Ham_FBK", "petit_pyrex"])
 def petalosim_files(request, output_tmpdir):
     return os.path.join(output_tmpdir, request.getfixturevalue(request.param)+'.h5')
 
@@ -171,7 +191,28 @@ def petalosim_params(request):
 
 @pytest.fixture(scope="module",
                 params=["petalosim_params_pet_box_HamamatsuVUV",
-                        "petalosim_params_pet_box_FBK", "petalosim_params_pet_box_mix_Ham_FBK"],
-                ids=["pet_box_HamamatsuVUV", "pet_box_FBK", 'pet_box_mix_Ham_FBK'])
+                        "petalosim_params_pet_box_FBK",
+                        "petalosim_params_pet_box_mix_Ham_FBK"],
+                ids=["pet_box_HamamatsuVUV", "pet_box_FBK",
+                     'pet_box_mix_Ham_FBK'])
 def petalosim_pet_box_params(request):
     return request.getfixturevalue(request.param)
+
+
+@pytest.fixture(scope="module",
+                params=["petalosim_params_pet_box_HamamatsuVUV",
+                        "petalosim_params_pet_box_FBK",
+                        "petalosim_params_pet_box_mix_Ham_FBK"],
+                ids=["pet_box_HamamatsuVUV", "pet_box_FBK",
+                     'pet_box_mix_Ham_FBK'])
+def petalosim_pet_box_params(request):
+    return request.getfixturevalue(request.param)
+
+
+@pytest.fixture(scope="module",
+                params=["petit_params_hama", "petit_params_fbk"],
+                ids=["petit_sat_HamamatsuVUV", "petit_sat_fbk"])
+def petit_sat_params(request):
+    return request.getfixturevalue(request.param)
+
+

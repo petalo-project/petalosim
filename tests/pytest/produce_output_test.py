@@ -122,8 +122,6 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 /Generator/Back2back/region CENTER
 
-/process/optical/processActivation Cerenkov false
-
 /petalosim/persistency/output_file {output_tmpdir}/{base_name_ring_tiles}
 /nexus/random_seed 16062020
 
@@ -186,8 +184,6 @@ def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdi
 /Generator/IonGenerator/mass_number 22
 
 /Actions/PetSensorsEventAction/min_charge {min_charge_evt}
-
-/process/optical/processActivation Cerenkov false
 
 /petalosim/persistency/output_file {output_tmpdir}/{base_name}
 
@@ -252,8 +248,6 @@ def test_create_petalo_output_file_petit_pyrex(config_tmpdir, output_tmpdir, PET
 
 /Actions/PetSensorsEventAction/min_charge 50
 
-/process/optical/processActivation Cerenkov false
-
 /petalosim/persistency/output_file {output_tmpdir}/{base_name_pyrex}
 
 /nexus/random_seed 23102022
@@ -271,7 +265,9 @@ def test_create_petalo_output_file_petit_pyrex(config_tmpdir, output_tmpdir, PET
 
 
 @pytest.mark.order(5)
-def test_create_petalo_output_file_petit_saturation(config_tmpdir, output_tmpdir, PETALODIR, base_name_sat):
+def test_create_petalo_output_file_petit_saturation(config_tmpdir, output_tmpdir, PETALODIR, petit_sat_params):
+
+     _, base_name, geom_type, _, _, _, _ = petit_sat_params
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -282,7 +278,7 @@ def test_create_petalo_output_file_petit_saturation(config_tmpdir, output_tmpdir
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/nexus/RegisterGeometry PETit
+/nexus/RegisterGeometry {geom_type}
 
 ### GENERATOR
 /nexus/RegisterGenerator IonGenerator
@@ -295,9 +291,9 @@ def test_create_petalo_output_file_petit_saturation(config_tmpdir, output_tmpdir
 
 /nexus/RegisterPersistencyManager PetaloPersistencyManager
 
-/nexus/RegisterMacro {config_tmpdir}/{base_name_sat}.config.mac
+/nexus/RegisterMacro {config_tmpdir}/{base_name}.config.mac
 """
-     init_path = os.path.join(config_tmpdir, base_name_sat+'.init.mac')
+     init_path = os.path.join(config_tmpdir, base_name+'.init.mac')
      init_file = open(init_path,'w')
      init_file.write(init_text)
      init_file.close()
@@ -309,25 +305,21 @@ def test_create_petalo_output_file_petit_saturation(config_tmpdir, output_tmpdir
 
 /process/em/verbose 0
 
-/Geometry/PETit/sipm_cells true
+/Geometry/{geom_type}/sipm_cells true
 
 /Generator/IonGenerator/region SOURCE
 /Generator/IonGenerator/atomic_number 11
 /Generator/IonGenerator/mass_number 22
 
-/Actions/PetSensorsEventAction/min_charge 50
-
-/process/optical/processActivation Cerenkov false
-
 /petalosim/persistency/sipm_cells true
 /petalosim/persistency/save_tot_charge false
 
-/petalosim/persistency/output_file {output_tmpdir}/{base_name_sat}
+/petalosim/persistency/output_file {output_tmpdir}/{base_name}
 
 /nexus/random_seed 23102022
 """
 
-     config_path = os.path.join(config_tmpdir, base_name_sat+'.config.mac')
+     config_path = os.path.join(config_tmpdir, base_name+'.config.mac')
      config_file = open(config_path,'w')
      config_file.write(config_text)
      config_file.close()
@@ -391,9 +383,9 @@ def test_create_petalo_output_file_nest(config_tmpdir, output_tmpdir, PETALODIR,
 /Generator/Back2back/region AD_HOC
 
 /process/optical/processActivation Scintillation false
-/PhysicsList/Petalo/nest true
-
 /process/optical/processActivation Cerenkov false
+
+/PhysicsList/Petalo/nest true
 
 /petalosim/persistency/output_file {output_tmpdir}/{base_name_nest}
 /nexus/random_seed 16062020
