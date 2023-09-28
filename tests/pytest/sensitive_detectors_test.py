@@ -3,11 +3,11 @@ import numpy  as np
 import os
 
 
-def test_sensor_ids(petalosim_params):
+def test_sensor_ids(general_params):
      """
      Check that sensors are correctly numbered.
      """
-     filename, nsipms, n_boards, sipms_per_board, board_ordering = petalosim_params
+     filename, nsipms, n_boards, sipms_per_board, board_ordering = general_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
@@ -28,13 +28,13 @@ def test_sensor_ids(petalosim_params):
           assert (sipm_ids % board_ordering).max() <=  sipms_per_board
 
 
-def test_sensor_ids_pet_box(petalosim_pet_box_params):
+def test_sensor_ids_petit(petit_params):
      """
      Check that sensors are correctly numbered for the geometry,
      the charge of the event is above a threshold and that the true
      information is stored if charge is detected by the sensors.
      """
-     filename, _, _, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_pet_box_params
+     filename, _, _, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petit_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()

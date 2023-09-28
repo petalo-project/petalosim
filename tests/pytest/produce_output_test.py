@@ -139,9 +139,9 @@ def test_create_petalo_output_file_ring_tiles(config_tmpdir, output_tmpdir, PETA
 
 
 @pytest.mark.order(3)
-def test_create_petalo_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petalosim_pet_box_params):
+def test_create_petalo_output_file_petit_all_tiles(config_tmpdir, output_tmpdir, PETALODIR, petit_params):
 
-     _, base_name, geom_type, _, _, _, _, _, min_charge_evt = petalosim_pet_box_params
+     _, base_name, geom_type, _, _, _, _, _, min_charge_evt = petit_params
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
