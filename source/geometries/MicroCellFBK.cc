@@ -31,7 +31,7 @@ MicroCellFBK::~MicroCellFBK()
 void MicroCellFBK::Construct()
 {
   G4double cell_size   = 35 * micrometer;
-  G4double cell_thickn = 10 * micrometer;
+  G4double cell_thickn = 300 * micrometer;
 
   SetDimensions(G4ThreeVector(cell_size, cell_size, cell_thickn));
 
