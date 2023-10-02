@@ -81,7 +81,7 @@ void TileHamamatsuVUV::Construct()
     sipm_cells.SetPitch(0.075 * mm);
     sipm_cells.SetMicroCell("MicroCellHmtsuVUV");
     sipm_cells.Construct();
-    sipm_dim = sipm_cells.GetDimensions();
+    sipm_dim = sipm_cells.GetDim();
   } else {
     sipm.SetSensorDepth(1);
     sipm.SetMotherDepth(2);
