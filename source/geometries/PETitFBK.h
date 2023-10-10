@@ -40,25 +40,21 @@ private:
   G4LogicalVolume* active_logic_;
 
   G4bool visibility_;
-  G4double reflectivity_;
   G4bool box_vis_, tile_vis_;
   G4double tile_refl_, sipm_pde_;
+  G4double n_tile_rows_, n_tile_columns_;
   G4bool sipm_cells_;
 
   G4ThreeVector specific_vertex_;
 
-  G4double n_tile_rows_, n_tile_columns_;
-  G4double tile_thickn_;
-  G4double dist_dice_flange_;
-
   G4double max_step_size_, pressure_;
+
+  G4double end_of_teflon_z_;
 
   /// Messenger for the definition of control commands
   G4GenericMessenger* msg_;
 
   PETitBox* box_;
-
-  G4double end_of_teflon_z_;
 };
 
 #endif

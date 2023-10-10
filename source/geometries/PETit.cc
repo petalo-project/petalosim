@@ -40,13 +40,13 @@ PETit::PETit() : GeometryBase(),
                  box_vis_(0),
                  tile_vis_(1),
                  tile_refl_(0.),
-                 specific_vertex_{},
-                 max_step_size_(1. * mm),
-                 pressure_(1 * bar),
                  dist_dice_flange_(18.6 * mm),
                  n_tile_rows_(2),
                  n_tile_columns_(2),
-                 sipm_cells_(false)
+                 specific_vertex_{},
+                 sipm_cells_(false),
+                 max_step_size_(1. * mm),
+                 pressure_(1 * bar)
 
 {
   // Messenger

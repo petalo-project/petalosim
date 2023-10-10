@@ -41,13 +41,12 @@ PETitFBK::PETitFBK() : GeometryBase(),
                        tile_vis_(1),
                        tile_refl_(0.),
                        sipm_pde_(0.3),
-                       specific_vertex_{},
-                       max_step_size_(1. * mm),
-                       pressure_(1 * bar),
-                       dist_dice_flange_(18.6 * mm),
                        n_tile_rows_(2),
                        n_tile_columns_(2),
-                       sipm_cells_(false)
+                       sipm_cells_(false),
+                       specific_vertex_{},
+                       max_step_size_(1. * mm),
+                       pressure_(1 * bar)
 
 {
   // Messenger
