@@ -32,7 +32,7 @@ SiPMHamamatsuBlue::SiPMHamamatsuBlue() : GeometryBase(),
                                          sensor_depth_(-1),
                                          mother_depth_(0),
                                          naming_order_(0),
-                                         box_geom_(0)
+                                         box_conf_(hama)
 {
 }
 
@@ -123,7 +123,7 @@ void SiPMHamamatsuBlue::Construct()
     sipmsd->SetDetectorVolumeDepth(sensor_depth_);
     sipmsd->SetMotherVolumeDepth(mother_depth_);
     sipmsd->SetDetectorNamingOrder(naming_order_);
-    sipmsd->SetBoxGeom(box_geom_);
+    sipmsd->SetBoxConf(box_conf_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
     active_logic->SetSensitiveDetector(sipmsd);

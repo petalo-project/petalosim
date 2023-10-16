@@ -1,14 +1,11 @@
 ### GEOMETRY
-/Geometry/PetBox/visibility true
-/Geometry/PetBox/tile_type_d HamamatsuVUV
-/Geometry/PetBox/tile_type_c HamamatsuVUV
-/Geometry/PetBox/single_tile_coinc_plane 0
-/Geometry/PetBox/add_teflon_block 1
-/Geometry/PetBox/pressure 1.26 bar
+/Geometry/PETitPyrex/visibility true
+/Geometry/PETitPyrex/box_vis true
+/Geometry/PETitPyrex/tile_vis true
 
-/Geometry/PetBox/tile_vis true
-/Geometry/PetBox/tile_refl 0.
-/Geometry/PetBox/sipm_pde 0.3
+/Geometry/PETitPyrex/tile_refl 0
+/Geometry/PETitPyrex/blue_tiles false
+#/Geometry/PETitPyrex/specific_vertex 3 3 0
 
 ### GENERATOR
 /Generator/IonGenerator/region SOURCE
@@ -17,9 +14,10 @@
 #/Generator/SingleParticle/particle geantino
 #/Generator/SingleParticle/min_energy 1  eV
 #/Generator/SingleParticle/max_energy 1 keV
-#/Generator/SingleParticle/region CENTER
+#/Generator/SingleParticle/region AD_HOC
+#/Generator/SingleParticle/momentum 0 0 -1
 
-/Actions/PetSensorsEventAction/min_charge 50
+#/Actions/PetSensorsEventAction/min_charge 50
 
 ### PHYSICS
 #/process/optical/processActivation Scintillation true
@@ -36,5 +34,5 @@
 
 ### OUTPUT FILE
 /petalosim/persistency/start_id 0
-/petalosim/persistency/output_file petbox.pet
+/petalosim/persistency/output_file petit_pyrex
 

@@ -9,6 +9,8 @@
 #ifndef SIPM_pet_Blue_H
 #define SIPM_pet_Blue_H
 
+#include "PetaloUtils.h"
+
 #include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
@@ -34,7 +36,7 @@ public:
   void SetSensorDepth(G4int sensor_depth);
   void SetMotherDepth(G4int mother_depth);
   void SetNamingOrder(G4int naming_order);
-  void SetBoxGeom(G4int box_geom);
+  void SetBoxConf(petit_conf box_conf);
 
 private:
   G4bool visibility_;
@@ -42,7 +44,7 @@ private:
   G4int sensor_depth_;
   G4int mother_depth_;
   G4int naming_order_;
-  G4int box_geom_;
+  petit_conf box_conf_;
 };
 
 inline void SiPMHamamatsuBlue::SetVisibility(G4bool vis)
@@ -65,9 +67,9 @@ inline void SiPMHamamatsuBlue::SetNamingOrder(G4int naming_order)
   naming_order_ = naming_order;
 }
 
-inline void SiPMHamamatsuBlue::SetBoxGeom(G4int box_geom)
+inline void SiPMHamamatsuBlue::SetBoxConf(petit_conf box_conf)
 {
-  box_geom_ = box_geom;
+  box_conf_ = box_conf;
 }
 
 #endif

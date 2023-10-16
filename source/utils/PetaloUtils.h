@@ -20,5 +20,10 @@ G4ThreeVector GenerateNonCollinearVector(G4ThreeVector dir, G4double angle);
 // produced in the annihilation of a positron in a body tissue
 std::tuple<G4ThreeVector, G4double, G4double> CalculateNonCollinearKinematicInBodyTissue(G4ThreeVector dir);
 
+// 0 is the default configuration, used also for non-petit geometries
+// 1 is the Hamamatsu configuration with IDs 11, 12, ... 88
+// 2 for the moment is like the default, by it could be of use in the future
+enum petit_conf {def, hama, fbk};
+
 
 #endif

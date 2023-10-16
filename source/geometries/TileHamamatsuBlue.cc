@@ -71,7 +71,7 @@ void TileHamamatsuBlue::Construct()
 
   sipm_->SetSensorDepth(1);
   sipm_->SetMotherDepth(2);
-  sipm_->SetBoxGeom(GetBoxGeom());
+  sipm_->SetBoxConf(GetBoxConf());
   sipm_->SetVisibility(GetTileVisibility());
 
   sipm_->Construct();

@@ -9,6 +9,7 @@
 #ifndef TILE_BASE_GEOMETRY_H
 #define TILE_BASE_GEOMETRY_H
 
+#include "PetaloUtils.h"
 #include "nexus/GeometryBase.h"
 #include <G4ThreeVector.hh>
 
@@ -22,8 +23,8 @@ public:
   /// Destructor
   virtual ~TileGeometryBase();
 
-  void SetBoxGeom(G4int box_geom);
-  G4int GetBoxGeom() const;
+  void SetBoxConf(petit_conf box_conf);
+  petit_conf GetBoxConf() const;
 
   void SetTileVisibility(G4bool vis);
   G4bool GetTileVisibility() const;
@@ -45,7 +46,7 @@ protected:
   TileGeometryBase();
 
 private:
-  G4int box_geom_;
+  petit_conf box_conf_;
   G4bool tile_vis_;
   G4double tile_refl_;
   G4double sipm_pde_;
@@ -53,11 +54,11 @@ private:
 
 // Inline definitions ///////////////////////////////////
 
-inline TileGeometryBase::TileGeometryBase() : box_geom_(0) {}
+inline TileGeometryBase::TileGeometryBase() : box_conf_(hama) {}
 inline TileGeometryBase::~TileGeometryBase() {}
 
-inline void TileGeometryBase::SetBoxGeom(G4int box_geom) { box_geom_ = box_geom; }
-inline G4int TileGeometryBase::GetBoxGeom() const { return box_geom_; }
+inline void TileGeometryBase::SetBoxConf(petit_conf box_conf) { box_conf_ = box_conf; }
+inline petit_conf TileGeometryBase::GetBoxConf() const { return box_conf_; }
 
 inline void TileGeometryBase::SetTileVisibility(G4bool vis) { tile_vis_ = vis; }
 inline G4bool TileGeometryBase::GetTileVisibility() const { return tile_vis_; }
