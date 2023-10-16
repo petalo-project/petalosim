@@ -1,12 +1,13 @@
 import pandas as pd
 import numpy  as np
+import os
 
 
-def test_sensor_ids(petalosim_params):
+def test_sensor_ids(general_params):
      """
      Check that sensors are correctly numbered.
      """
-     filename, nsipms, n_boards, sipms_per_board, board_ordering = petalosim_params
+     filename, nsipms, n_boards, sipms_per_board, board_ordering = general_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
@@ -27,13 +28,13 @@ def test_sensor_ids(petalosim_params):
           assert (sipm_ids % board_ordering).max() <=  sipms_per_board
 
 
-def test_sensor_ids_pet_box(petalosim_pet_box_params):
+def test_sensor_ids_petit(petit_params):
      """
      Check that sensors are correctly numbered for the geometry,
      the charge of the event is above a threshold and that the true
      information is stored if charge is detected by the sensors.
      """
-     filename, _, _, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_pet_box_params
+     filename, _, _, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petit_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
@@ -74,13 +75,19 @@ def test_sensor_ids_pet_box(petalosim_pet_box_params):
      assert mcparticles.event_id.nunique() == sns_response.event_id.nunique()
 
 
-def test_sensor_ids_petit_pyrex_blue(petalosim_params_pyrex_HamamatsuBlue):
+def test_sensor_ids_petit_pyrex_blue(output_tmpdir, base_name_pyrex):
      """
      Check that sensors are correctly numbered for the geometry,
      the charge of the event is above a threshold and that the true
      information is stored if charge is detected by the sensors.
      """
-     filename, nsipms, sipms_per_tile, init_sns_id1, init_sns_id2, sensor_name, min_charge_evt = petalosim_params_pyrex_HamamatsuBlue
+
+     nsipms         = 128
+     sipms_per_tile =  16
+     init_sns_id1   =  11
+     sensor_name    = 'SiPMHmtsuBlue'
+     min_charge_evt = 50
+     filename = os.path.join(output_tmpdir, base_name_pyrex+'.h5')
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
@@ -120,3 +127,27 @@ def test_sensor_ids_petit_pyrex_blue(petalosim_params_pyrex_HamamatsuBlue):
      # Check that all the stored events have detected charge
      mcparticles = pd.read_hdf(filename, 'MC/particles')
      assert mcparticles.event_id.nunique() == sns_response.event_id.nunique()
+
+
+def test_sensor_ids_petit_saturation(output_tmpdir, petit_sat_params):
+     """
+     Check that both pixels and sensors are correctly numbered for the geometry.
+     """
+
+     filename, _, _, npxls, nsipms, sep_pxls, sep_sipms = petit_sat_params
+
+     sns_response = pd.read_hdf(filename, 'MC/tof_sns_response')
+     pxl_ids     = sns_response.sensor_id.unique()
+     pxl_ids1    = pxl_ids[pxl_ids < sep_pxls]
+     pxl_ids2    = pxl_ids[pxl_ids > sep_pxls]
+
+     assert 1 <= len(pxl_ids1) <= npxls / 2.
+     assert 1 <= len(pxl_ids2) <= npxls / 2.
+
+     sipm_ids = sns_response.sensor_id // 10000
+
+     sipm_ids1 = sipm_ids[sipm_ids < sep_sipms]
+     sipm_ids2 = sipm_ids[sipm_ids > sep_sipms]
+
+     assert 1 <= len(set(sipm_ids1)) <= nsipms / 2.
+     assert 1 <= len(set(sipm_ids2)) <= nsipms / 2.

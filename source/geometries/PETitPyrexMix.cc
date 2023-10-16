@@ -47,9 +47,6 @@ PETitPyrexMix::PETitPyrexMix() : GeometryBase(),
                                  tile_vis_(1),
                                  tile_refl_(0.),
                                  panel_refl_(0.),
-                                 specific_vertex_{},
-                                 max_step_size_(1. * mm),
-                                 pressure_(1 * bar),
                                  n_tile_rows_(2),
                                  n_tile_columns_(2),
                                  dist_lat_panels_(69. * mm),
@@ -66,10 +63,9 @@ PETitPyrexMix::PETitPyrexMix() : GeometryBase(),
                                  v_l_panel_z_size_(46.7 * mm),
                                  dist_ham_vuv_(18.6 * mm),
                                  dist_fbk_(21.05 * mm),
-                                 panel_sipm_xy_size_(66. * mm),
-                                 dist_sipms_panel_sipms_(0.3 * mm),
-                                 wls_depth_(0.001 * mm),
-                                 sipm_pde_(0.3)
+                                 sipm_pde_(0.3),
+                                 specific_vertex_{},
+                                 pressure_(1 * bar)
 
 {
   // Messenger
@@ -138,7 +134,6 @@ void PETitPyrexMix::BuildBox()
                     false, 0, false);
 
   active_logic_ = box_->GetActiveVolume();
-  G4double ih_z_size = box_->GetHatZSize();
 
   G4Box* entry_panel_solid =
     new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2., panel_thickness_/2.);
@@ -245,6 +240,7 @@ void PETitPyrexMix::BuildSensors()
   tile0.SetBoxConf(hama);
   tile0.SetTileVisibility(tile_vis_);
   tile0.SetTileReflectivity(tile_refl_);
+  tile0.SetSiPMCells(false);
 
   tile0.Construct();
 
@@ -277,6 +273,7 @@ void PETitPyrexMix::BuildSensors()
   tile2.SetBoxConf(hama); // we use hama because the IDs must be 111, 112, ... 118 etc.
   tile2.SetTileVisibility(tile_vis_);
   tile2.SetTileReflectivity(tile_refl_);
+  tile2.SetSiPMCells(false);
 
   tile2.Construct();
 

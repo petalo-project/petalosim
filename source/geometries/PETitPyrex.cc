@@ -45,9 +45,6 @@ PETitPyrex::PETitPyrex() : GeometryBase(),
                            tile_refl_(0.),
                            panel_refl_(0.),
                            blue_tiles_(0),
-                           specific_vertex_{},
-                           max_step_size_(1. * mm),
-                           pressure_(1 * bar),
                            n_tile_rows_(2),
                            n_tile_columns_(2),
                            dist_lat_panels_(69. * mm),
@@ -66,7 +63,9 @@ PETitPyrex::PETitPyrex() : GeometryBase(),
                            dist_ham_blue_(19.35 * mm),
                            panel_sipm_xy_size_(66. * mm),
                            dist_sipms_panel_sipms_(0.3 * mm),
-                           wls_depth_(0.001 * mm)
+                           wls_depth_(0.001 * mm),
+                           specific_vertex_{},
+                           pressure_(1 * bar)
 
 {
   // Messenger
@@ -138,7 +137,6 @@ void PETitPyrex::BuildBox()
                     false, 0, false);
 
   active_logic_ = box_->GetActiveVolume();
-  G4double ih_z_size = box_->GetHatZSize();
 
   G4Box* entry_panel_solid =
     new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2.,
@@ -156,6 +154,7 @@ void PETitPyrex::BuildBox()
   tile_->SetBoxConf(hama);
   tile_->SetTileVisibility(tile_vis_);
   tile_->SetTileReflectivity(tile_refl_);
+  tile_->SetSiPMCells(false);
 
   tile_->Construct();
   tile_thickn_ = tile_->GetDimensions().z();

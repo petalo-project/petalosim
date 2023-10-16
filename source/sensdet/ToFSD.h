@@ -60,6 +60,9 @@ public:
   /// Set the box geometry parameter
   void SetBoxConf(petit_conf);
 
+  /// Set type of SiPM (with every microcell or not)
+  void SetSiPMCells(G4bool cells);
+
   /// Return the unique name of the hits collection created
   /// by this sensitive detector. This will be used by the
   /// persistency manager to select the collection.
@@ -75,7 +78,8 @@ private:
   G4int mother_depth_;      ///< Depth of the SD's mother in the geometry tree
   G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-  G4int box_conf_; ///< Type of configuration
+  G4int box_conf_; ///< Type of configuration of the petit geometry
+  G4bool sipm_cells_; ///< True if each individual microcell is simulated in SiPMs
 
   PetSensorHitsCollection* HC_; ///< Pointer to the collection of hits
 };
@@ -95,5 +99,6 @@ inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; 
 inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
 
 inline void ToFSD::SetBoxConf(petit_conf bc) { box_conf_ = bc; }
+inline void ToFSD::SetSiPMCells(G4bool cells) { sipm_cells_ = cells; }
 
 #endif

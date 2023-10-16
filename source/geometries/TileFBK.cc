@@ -10,6 +10,7 @@
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 #include "SiPMFBKVUV.h"
+#include "SiPMCells.h"
 
 #include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
@@ -39,7 +40,6 @@ TileFBK::TileFBK() : TileGeometryBase(),
                      sipm_naming_order_(0)
 
 {
-  sipm_ = new SiPMFBKVUV();
 }
 
 TileFBK::~TileFBK()
@@ -66,21 +66,42 @@ void TileFBK::Construct()
 
   new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
-  sipm_->SetSensorDepth(1);
-  sipm_->SetMotherDepth(2);
-  sipm_->SetNamingOrder(sipm_naming_order_);
-  sipm_->SetBoxConf(GetBoxConf());
-  sipm_->SetVisibility(GetTileVisibility());
-  sipm_->SetPDE(GetPDE());
+  SiPMCells sipm_cells;
+  SiPMFBKVUV sipm;
 
-  sipm_->Construct();
-  G4ThreeVector sipm_dim = sipm_->GetDimensions();
+  G4ThreeVector sipm_dim;
+
+  if (GetSiPMCells()) {
+    sipm_cells.SetDim(G4ThreeVector(3. * mm, 3.4 * mm, 0.6 * mm));
+    sipm_cells.SetNumbOfMicroCells(8245);
+    sipm_cells.SetPitch(0.035 * mm);
+    sipm_cells.SetMicroCell("MicroCellFBK");
+    sipm_cells.SetPDE(GetPDE());
+    sipm_cells.Construct();
+    sipm_dim = sipm_cells.GetDim();
+  } else {
+    sipm.SetSensorDepth(1);
+    sipm.SetMotherDepth(2);
+    sipm.SetNamingOrder(sipm_naming_order_);
+    sipm.SetBoxConf(GetBoxConf());
+    sipm.SetVisibility(GetTileVisibility());
+    sipm.SetPDE(GetPDE());
+
+    sipm.Construct();
+    sipm_dim = sipm.GetDimensions();
+  }
 
   G4double offset_x = 0.95 * mm;
   G4double offset_y = 0.55 * mm;
 
   // SiPMs
-  G4LogicalVolume *sipm_logic = sipm_->GetLogicalVolume();
+  G4LogicalVolume* sipm_logic;
+
+  if (GetSiPMCells()) {
+    sipm_logic = sipm_cells.GetLogicalVolume();
+  } else {
+    sipm_logic = sipm.GetLogicalVolume();
+  }
 
   G4int copy_no;
   G4String vol_name;

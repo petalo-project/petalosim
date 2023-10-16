@@ -44,8 +44,6 @@ private:
   G4double lxe_thick_;
   G4double quartz_rindex_;
   G4double quartz_thick_;
-
-  SiPMHamamatsuVUV *sipm_;
 };
 
 #endif

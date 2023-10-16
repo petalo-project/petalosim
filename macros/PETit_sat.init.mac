@@ -1,0 +1,22 @@
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics PetaloPhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+### GEOMETRY
+/nexus/RegisterGeometry PETitFBK
+
+### GENERATOR
+/nexus/RegisterGenerator IonGenerator
+
+### ACTIONS
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction PetaloEventAction
+/nexus/RegisterTrackingAction PetaloTrackingAction
+
+/nexus/RegisterPersistencyManager PetaloPersistencyManager
+
+/nexus/RegisterMacro macros/PETit_sat.config.mac

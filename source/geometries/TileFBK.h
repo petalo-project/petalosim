@@ -14,7 +14,6 @@
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-class SiPMFBKVUV;
 
 using namespace nexus;
 
@@ -46,8 +45,6 @@ using namespace nexus;
     G4int n_rows_, n_columns_;
 
     G4int sipm_naming_order_;
-
-    SiPMFBKVUV* sipm_;
 
   };
 
