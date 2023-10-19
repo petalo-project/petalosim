@@ -36,8 +36,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
 using namespace nexus;
 using namespace CLHEP;
 
@@ -167,7 +165,8 @@ void PetaloPersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
       std::string key, value;
       std::getline(init_read, key, ' ');
       std::getline(init_read, value);
-      if ((key == "/nexus/RegisterTrackingAction") && (value == "OpticalTrackingAction")) {
+      if ((key == "/nexus/RegisterTrackingAction") &&
+          (value == "OpticalTrackingAction")) {
         save_opt_phot = true;
         break;
       }
@@ -311,7 +310,8 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
         std::find(sns_posvec_.begin(), sns_posvec_.end(), s_id);
       if (pos_it == sns_posvec_.end()) {
         h5writer_->WriteSensorPosInfo((unsigned int)s_id, sdname.c_str(),
-                                      (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+                                      (float)xyz.x(), (float)xyz.y(),
+                                      (float)xyz.z());
         sns_posvec_.push_back(s_id);
       }
       // Save also individual photons
@@ -358,7 +358,8 @@ void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       unsigned int time_bin = (unsigned int)((*it).first/wire_bin_size_+0.5);
       unsigned int charge   = (unsigned int)((*it).second+0.5);
-      h5writer_->WriteChargeDataInfo(nevt_, (unsigned int)hit->GetSensorID(), time_bin, charge);
+      h5writer_->WriteChargeDataInfo(nevt_, (unsigned int)hit->GetSensorID(),
+                                     time_bin, charge);
     }
 
 
@@ -367,8 +368,9 @@ void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
     if (pos_it == charge_posvec_.end()) {
       std::string sdname = hits->GetSDname();
       G4ThreeVector xyz  = hit->GetPosition();
-      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetSensorID(), sdname.c_str(),
-                                    (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetSensorID(),
+                                    sdname.c_str(), (float)xyz.x(),
+                                    (float)xyz.y(), (float)xyz.z());
       charge_posvec_.push_back(hit->GetSensorID());
     }
   }

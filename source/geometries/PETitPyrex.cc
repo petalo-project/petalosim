@@ -82,7 +82,7 @@ PETitPyrex::PETitPyrex() : GeometryBase(),
                         "True if using Hamamatsu SiPMs not sensitive to VUV");
 
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
-                                "Set generation vertex.");
+                                "Generation vertex.");
 
   G4GenericMessenger::Command &press_cmd =
     msg_->DeclareProperty("pressure", pressure_,

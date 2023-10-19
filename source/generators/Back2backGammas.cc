@@ -24,9 +24,6 @@
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
 
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Units/PhysicalConstants.h"
-
 using namespace CLHEP;
 using namespace nexus;
 
@@ -38,19 +35,19 @@ Back2backGammas::Back2backGammas(): geom_(0), costheta_min_(-1.),
 {
   //G4cout << "Limits = " << std::numeric_limits<unsigned int>::max() << G4endl;
   msg_ = new G4GenericMessenger(this, "/Generator/Back2back/",
-                                "Control commands of 511-keV back to back gammas generator.");
+    "Control commands of 511-keV back to back gammas generator.");
 
   msg_->DeclareProperty("region", region_,
-                        "Set the region of the geometry where the vertex will be generated.");
+    "Region of the geometry where the vertex is generated.");
 
   msg_->DeclareProperty("min_costheta", costheta_min_,
-                        "Set minimum cosTheta for the direction of the particle.");
+                        "Minimum cosTheta for the direction of the particle.");
   msg_->DeclareProperty("max_costheta", costheta_max_,
-                        "Set maximum cosTheta for the direction of the particle.");
+                        "Maximum cosTheta for the direction of the particle.");
   msg_->DeclareProperty("min_phi", phi_min_,
-                        "Set minimum phi for the direction of the particle.");
+                        "Minimum phi for the direction of the particle.");
   msg_->DeclareProperty("max_phi", phi_max_,
-                        "Set maximum phi for the direction of the particle.");
+                        "Maximum phi for the direction of the particle.");
 
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -66,10 +63,11 @@ void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   G4ParticleDefinition* gamma =
     G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
-  auto dir1 = (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
-               RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_):
-               G4RandomDirection();
-
+  auto dir1 = (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. ||
+               phi_max_ != 2.*pi) ?
+    RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_):
+    G4RandomDirection();
+  
   auto [dir2, e1, e2] = CalculateNonCollinearKinematicInBodyTissue(dir1);
 
   auto p1 = e1 * dir1;

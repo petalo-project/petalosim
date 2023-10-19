@@ -82,12 +82,12 @@ void PetAnalysisEventAction::EndOfEventAction(const G4Event *event)
     G4double edep = 0.;
     G4int n_opt_photons = 0;
 
-    G4TrajectoryContainer *tc = event->GetTrajectoryContainer();
+    G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
     if (tc)
     {
       for (unsigned int i = 0; i < tc->size(); ++i)
       {
-        Trajectory *trj = dynamic_cast<Trajectory *>((*tc)[i]);
+        Trajectory* trj = dynamic_cast<Trajectory *>((*tc)[i]);
         edep += trj->GetEnergyDeposit();
         // Draw tracks in visual mode
         if (G4VVisManager::GetConcreteInstance())
@@ -100,7 +100,7 @@ void PetAnalysisEventAction::EndOfEventAction(const G4Event *event)
       }
     }
 
-    PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
+    PetaloPersistencyManager* pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
     if (!event->IsAborted() && edep > 0)
     {

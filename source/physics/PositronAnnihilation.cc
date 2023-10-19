@@ -20,9 +20,6 @@
 #include <G4Positron.hh>
 #include <G4eeToTwoGammaModel.hh>
 
-#include <G4PhysicalConstants.hh>
-#include <G4SystemOfUnits.hh>
-
 PositronAnnihilation::PositronAnnihilation(const G4String& name)
   :  G4VEmProcess(name)
   {

@@ -16,7 +16,8 @@ hsize_t createRunType()
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (run_info_t));
   H5Tinsert (memtype, "param_key" , HOFFSET (run_info_t, param_key), strtype);
-  H5Tinsert (memtype, "param_value" , HOFFSET (run_info_t, param_value), strtype);
+  H5Tinsert (memtype, "param_value" , HOFFSET (run_info_t, param_value),
+             strtype);
   return memtype;
 }
 
@@ -24,9 +25,12 @@ hsize_t createSensorDataType()
 {
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_data_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (sns_data_t, event_id), H5T_NATIVE_INT32);
-  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_data_t, sensor_id) , H5T_NATIVE_UINT);
-  H5Tinsert (memtype, "charge" , HOFFSET (sns_data_t, charge) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "event_id", HOFFSET (sns_data_t, event_id),
+             H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_data_t, sensor_id),
+             H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "charge" , HOFFSET (sns_data_t, charge),
+             H5T_NATIVE_UINT);
   return memtype;
 }
 
@@ -34,10 +38,13 @@ hsize_t createSensorTofType()
 {
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_tof_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (sns_tof_t, event_id), H5T_NATIVE_INT32);
-  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_tof_t, sensor_id) , H5T_NATIVE_INT);
-  H5Tinsert (memtype, "time" , HOFFSET (sns_tof_t, time) , H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "track_id" , HOFFSET (sns_tof_t, track_id) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "event_id", HOFFSET (sns_tof_t, event_id),
+             H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_tof_t, sensor_id),
+             H5T_NATIVE_INT);
+  H5Tinsert (memtype, "time" , HOFFSET (sns_tof_t, time), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "track_id" , HOFFSET (sns_tof_t, track_id),
+             H5T_NATIVE_UINT);
   return memtype;
 }
 
@@ -51,14 +58,16 @@ hsize_t createHitInfoType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (hit_info_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (hit_info_t, event_id), H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "event_id", HOFFSET (hit_info_t, event_id),
+             H5T_NATIVE_INT32);
   H5Tinsert (memtype, "x",HOFFSET (hit_info_t, x), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "y",HOFFSET (hit_info_t, y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "z",HOFFSET (hit_info_t, z), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "time",HOFFSET (hit_info_t, time), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "energy",HOFFSET (hit_info_t, energy), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "label",HOFFSET (hit_info_t, label),strtype);
-  H5Tinsert (memtype, "particle_id",HOFFSET (hit_info_t, particle_id),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_id",HOFFSET (hit_info_t, particle_id),
+             H5T_NATIVE_INT);
   return memtype;
 }
 
@@ -75,31 +84,62 @@ hsize_t createParticleInfoType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (particle_info_t, event_id), H5T_NATIVE_INT32);
-  H5Tinsert (memtype, "particle_id",HOFFSET (particle_info_t, particle_id),H5T_NATIVE_INT);
-  H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),strtype);
-  H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
-  H5Tinsert (memtype, "mother_id",HOFFSET (particle_info_t, mother_id),H5T_NATIVE_INT);
-  H5Tinsert (memtype, "initial_x",HOFFSET (particle_info_t, initial_x), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_y",HOFFSET (particle_info_t, initial_y), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_z",HOFFSET (particle_info_t, initial_z), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_t",HOFFSET (particle_info_t, initial_t), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_x",HOFFSET (particle_info_t, final_x), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_y",HOFFSET (particle_info_t, final_y), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_z",HOFFSET (particle_info_t, final_z), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_t",HOFFSET (particle_info_t, final_t), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_volume",HOFFSET (particle_info_t, initial_volume),strtype);
-  H5Tinsert (memtype, "final_volume",HOFFSET (particle_info_t, final_volume),strtype);
-  H5Tinsert (memtype, "initial_momentum_x",HOFFSET (particle_info_t, initial_momentum_x), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_momentum_y",HOFFSET (particle_info_t, initial_momentum_y), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_momentum_z",HOFFSET (particle_info_t, initial_momentum_z), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_momentum_x", HOFFSET (particle_info_t, final_momentum_x), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_momentum_y", HOFFSET (particle_info_t, final_momentum_y), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_momentum_z", HOFFSET (particle_info_t, final_momentum_z), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "kin_energy",HOFFSET (particle_info_t, kin_energy), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "length", HOFFSET (particle_info_t, length), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "creator_proc",HOFFSET (particle_info_t, creator_proc), strtype);
-  H5Tinsert (memtype, "final_proc", HOFFSET (particle_info_t, final_proc), strtype);
+  H5Tinsert (memtype, "event_id", HOFFSET (particle_info_t, event_id),
+             H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "particle_id",HOFFSET (particle_info_t, particle_id),
+             H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),
+             strtype);
+  H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary),
+             H5T_NATIVE_CHAR);
+  H5Tinsert (memtype, "mother_id",HOFFSET (particle_info_t, mother_id),
+             H5T_NATIVE_INT);
+  H5Tinsert (memtype, "initial_x",HOFFSET (particle_info_t, initial_x),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_y",HOFFSET (particle_info_t, initial_y),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_z",HOFFSET (particle_info_t, initial_z),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_t",HOFFSET (particle_info_t, initial_t),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_x",HOFFSET (particle_info_t, final_x),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_y",HOFFSET (particle_info_t, final_y),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_z",HOFFSET (particle_info_t, final_z),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_t",HOFFSET (particle_info_t, final_t),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_volume", HOFFSET (particle_info_t,
+                                                 initial_volume), strtype);
+  H5Tinsert (memtype, "final_volume", HOFFSET (particle_info_t, final_volume),
+             strtype);
+  H5Tinsert (memtype, "initial_momentum_x", HOFFSET (particle_info_t,
+                                                     initial_momentum_x),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_momentum_y", HOFFSET (particle_info_t,
+                                                     initial_momentum_y),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_momentum_z", HOFFSET (particle_info_t,
+                                                     initial_momentum_z),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_momentum_x", HOFFSET (particle_info_t,
+                                                   final_momentum_x),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_momentum_y", HOFFSET (particle_info_t,
+                                                   final_momentum_y),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_momentum_z", HOFFSET (particle_info_t,
+                                                   final_momentum_z),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "kin_energy",HOFFSET (particle_info_t, kin_energy),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "length", HOFFSET (particle_info_t, length),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "creator_proc",HOFFSET (particle_info_t, creator_proc),
+             strtype);
+  H5Tinsert (memtype, "final_proc", HOFFSET (particle_info_t, final_proc),
+             strtype);
   return memtype;
 }
 
@@ -110,7 +150,8 @@ hsize_t createSensorPosType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_pos_t));
-  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_pos_t, sensor_id) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_pos_t, sensor_id),
+             H5T_NATIVE_UINT);
   H5Tinsert (memtype, "sensor_name", HOFFSET (sns_pos_t, sensor_name), strtype);
   H5Tinsert (memtype, "x" , HOFFSET (sns_pos_t, x) , H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "y" , HOFFSET (sns_pos_t, y) , H5T_NATIVE_FLOAT);
@@ -128,19 +169,32 @@ hsize_t createStepType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof(step_info_t));
-  H5Tinsert (memtype, "event_id"      , HOFFSET(step_info_t, event_id      ), H5T_NATIVE_INT32);
-  H5Tinsert (memtype, "particle_id"   , HOFFSET(step_info_t, particle_id   ), H5T_NATIVE_INT  );
-  H5Tinsert (memtype, "particle_name" , HOFFSET(step_info_t, particle_name ), strtype         );
-  H5Tinsert (memtype, "step_id"       , HOFFSET(step_info_t, step_id       ), H5T_NATIVE_INT  );
-  H5Tinsert (memtype, "initial_volume", HOFFSET(step_info_t, initial_volume), proc_strtype    );
-  H5Tinsert (memtype, "final_volume"  , HOFFSET(step_info_t, final_volume  ), proc_strtype    );
-  H5Tinsert (memtype, "proc_name"     , HOFFSET(step_info_t, proc_name     ), proc_strtype    );
-  H5Tinsert (memtype, "initial_x"     , HOFFSET(step_info_t, initial_x     ), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_y"     , HOFFSET(step_info_t, initial_y     ), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_z"     , HOFFSET(step_info_t, initial_z     ), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_x"       , HOFFSET(step_info_t, final_x       ), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_y"       , HOFFSET(step_info_t, final_y       ), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "final_z"       , HOFFSET(step_info_t, final_z       ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "event_id", HOFFSET(step_info_t, event_id),
+             H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "particle_id", HOFFSET(step_info_t, particle_id),
+             H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_name", HOFFSET(step_info_t, particle_name),
+             strtype);
+  H5Tinsert (memtype, "step_id", HOFFSET(step_info_t, step_id),
+             H5T_NATIVE_INT);
+  H5Tinsert (memtype, "initial_volume", HOFFSET(step_info_t, initial_volume),
+             proc_strtype);
+  H5Tinsert (memtype, "final_volume", HOFFSET(step_info_t, final_volume),
+             proc_strtype);
+  H5Tinsert (memtype, "proc_name", HOFFSET(step_info_t, proc_name),
+             proc_strtype);
+  H5Tinsert (memtype, "initial_x", HOFFSET(step_info_t, initial_x),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_y", HOFFSET(step_info_t, initial_y),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_z", HOFFSET(step_info_t, initial_z),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_x", HOFFSET(step_info_t, final_x),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_y", HOFFSET(step_info_t, final_y),
+             H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_z", HOFFSET(step_info_t, final_z),
+             H5T_NATIVE_FLOAT);
   return memtype;
 }
 
@@ -148,10 +202,14 @@ hsize_t createChargeDataType()
 {
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (charge_data_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (charge_data_t, event_id), H5T_NATIVE_INT32);
-  H5Tinsert (memtype, "sensor_id" , HOFFSET (charge_data_t, sensor_id) , H5T_NATIVE_UINT);
-  H5Tinsert (memtype, "time_bin" , HOFFSET (charge_data_t, time_bin) , H5T_NATIVE_UINT);
-  H5Tinsert (memtype, "charge" , HOFFSET (charge_data_t, charge) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "event_id", HOFFSET (charge_data_t, event_id),
+             H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "sensor_id", HOFFSET (charge_data_t, sensor_id),
+             H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "time_bin", HOFFSET (charge_data_t, time_bin),
+             H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "charge", HOFFSET (charge_data_t, charge),
+             H5T_NATIVE_UINT);
   return memtype;
 }
 
@@ -190,7 +248,8 @@ hid_t createGroup(hid_t file, std::string& groupName)
   return wfgroup;
 }
 
-void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype,
+              hsize_t counter)
 {
   hid_t memspace, file_space;
   hsize_t dims[1] = {1};
@@ -209,7 +268,8 @@ void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter
   H5Sclose(memspace);
 }
 
-void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype,
+                  hsize_t counter)
 {
   hid_t memspace, file_space;
   //Create memspace for one more row
@@ -231,7 +291,8 @@ void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t cou
   H5Sclose(memspace);
 }
 
-void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype,
+                 hsize_t counter)
 {
   hid_t memspace, file_space;
   //Create memspace for one more SiPM row
@@ -254,7 +315,8 @@ void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype, hsize_t counte
 }
 
 
-void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype,
+              hsize_t counter)
 {
   hid_t memspace, file_space;
 
@@ -274,7 +336,8 @@ void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter
   H5Sclose(memspace);
 }
 
-void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeParticle(particle_info_t* particleInfo, hid_t dataset,
+                   hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
 
@@ -295,7 +358,8 @@ void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, 
 }
 
 
-void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype,
+                 hsize_t counter)
 {
   hid_t memspace, file_space;
   //Create memspace for one more row
@@ -337,7 +401,8 @@ void writeStep(step_info_t* step, hid_t dataset, hid_t memtype, hsize_t counter)
   H5Sclose(memspace);
 }
 
-void writeChargeData(charge_data_t* chargeData, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeChargeData(charge_data_t* chargeData, hid_t dataset, hid_t memtype,
+                     hsize_t counter)
 {
   hid_t memspace, file_space;
   //Create memspace for one more row

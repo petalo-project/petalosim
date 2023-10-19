@@ -87,7 +87,8 @@ void PetaloPhysics::ConstructProcess()
 
   // Remove Geant4 annihilation process
   G4VProcess* eplusAnnihilation =
-    G4ProcessTable::GetProcessTable()->FindProcess("annihil", G4Positron::Definition());
+    G4ProcessTable::GetProcessTable()->FindProcess("annihil",
+                                                   G4Positron::Definition());
   pmanager->RemoveProcess(eplusAnnihilation);
   // Add our custom-made process
   pos_annihil_ = new PositronAnnihilation();
@@ -98,7 +99,7 @@ void PetaloPhysics::ConstructProcess()
   if (risetime_)
   {
     pmanager = G4Electron::Definition()->GetProcessManager();
-    G4Scintillation *theScintillationProcess =
+    G4Scintillation* theScintillationProcess =
         (G4Scintillation *)G4ProcessTable::GetProcessTable()->FindProcess("Scintillation",
                                                                           G4Electron::Definition());
     theScintillationProcess->SetFiniteRiseTime(true);
@@ -107,8 +108,9 @@ void PetaloPhysics::ConstructProcess()
   if (noCompt_)
   {
     pmanager = G4Gamma::Definition()->GetProcessManager();
-    G4VProcess *cs =
-      G4ProcessTable::GetProcessTable()->FindProcess("compt", G4Gamma::Definition());
+    G4VProcess* cs =
+      G4ProcessTable::GetProcessTable()->FindProcess("compt",
+                                                     G4Gamma::Definition());
     pmanager->RemoveProcess(cs);
   }
 

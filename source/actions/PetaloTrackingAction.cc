@@ -82,6 +82,7 @@ void PetaloTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalMomentum(track->GetMomentum());
 
   // Record last process of the track
-  G4String proc_name = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+  G4String proc_name =
+    track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   trj->SetFinalProcess(proc_name);
 }

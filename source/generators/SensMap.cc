@@ -24,8 +24,6 @@
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
-#include "CLHEP/Units/SystemOfUnits.h"
-
 using namespace nexus;
 using namespace CLHEP;
 
@@ -38,7 +36,7 @@ SensMap::SensMap():
     "Control commands of the sensitivity map primary generator.");
 
     msg_->DeclareProperty("num_gammas", num_gammas_,
-			  "Set number of back-to-back gammas to be generated.");
+			  "Number of back-to-back gammas to be generated.");
 
   // Retrieve pointer to detector geometry from the run manager
   DetectorConstruction* detconst =

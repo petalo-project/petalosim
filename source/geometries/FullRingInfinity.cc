@@ -83,7 +83,7 @@ FullRingInfinity::FullRingInfinity() :
 {
   // Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
-                                "Control commands of geometry FullRingInfinity.");
+    "Control commands of geometry FullRingInfinity.");
   G4GenericMessenger::Command &depth_cmd =
       msg_->DeclareProperty("depth", lxe_depth_, "Dimension in DOI");
   depth_cmd.SetUnitCategory("Length");
@@ -97,16 +97,21 @@ FullRingInfinity::FullRingInfinity() :
   pitch_cmd.SetRange("pitch>0.");
 
   G4GenericMessenger::Command &inner_r_cmd =
-      msg_->DeclareProperty("inner_radius", inner_radius_, "Inner radius of ring");
+      msg_->DeclareProperty("inner_radius", inner_radius_,
+                            "Inner radius of ring");
   inner_r_cmd.SetUnitCategory("Length");
   inner_r_cmd.SetParameterName("inner_radius", false);
   inner_r_cmd.SetRange("inner_radius>0.");
 
   msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
-  msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
-  msg_->DeclareProperty("charge_detector", charge_det_, "True if charge is detected");
-  msg_->DeclareProperty("separators", separators_, "True if separator panels are present");
-  msg_->DeclareProperty("phantom", phantom_, "True if Jaszczak phantom is used");
+  msg_->DeclareProperty("instrumented_faces", instr_faces_,
+                        "Number of instrumented faces");
+  msg_->DeclareProperty("charge_detector", charge_det_,
+                        "True if charge is detected");
+  msg_->DeclareProperty("separators", separators_,
+                        "True if separator panels are present");
+  msg_->DeclareProperty("phantom", phantom_,
+                        "True if Jaszczak phantom is used");
 
   G4GenericMessenger::Command& wire_pitch_cmd =
       msg_->DeclareProperty("wire_pitch", wire_pitch_, "Pitch of wires");
@@ -115,7 +120,8 @@ FullRingInfinity::FullRingInfinity() :
   wire_pitch_cmd.SetRange("wire_pitch>0.");
 
   G4GenericMessenger::Command& wire_time_cmd =
-      msg_->DeclareProperty("wire_time_bin", wire_time_bin_, "Time binning of wires");
+      msg_->DeclareProperty("wire_time_bin", wire_time_bin_,
+                            "Time binning of wires");
   wire_time_cmd.SetUnitCategory("Time");
   wire_time_cmd.SetParameterName("wire_time_bin", false);
   wire_time_cmd.SetRange("wire_time_bin>0.");
@@ -127,7 +133,7 @@ FullRingInfinity::FullRingInfinity() :
     "Number of teflon separators in the phi direction");
 
   msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
-                                "Set generation vertex.");
+                                "Generation vertex.");
 
   // Read in the point distribution.
   msg_->DeclareMethod("pointFile", &FullRingInfinity::BuildPointfile,
@@ -195,11 +201,12 @@ void FullRingInfinity::Construct()
 {
   // LAB. This is just a volume of air surrounding the detector
   G4double lab_size = 10. * m;
-  G4Box *lab_solid = new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
+  G4Box *lab_solid =
+    new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
   lab_logic_ =
       new G4LogicalVolume(lab_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+          G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
   lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(lab_logic_);
 
@@ -242,16 +249,22 @@ void FullRingInfinity::BuildCryostat()
     const G4double lxe_ext_radius = external_radius_ + elec_ext_space;
     const G4double lxe_width      = axial_length_ + 2.*kapton_thickn_;
 
-    const G4double lxe_container_int_radius = lxe_int_radius - lxe_container_int_thickn_;
-    const G4double lxe_container_ext_radius = lxe_ext_radius + lxe_container_ext_thickn_;
-    const G4double lxe_container_width      = lxe_width + 2.*lxe_container_ext_thickn_;
+    const G4double lxe_container_int_radius =
+      lxe_int_radius - lxe_container_int_thickn_;
+    const G4double lxe_container_ext_radius =
+      lxe_ext_radius + lxe_container_ext_thickn_;
+    const G4double lxe_container_width =
+      lxe_width + 2.*lxe_container_ext_thickn_;
 
-    const G4double vacuum_int_radius = lxe_container_int_radius - vacuum_thickn_;
-    const G4double vacuum_ext_radius = lxe_container_ext_radius + vacuum_thickn_ ;
+    const G4double vacuum_int_radius =
+      lxe_container_int_radius - vacuum_thickn_;
+    const G4double vacuum_ext_radius =
+      lxe_container_ext_radius + vacuum_thickn_ ;
 
     const G4double vessel_int_radius = vacuum_int_radius - vessel_int_thickn_;
     const G4double vessel_ext_radius = vacuum_ext_radius + vessel_ext_thickn_;
-    const G4double vessel_width      = lxe_container_width + 2.*vessel_ext_thickn_;
+    const G4double vessel_width =
+      lxe_container_width + 2.*vessel_ext_thickn_;
 
     G4Tubs* vessel_solid =
       new G4Tubs("VACUUM_VESSEL", vessel_int_radius, vessel_ext_radius,
@@ -267,7 +280,8 @@ void FullRingInfinity::BuildCryostat()
     G4Tubs* vacuum_solid =
       new G4Tubs("VACUUM", vacuum_int_radius, vacuum_ext_radius,
                  lxe_container_width/2., 0, twopi);
-    G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    G4Material* vacuum =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     G4LogicalVolume* vacuum_logic =
           new G4LogicalVolume(vacuum_solid, vacuum, "VACUUM");
@@ -275,10 +289,11 @@ void FullRingInfinity::BuildCryostat()
 		      "VACUUM", vessel_logic, false, 0, true);
 
     G4Tubs* lxe_container_solid =
-      new G4Tubs("CONTAINER", lxe_container_int_radius, lxe_container_ext_radius,
-                 lxe_container_width/2., 0, twopi);
+      new G4Tubs("CONTAINER", lxe_container_int_radius,
+                 lxe_container_ext_radius, lxe_container_width/2., 0, twopi);
 
-    G4Material* aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    G4Material* aluminum =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
     aluminum->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     G4LogicalVolume* lxe_container_logic =
       new G4LogicalVolume(lxe_container_solid, aluminum, "CONTAINER");
@@ -379,7 +394,8 @@ void FullRingInfinity::BuildSensors()
   G4int n_sipm_int = 2 * pi * inner_radius_ / sipm_pitch_;
   if (instr_faces_ == 2)
   {
-    G4cout << "Number of sipms in inner face: " << n_sipm_int * n_sipm_rows_ << G4endl;
+    G4cout << "Number of sipms in inner face: " << n_sipm_int * n_sipm_rows_
+           << G4endl;
   }
   G4double step   = 2. * pi / n_sipm_int;
   G4double radius = inner_radius_ + sipm_dim_.z() / 2.;
@@ -422,7 +438,8 @@ void FullRingInfinity::BuildSensors()
   //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
   //G4double offset = 0.1 * mm;
   n_sipm_ext_ = 2 * pi * external_radius_ / sipm_pitch_;
-  G4cout << "Number of sipms in external face: " << n_sipm_ext_ * n_sipm_rows_ << G4endl;
+  G4cout << "Number of sipms in external face: " << n_sipm_ext_ * n_sipm_rows_
+         << G4endl;
   //radius = external_radius_ - sipm_dim_.z() / 2. - offset_;
   radius = inner_radius_ + lxe_depth_ + sipm_dim_.z()/2.;
 
@@ -495,7 +512,8 @@ void FullRingInfinity::BuildWires()
   wire_col.SetForceSolid(true);
   chdet_logic->SetVisAttributes(wire_col);
 
-  G4double chdet_radius = inner_radius_ + lxe_depth_ - chdet_thickn_ / 2. - chdet_offset_;
+  G4double chdet_radius =
+    inner_radius_ + lxe_depth_ - chdet_thickn_ / 2. - chdet_offset_;
   G4int n_wires = 2. * pi * chdet_radius / wire_pitch_;
   G4cout << "Number of wires: " << n_wires << G4endl;
 
@@ -516,14 +534,16 @@ void FullRingInfinity::BuildWires()
     chdet_copy_no = chdet_copy_no + 1;
     chdet_vol_name = "WIRE_" + std::to_string(chdet_copy_no);
     new G4PVPlacement(G4Transform3D(rot, chdet_position), chdet_logic,
-                      chdet_vol_name, active_logic_, false, chdet_copy_no, false);
+                      chdet_vol_name, active_logic_, false, chdet_copy_no,
+                      false);
   }
 }
 
 void FullRingInfinity::BuildSeparators()
 {
   // Separate LXe volume in smaller areas with teflon panels
-  G4Material* teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  G4Material* teflon =
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
   teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   //G4double arc_sep_phi = 2 * pi * (inner_radius_ + lxe_depth_) / n_sep_phi_;
@@ -545,8 +565,8 @@ void FullRingInfinity::BuildSeparators()
   G4double union_r = inner_radius_ + sep_size/2.;
   G4double union_z = axial_length_/2. - segm_sep_z;
   G4ThreeVector union_pos(0, union_r, union_z);
-  G4UnionSolid* sep_solid = new G4UnionSolid("SEPARATOR", sep_z_solid, sep_phi_solid,
-                                             0, union_pos);
+  G4UnionSolid* sep_solid =
+    new G4UnionSolid("SEPARATOR", sep_z_solid, sep_phi_solid, 0, union_pos);
 
   G4RotationMatrix union_rot;
 
@@ -589,7 +609,8 @@ void FullRingInfinity::BuildPhantom()
   jas_phantom_ = new JaszczakPhantom();
   jas_phantom_->Construct();
   G4LogicalVolume* phantom_logic = jas_phantom_->GetLogicalVolume();
-  new G4PVPlacement(0, G4ThreeVector(0, 0, 0), phantom_logic, "JASZCZAK", lab_logic_, false, 0, true);
+  new G4PVPlacement(0, G4ThreeVector(0, 0, 0), phantom_logic, "JASZCZAK",
+                    lab_logic_, false, 0, true);
   // phantom_diam_ = 6. * cm;
 
   // G4Orb *phantom_solid = new G4Orb("PHANTOM", phantom_diam_ / 2.);
@@ -641,7 +662,8 @@ G4ThreeVector FullRingInfinity::GenerateVertex(const G4String &region) const
     }
     catch (const std::out_of_range &oor)
     {
-      G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalErrorInArgument, "Sensitivity point out of range.");
+      G4Exception("[FullRingInfinity]", "GenerateVertex()",
+                  FatalErrorInArgument, "Sensitivity point out of range.");
     }
   }
   else
@@ -652,7 +674,8 @@ G4ThreeVector FullRingInfinity::GenerateVertex(const G4String &region) const
   return vertex;
 }
 
-G4int FullRingInfinity::binarySearchPt(G4int low, G4int high, G4double rnd) const
+G4int FullRingInfinity::binarySearchPt(G4int low,
+                                       G4int high, G4double rnd) const
 {
 
   // Error
@@ -684,7 +707,8 @@ G4ThreeVector FullRingInfinity::RandomPointVertex() const
   //G4int jpt = 0;
   //while(pt_[jpt] < rnd) jpt++;
   //jpt -= 1;
-  //if(ipt != jpt) std::cout << "WARNING: algorithms don't match i = " << ipt << ", j = " << jpt << "***" << std::endl;
+  //if(ipt != jpt) std::cout << "WARNING: algorithms don't match i = " << ipt
+  // << ", j = " << jpt << "***" << std::endl;
 
   // Compute the vertex.
   G4int nx = ipt / (pt_Ny_ * pt_Nz_);
@@ -698,7 +722,8 @@ G4ThreeVector FullRingInfinity::RandomPointVertex() const
   G4double yrnd = G4UniformRand() - 0.5;
   G4double zrnd = G4UniformRand() - 0.5;
 
-  //std::cout << "Generated at point (" << x << ", " << y << ", " << z << "), index " << ipt << std::endl;
+  //std::cout << "Generated at point (" << x << ", " << y << ", " << z << "),
+  // index " << ipt << std::endl;
   return G4ThreeVector(x + xrnd, y + yrnd, z + zrnd);
 }
 
@@ -738,10 +763,10 @@ void FullRingInfinity::BuildPointfile(G4String pointFile)
 
   is.close();
 
-  std::cout << "Read distribution of (" << pt_Nx_ << ", " << pt_Ny_ << ", " << pt_Nz_
-            << "); Len (" << pt_Lx_ << ", " << pt_Ly_ << ", " << pt_Lz_
-            << "); with total elements = " << length << ", and first two = "
-            << pt_[0] << " , " << pt_[1] << std::endl;
+  std::cout << "Read distribution of (" << pt_Nx_ << ", " << pt_Ny_ << ", "
+            << pt_Nz_ << "); Len (" << pt_Lx_ << ", " << pt_Ly_ << ", "
+            << pt_Lz_ << "); with total elements = " << length
+            << ", and first two = " << pt_[0] << " , " << pt_[1] << std::endl;
 }
 
 void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
@@ -769,6 +794,6 @@ void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
       }
     }
   }
-  G4cout << "Number of points in sensitivity map = " << sensitivity_vertices_.size()
-         << G4endl;
+  G4cout << "Number of points in sensitivity map = "
+         << sensitivity_vertices_.size() << G4endl;
 }
