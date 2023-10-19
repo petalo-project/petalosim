@@ -12,9 +12,9 @@
 #include "SiPMHamamatsuVUV.h"
 #include "SiPMCells.h"
 #include "MicroCellHmtsuVUV.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/MaterialsList.h"
 #include "nexus/OpticalMaterialProperties.h"
 
@@ -55,16 +55,16 @@ void TileHamamatsuVUV::Construct()
 {
   SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));
 
-  G4Box *tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2., tile_z_/2);
+  G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2., tile_z_/2);
 
-  G4Material *fr4 = petmaterials::FR4();
-  G4LogicalVolume *tile_logic =
+  G4Material* fr4 = petmaterials::FR4();
+  G4LogicalVolume* tile_logic =
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
   this->SetLogicalVolume(tile_logic);
 
   // OPTICAL SURFACE FOR REFLECTION
-  G4OpticalSurface *fr4_opsurf =
+  G4OpticalSurface* fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
   fr4_opsurf->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(GetTileReflectivity()));
 
@@ -100,9 +100,9 @@ void TileHamamatsuVUV::Construct()
   G4double lxe_x = tile_x_ - offset_x;
   G4double lxe_y = tile_y_ - offset_y;
   G4double lxe_z = lxe_thick_ + quartz_thick_;
-  G4Box *lxe_solid = new G4Box("TILE_LXE", lxe_x/2., lxe_y/2., lxe_z/2.);
+  G4Box* lxe_solid = new G4Box("TILE_LXE", lxe_x/2., lxe_y/2., lxe_z/2.);
 
-  G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+  G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
   LXe->SetMaterialPropertiesTable(opticalprops::LXe());
   G4LogicalVolume *lxe_logic =
       new G4LogicalVolume(lxe_solid, LXe, "TILE_LXE");
@@ -115,13 +115,13 @@ void TileHamamatsuVUV::Construct()
   G4double quartz_x = tile_x_ - offset_x;
   G4double quartz_y = tile_y_ - offset_y;
 
-  G4Box *quartz_solid =
+  G4Box* quartz_solid =
     new G4Box("TILE_QUARTZ_WINDOW", quartz_x/2., quartz_y/2., quartz_thick_/2);
 
   G4Material *quartz = materials::FusedSilica();
   quartz->SetMaterialPropertiesTable(petopticalprops::FakeGenericMaterial(quartz_rindex_));
 
-  G4LogicalVolume *quartz_logic =
+  G4LogicalVolume* quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");
 
   G4double zpos_quartz = (lxe_thick_ + quartz_thick_)/2. - quartz_thick_/2.;
@@ -129,7 +129,7 @@ void TileHamamatsuVUV::Construct()
                     "TILE_QUARTZ_WINDOW", lxe_logic, false, 0, false);
 
   // The real LXe region as active
-  G4Box *active_solid =
+  G4Box* active_solid =
       new G4Box("ACTIVE_LXE_TILE", lxe_x / 2., lxe_y / 2., lxe_thick_ / 2.);
   G4LogicalVolume *active_logic =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE_LXE_TILE");
@@ -139,7 +139,7 @@ void TileHamamatsuVUV::Construct()
                     "ACTIVE_LXE_TILE", lxe_logic, false, 0, false);
 
   // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE_LXE_TILE");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE_LXE_TILE");
   active_logic->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
@@ -156,12 +156,16 @@ void TileHamamatsuVUV::Construct()
     for (int i = 0; i < n_columns_; i++)
     {
       G4int copy_no = (j + 1) * 10 + i + 1;
-      G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + i * sipm_pitch_;
-      G4double y_pos = tile_y_/2. - offset_y - sipm_dim.y()/2. - j * sipm_pitch_;
-      G4double z_pos = tile_z_/2. - quartz_thick_ - lxe_thick_ - sipm_dim.z()/2.;
+      G4double x_pos =
+        -tile_x_/2. + offset_x + sipm_dim.x()/2. + i * sipm_pitch_;
+      G4double y_pos =
+        tile_y_/2. - offset_y - sipm_dim.y()/2. - j * sipm_pitch_;
+      G4double z_pos =
+        tile_z_/2. - quartz_thick_ - lxe_thick_ - sipm_dim.z()/2.;
       G4String vol_name = "SiPMHmtsuVUV_" + std::to_string(copy_no);
       new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
-                        sipm_logic, vol_name, tile_logic, false, copy_no, false);
+                        sipm_logic, vol_name, tile_logic, false,
+                        copy_no, false);
     }
   }
 

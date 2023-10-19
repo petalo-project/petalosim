@@ -15,9 +15,9 @@
 #include "PetOpticalMaterialProperties.h"
 #include "TeflonBlockHamamatsu.h"
 #include "PetaloUtils.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/SpherePointSampler.h"
 #include "nexus/MaterialsList.h"
@@ -103,9 +103,9 @@ void PETitPyrex::Construct()
 {
   // Volume of air surrounding the detector //
   G4double lab_size = 1. * m;
-  G4Box *lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
+  G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
 
-  G4Material *air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+  G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   lab_logic_ = new G4LogicalVolume(lab_solid, air, "LAB");
   lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(lab_logic_);
@@ -120,7 +120,7 @@ void PETitPyrex::BuildBox()
   LXe->SetMaterialPropertiesTable(petopticalprops::LXe(pressure_));
 
   // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
 

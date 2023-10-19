@@ -11,8 +11,8 @@
 #include "SiPMpetVUV.h"
 #include "PetPlainDice.h"
 #include "PetOpticalMaterialProperties.h"
+#include "PetIonizationSD.h"
 
-#include "nexus/IonizationSD.h"
 #include "nexus/BoxPointSampler.h"
 #include "nexus/Visibilities.h"
 #include "nexus/OpticalMaterialProperties.h"
@@ -189,7 +189,7 @@ void PetLXeCell::BuildActive()
                     "ACTIVE_LXE", lXe_logic_, false, 0, true);
 
   // Set the ACTIVE volume as an ionization sensitive active
-  IonizationSD *ionisd = new IonizationSD("/PETALX/ACTIVE_LXe");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALX/ACTIVE_LXe");
   active_logic_->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
@@ -257,7 +257,7 @@ void PetLXeCell::BuildSiPMPlane()
     }
   }
 
-  G4LogicalVolume *pdb_logic = pdb_->GetLogicalVolume();
+  G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
 
   G4double displ = xy_size_ / 2. + pdb_z_ / 2.;
   G4double displz = lXe_size_z_ / 2. - pdb_z_ - z_size_ / 2.;

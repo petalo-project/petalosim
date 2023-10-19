@@ -11,7 +11,6 @@
 #include "PetMaterialsList.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

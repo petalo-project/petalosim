@@ -12,7 +12,6 @@
 #include "SiPMFBKVUV.h"
 #include "SiPMCells.h"
 
-#include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
 
 #include <G4GenericMessenger.hh>

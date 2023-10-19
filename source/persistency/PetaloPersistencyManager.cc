@@ -12,6 +12,7 @@
 #include "ToFSD.h"
 #include "ChargeSD.h"
 #include "PetSaveAllSteppingAction.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
@@ -241,7 +242,7 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
     // Fetch collection using the id number
     G4VHitsCollection* hits = hce->GetHC(hcid);
 
-    if (hcname == IonizationSD::GetCollectionUniqueName()) {
+    if (hcname == PetIonizationSD::GetCollectionUniqueName()) {
       if (sns_only_ == false) {
 	StoreIonizationHits(hits);
       }

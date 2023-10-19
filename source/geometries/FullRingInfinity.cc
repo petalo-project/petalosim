@@ -10,11 +10,11 @@
 #include "FullRingInfinity.h"
 #include "SiPMpetVUV.h"
 #include "PetOpticalMaterialProperties.h"
+#include "PetIonizationSD.h"
 #include "ChargeSD.h"
 #include "JaszczakPhantom.h"
 
 #include "nexus/SpherePointSampler.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/OpticalMaterialProperties.h"
@@ -307,7 +307,7 @@ void FullRingInfinity::BuildCryostat()
                       "ACTIVE", LXe_logic_, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive det
-    IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
+    PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
     active_logic_->SetSensitiveDetector(ionisd);
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 

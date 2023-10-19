@@ -11,11 +11,11 @@
 #include "PetMaterialsList.h"
 #include "PetOpticalMaterialProperties.h"
 #include "Na22Source.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/Visibilities.h"
 #include "nexus/OpticalMaterialProperties.h"
 #include "nexus/SpherePointSampler.h"
-#include "nexus/IonizationSD.h"
 
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>

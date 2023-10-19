@@ -13,9 +13,9 @@
 #include "PetOpticalMaterialProperties.h"
 #include "TeflonBlockHamamatsu.h"
 #include "PetaloUtils.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/SpherePointSampler.h"
 
@@ -99,7 +99,7 @@ void PETit::BuildBox()
   LXe->SetMaterialPropertiesTable(petopticalprops::LXe(pressure_));
 
   // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
 

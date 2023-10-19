@@ -11,7 +11,6 @@
 #include "PetLXeCell.h"
 #include "PetLYSOCell.h"
 
-#include "nexus/IonizationSD.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/MaterialsList.h"
 
@@ -49,7 +48,7 @@ void Lab::Construct()
   // events can be generated on the outside.
 
   G4double lab_size(2. * m);
-  G4Box *lab_solid =
+  G4Box* lab_solid =
       new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
   G4LogicalVolume *lab_logic =
@@ -63,29 +62,29 @@ void Lab::Construct()
   module_->Construct();
   G4ThreeVector cell_dim = module_->GetDimensions();
 
-  G4LogicalVolume *module_logic = module_->GetLogicalVolume();
+  G4LogicalVolume* module_logic = module_->GetLogicalVolume();
   new G4PVPlacement(0, G4ThreeVector(0., 0., -10. * cm - cell_dim.z() / 2.), module_logic, "MODULE_0",
                     lab_logic, false, 0, true);
 
   G4RotationMatrix rot;
   rot.rotateY(pi);
-  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., 10. * cm + cell_dim.z() / 2.)), module_logic,
-                    "MODULE_1", lab_logic, false, 1, true);
+  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., 10. * cm + cell_dim.z() / 2.)),
+                    module_logic, "MODULE_1", lab_logic, false, 1, true);
 
   // Build walls of stainless steel, with low thickness
   G4double det_size = cell_dim.x();
   G4double det_size_z = 1. * mm;
-  G4Box *det_solid =
+  G4Box* det_solid =
       new G4Box("WALL", det_size / 2., det_size / 2., det_size_z / 2.);
   G4Material *steel = materials::Steel();
 
-  G4LogicalVolume *det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
+  G4LogicalVolume* det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
   //   det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., -10. * cm + det_size_z / 2.), det_logic,
-                    "WALL", lab_logic, false, 0, true);
-  new G4PVPlacement(0, G4ThreeVector(0., 0., 10. * cm - det_size_z / 2.), det_logic,
-                    "WALL", lab_logic, false, 1, true);
+  new G4PVPlacement(0, G4ThreeVector(0., 0., -10. * cm + det_size_z / 2.),
+                    det_logic, "WALL", lab_logic, false, 0, true);
+  new G4PVPlacement(0, G4ThreeVector(0., 0., 10. * cm - det_size_z / 2.),
+                    det_logic, "WALL", lab_logic, false, 1, true);
 }
 
 G4ThreeVector Lab::GenerateVertex(const G4String &region) const

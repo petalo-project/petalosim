@@ -11,9 +11,9 @@
 #include "SiPMpetFBK.h"
 #include "Tile.h"
 #include "PetOpticalMaterialProperties.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/CylinderPointSampler.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/OpticalMaterialProperties.h"
@@ -141,7 +141,7 @@ void FullRingTiles::BuildCryostat()
                     "ACTIVE", LXe_logic_, false, 0, true);
 
   // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
+  PetIonizationSD *ionisd = new PetIonizationSD("/PETALO/ACTIVE");
   active_logic_->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 

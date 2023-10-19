@@ -12,7 +12,6 @@
 #include "MicroCellFBK.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/IonizationSD.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
