@@ -7,7 +7,6 @@
 // ----------------------------------------------------------------------------
 
 #include "PetaloPhysics.h"
-#include "WavelengthShifting.h"
 #include "PositronAnnihilation.h"
 #include "PetaloPersistencyManager.h"
 
@@ -60,6 +59,7 @@ PetaloPhysics::~PetaloPhysics()
 {
   delete msg_;
   delete wls_;
+  delete pos_annihil_;
 }
 
 void PetaloPhysics::ConstructParticle()
@@ -70,7 +70,7 @@ void PetaloPhysics::ConstructParticle()
 
 void PetaloPhysics::ConstructProcess()
 {
-  G4ProcessManager *pmanager = 0;
+  G4ProcessManager* pmanager = 0;
 
   // Add our own wavelength shifting process for the optical photon
   pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
@@ -80,7 +80,7 @@ void PetaloPhysics::ConstructProcess()
                 "G4OpticalPhoton without a process manager.");
   }
 
-  wls_ = new WavelengthShifting();
+  wls_ = new nexus::WavelengthShifting();
   pmanager->AddDiscreteProcess(wls_);
 
   pmanager = G4Positron::Definition()->GetProcessManager();
