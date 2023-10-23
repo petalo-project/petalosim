@@ -1,3 +1,6 @@
+tag v4_00_01 - 23 Oct 2023
+	- Fix the position of the tiles in the FBK configuration
+
 tag v4_00_00 - 16 Oct 2023
 	- Reorganize code in different classes, one for each configuration of PETit
 	- Add the possibility of simulating each microcell of SiPMs, to account for saturation
