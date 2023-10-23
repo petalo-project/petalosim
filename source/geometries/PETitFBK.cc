@@ -41,8 +41,6 @@ PETitFBK::PETitFBK() : GeometryBase(),
                        tile_vis_(1),
                        tile_refl_(0.),
                        sipm_pde_(0.3),
-                       n_tile_rows_(2),
-                       n_tile_columns_(2),
                        sipm_cells_(false),
                        specific_vertex_{},
                        max_step_size_(1. * mm),
@@ -167,41 +165,74 @@ void PETitFBK::BuildSensors()
   G4double tile_size_x = tile.GetDimensions().x();
   G4double tile_size_y = tile.GetDimensions().y();
   G4double tile_thickn = tile.GetDimensions().z();
-  G4double full_row_size = n_tile_columns_ * tile_size_x;
-  G4double full_col_size = n_tile_rows_ * tile_size_y;
+
+  G4double offset_x_left  = 0.08*mm;
+  G4double offset_x_right = 0.38*mm;
 
   G4LogicalVolume* tile_logic = tile.GetLogicalVolume();
-  G4String vol_name;
-  G4int copy_no = 1;
   G4double z_pos = end_of_teflon_z_ + 0.5*mm + tile_thickn/2.;
 
-  for (G4int j = 0; j < n_tile_rows_; j++) {
-    G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
-    for (G4int i = 0; i < n_tile_columns_; i++) {
-      G4double x_pos = -full_row_size/2. + tile_size_x/2. + i*tile_size_x;
-      vol_name = "TILE_" + std::to_string(copy_no);
+    // Place tiles one by one because they're not symmetric w.r.t (0, 0)
 
-      new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, -z_pos), tile_logic,
-                        vol_name, active_logic_, false, copy_no, false);
-      copy_no += 1;
-    }
-  }
+  /// "Detection" plane ///
+
+  // 100, 101, ...
+  G4double x_pos1 = - tile_size_x/2. - offset_x_left;
+  G4double y_pos1 = tile_size_y/2.;
+  G4int copy_no = 1;
+  G4String vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(0, G4ThreeVector(x_pos1, y_pos1, -z_pos),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
+
+  // 200, 201, ...
+  G4double x_pos2 = offset_x_right + tile_size_x/2.;
+  copy_no = 2;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(0, G4ThreeVector(x_pos2, y_pos1, -z_pos),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
+
+  // 300, 301, ...
+  G4double y_pos3 = - tile_size_y/2.;
+  copy_no = 3;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(0, G4ThreeVector(x_pos1, y_pos3, -z_pos),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
+
+  // 400, 401, ...
+  copy_no = 4;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(0, G4ThreeVector(x_pos2, y_pos3, -z_pos),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
+
+
+  /// "Coincidence" plane ///
 
   G4RotationMatrix rot;
   rot.rotateY(pi);
 
-  for (G4int j=0; j<n_tile_rows_; j++) {
-    G4double y_pos = full_col_size/2. - tile_size_y/2. - j*tile_size_y;
-    for (G4int i=0; i<n_tile_columns_; i++) {
-      G4double x_pos = full_row_size/2. - tile_size_x/2. - i*tile_size_x;
-      vol_name = "TILE_" + std::to_string(copy_no);
+  // 500, 501, ...
+  copy_no = 5;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-x_pos1, y_pos1, z_pos)),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
 
-      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, z_pos)),
-                        tile_logic, vol_name, active_logic_,
-                        false, copy_no, false);
-      copy_no += 1;
-    }
-  }
+  // 600, 601, ...
+  copy_no = 6;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-x_pos2, y_pos1, z_pos)),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
+
+  // 700, 701, ...
+  copy_no = 7;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-x_pos1, y_pos3, z_pos)),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
+
+  // 800, 801, ...
+  copy_no = 8;
+  vol_name = "TILE_" + std::to_string(copy_no);
+  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-x_pos2, y_pos3, z_pos)),
+                    tile_logic, vol_name, active_logic_, false, copy_no, false);
 
 }
 

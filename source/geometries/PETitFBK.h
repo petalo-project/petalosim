@@ -42,7 +42,6 @@ private:
   G4bool visibility_;
   G4bool box_vis_, tile_vis_;
   G4double tile_refl_, sipm_pde_;
-  G4double n_tile_rows_, n_tile_columns_;
   G4bool sipm_cells_;
 
   G4ThreeVector specific_vertex_;
