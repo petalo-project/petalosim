@@ -55,6 +55,12 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
                 if l1[0] == '/petalosim/persistency/output_file':
                     l2 = l1[1].split('/')
                     f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
+                elif l1[0] == '/Actions/PetAnalysisRunAction/histo_file':
+                    l2 = l1[1].split('/')
+                    f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
+                elif l1[0] == '/Actions/PetAnalysisRunAction/ntuple_file':
+                    l2 = l1[1].split('/')
+                    f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
                 else:
                     f_cp.write(l)
 

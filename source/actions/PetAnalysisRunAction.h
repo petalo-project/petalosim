@@ -13,7 +13,9 @@
 #define PET_ANALYSIS_RUN_ACTION_H
 
 #include <G4UserRunAction.hh>
+#include <globals.hh>
 
+class G4GenericMessenger;
 
 class PetAnalysisRunAction: public G4UserRunAction
 {
@@ -25,6 +27,11 @@ public:
   
   virtual void BeginOfRunAction(const G4Run*);
   virtual void EndOfRunAction(const G4Run*);
+
+private:
+  G4GenericMessenger* msg_;
+  G4String fname_;
+  G4String ntuple_fname_;
 
 };
 
