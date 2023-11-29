@@ -459,7 +459,7 @@ void PetaloPersistencyManager::SaveConfigurationInfo(G4String file_name)
     std::getline(ss, key, ' ');
     std::getline(ss, value);
 
-    if (key != "") {
+    if (!key.empty()) {
       auto found_other_macro = key.find("/control/execute");
       if (found_other_macro == std::string::npos) {
         if (key[0] == '\n') {
