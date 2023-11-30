@@ -27,7 +27,7 @@ PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction(),
   msg_->DeclareProperty("histo_file", fname_,
                         "Name of the file for the analysis histograms");
   msg_->DeclareProperty("ntuple_file", ntuple_fname_,
-                        "Name of the file for the analysis histograms");
+                        "Name of the file for the analysis ntuples");
   
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("csv");
