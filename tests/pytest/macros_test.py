@@ -29,7 +29,7 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     Copy the init and config macro to a temporary directory, modifying
     the fields related to the path of the config and the output file.
     """
-    init_name  = init_macro.split('/')[-1]
+    init_name    = init_macro.split('/')[-1]
     config_macro = init_macro.replace('init', 'config')
     config_name  = config_macro.split('/')[-1]
 
@@ -52,7 +52,9 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
             lines = f.readlines()
             for l in lines:
                 l1 = l.split(' ')
-                if l1[0] == '/petalosim/persistency/outputFile':
+                if (l1[0] == '/petalosim/persistency/output_file' or
+                    l1[0] == '/Actions/PetAnalysisRunAction/histo_file' or
+                    l1[0] == '/Actions/PetAnalysisRunAction/ntuple_file'):
                     l2 = l1[1].split('/')
                     f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
                 else:

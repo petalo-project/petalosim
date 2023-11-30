@@ -15,17 +15,22 @@
 
 #include <G4Run.hh>
 #include <G4AnalysisManager.hh>
+#include <G4GenericMessenger.hh>
 
 REGISTER_CLASS(PetAnalysisRunAction, G4UserRunAction)
 
-PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction()
+PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction(),
+                                              fname_("OptTrackInfo"),
+                                              ntuple_fname_("OpticalEvtInfo")
 {
+  msg_ = new G4GenericMessenger(this, "/Actions/PetAnalysisRunAction/");
+  msg_->DeclareProperty("histo_file", fname_,
+                        "Name of the file for the analysis histograms");
+  msg_->DeclareProperty("ntuple_file", ntuple_fname_,
+                        "Name of the file for the analysis ntuples");
+  
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("csv");
-  // Set the base name of the histogram files.
-  // If no histogram files are booked, you still need to provide a name here,
-  // but it's not used anywhere.
-  analysisManager->SetFileName("OptTrackInfo");
 
   // Book 1D histograms
   analysisManager->CreateH1("CherLambda","Wavelength of Cherenkov photons (nm)", 1000, 0, 1500.); // histo ID = 0
@@ -44,7 +49,6 @@ PetAnalysisRunAction::PetAnalysisRunAction(): G4UserRunAction()
   analysisManager->CreateNtuple("OptEvt", "Number of produced optical photon");
   analysisManager->CreateNtupleDColumn("NPhotons"); // column ID = 0
   analysisManager->FinishNtuple();
-  analysisManager->SetNtupleFileName(0, "OpticalEvtInfo");
 
   /*
   // Example of how to create a different file with different observables
@@ -73,6 +77,11 @@ void PetAnalysisRunAction::BeginOfRunAction(const G4Run* run)
   auto analysisManager = G4AnalysisManager::Instance();
 
   analysisManager->Reset();
+  // The name of the histogram and ntuple files need to be set.
+  // If no histogram files are booked, you still need to provide a name here,
+  // but it's not used anywhere.
+  analysisManager->SetFileName(fname_);
+  analysisManager->SetNtupleFileName(0, ntuple_fname_);
   analysisManager->OpenFile();
 }
 

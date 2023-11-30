@@ -17,6 +17,9 @@
 ### GENERATOR
 /Generator/Back2back/region AD_HOC
 
+/Actions/PetAnalysisRunAction/histo_file OptTrackInfo
+/Actions/PetAnalysisRunAction/ntuple_file OpticalEvtInfo
+
 ### VERBOSITIES
 /run/verbose 1
 /event/verbose 0
