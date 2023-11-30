@@ -29,7 +29,7 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     Copy the init and config macro to a temporary directory, modifying
     the fields related to the path of the config and the output file.
     """
-    init_name  = init_macro.split('/')[-1]
+    init_name    = init_macro.split('/')[-1]
     config_macro = init_macro.replace('init', 'config')
     config_name  = config_macro.split('/')[-1]
 
