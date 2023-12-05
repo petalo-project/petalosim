@@ -179,8 +179,9 @@ G4MaterialPropertiesTable* GlassEpoxy()
 
     const G4int ri_entries = 200;
     // This is the range where Cerenkov photons are produced by G4.
-    // Since the recommendation is to use the PDE range of the photosensors used in the simulation,
-    // we choose that of Hamamatsu S15779(ES1) arrays as a typical range.
+    // Since the recommendation is to use the PDE range of the photosensors used
+    // in the simulation, we choose that of Hamamatsu S15779(ES1) arrays as a
+    // typical range.
     const G4double minE_n = 1.38 * eV; // corresponds to 900 nm, where Hamamatsu's pde go to zero
     const G4double maxE_n = 8.21 * eV; // corresponds to 151 nm, where Hamamatsu's pde go to zero
     // + above this value A(omega) starts to diverge
@@ -200,7 +201,8 @@ G4MaterialPropertiesTable* GlassEpoxy()
     LXe_mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
     // for (G4int i=ri_entries-1; i>=0; i--) {
-    //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, " << rindex[i] << G4endl;
+    //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, "
+    //          << rindex[i] << G4endl;
     // }
 
     // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
@@ -353,7 +355,8 @@ G4MaterialPropertiesTable* PTFE()
   std::vector<G4double> specularspike = {0., 0.};
   // 180 degrees reflection.
   std::vector<G4double> backscatter   = {0., 0.};
-  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
+  // 1 - the sum of these three last parameters is the percentage of
+  // Lambertian reflection
 
   mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES, specularlobe);
   mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES, specularspike);
@@ -369,8 +372,9 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
 
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
-  /// A WLS material is characterized by its photon absorption and photon emission spectrum
-  /// and by a possible time delay between the absorption and re-emission of the photon.
+  /// A WLS material is characterized by its photon absorption and
+  /// photon emission spectrum and by a possible time delay between the absorption
+  /// and re-emission of the photon.
 
   // Data from https://doi.org/10.1140/epjc/s10052-018-5807-z
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -390,7 +394,8 @@ G4MaterialPropertiesTable* TPB(G4double decay_time)
   mpt->AddProperty("ABSLENGTH", abs_energy, abs_length);
 
   // WLS ABSORPTION LENGTH (Version No Secondary WLS)
-  // The No Secondary WLS is forced by setting the WLS_absLength to opticalprops::noAbsLength_
+  // The No Secondary WLS is forced by setting the WLS_absLength to
+  // opticalprops::noAbsLength_
   // for wavelengths higher than 380 nm where the WLS emission spectrum starts.
   std::vector<G4double> WLS_abs_energy =
     {opticalprops::optPhotMinE_,

@@ -251,10 +251,10 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
     else if (hcname == ChargeSD::GetCollectionUniqueName())
       StoreChargeHits(hits);
     else {
-      G4String msg =
+      G4String er =
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
-      G4Exception("StoreHits()", "[PetaloPersistencyManager]", JustWarning, msg);
+      G4Exception("StoreHits()", "[PetaloPersistencyManager]", JustWarning, er);
     }
   }
 }
@@ -304,7 +304,8 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
       std::string sdname = hits->GetSDname();
       G4ThreeVector xyz = hit->GetPosition();
       if (save_tot_charge_ == true) {
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)s_id, (unsigned int)charge);
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)s_id,
+                                       (unsigned int)charge);
       }
       std::vector<G4int>::iterator pos_it =
         std::find(sns_posvec_.begin(), sns_posvec_.end(), s_id);
@@ -364,7 +365,8 @@ void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
 
 
     std::vector<G4int>::iterator pos_it =
-      std::find(charge_posvec_.begin(), charge_posvec_.end(), hit->GetSensorID());
+      std::find(charge_posvec_.begin(), charge_posvec_.end(),
+                hit->GetSensorID());
     if (pos_it == charge_posvec_.end()) {
       std::string sdname = hits->GetSDname();
       G4ThreeVector xyz  = hit->GetPosition();

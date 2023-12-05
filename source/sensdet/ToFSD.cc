@@ -40,7 +40,8 @@ G4String ToFSD::GetCollectionUniqueName()
 void ToFSD::Initialize(G4HCofThisEvent* HCE)
 {
   // Create a new collection of PMT hits
-  HC_ = new PetSensorHitsCollection(this->GetName(), this->GetCollectionName(0));
+  HC_ = new PetSensorHitsCollection(this->GetName(),
+                                    this->GetCollectionName(0));
 
   G4int HCID = G4SDManager::GetSDMpointer()->
     GetCollectionID(this->GetName() + "/" + this->GetCollectionName(0));
