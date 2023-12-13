@@ -140,7 +140,7 @@ void Pet2boxes::BuildActive()
   G4Box* active_solid =
       new G4Box("ACTIVE", active_size_ / 2., active_size_ / 2., z_size_ / 2.);
 
-  G4LogicalVolume *active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
+  G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   // G4VisAttributes red_color;
   // red_color.SetColor(1., 0., 0.);
@@ -165,8 +165,8 @@ void Pet2boxes::BuildSiPMPlane()
   pdb_->SetSize(z_size_, active_size_);
   pdb_->Construct();
 
-  G4LogicalVolume *db_logic = db_->GetLogicalVolume();
-  G4LogicalVolume *pdb_logic = pdb_->GetLogicalVolume();
+  G4LogicalVolume* db_logic = db_->GetLogicalVolume();
+  G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
   G4double db_zsize = db_->GetDimensions().z();
   // G4cout << "dice board x = " << db_xsize << ", y = "
   // 	   << db_ysize << ", z = " <<  db_zsize << std::endl;

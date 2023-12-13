@@ -69,7 +69,7 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   // done in G4Scintillation)
   G4MaterialPropertiesTable* mpt = opticalprops::LXe();
   // Using fast or slow component here is irrelevant, since we're not using
-  // time and they're are the same in energy.
+  // time and they're the same in energy.
   G4MaterialPropertyVector* spectrum =
     mpt->GetProperty("SCINTILLATIONCOMPONENT1");
   G4PhysicsOrderedFreeVector* spectrum_integral =

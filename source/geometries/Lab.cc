@@ -51,7 +51,7 @@ void Lab::Construct()
   G4Box* lab_solid =
       new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
-  G4LogicalVolume *lab_logic =
+  G4LogicalVolume* lab_logic =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR");
   lab_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
@@ -76,7 +76,7 @@ void Lab::Construct()
   G4double det_size_z = 1. * mm;
   G4Box* det_solid =
       new G4Box("WALL", det_size / 2., det_size / 2., det_size_z / 2.);
-  G4Material *steel = materials::Steel();
+  G4Material* steel = materials::Steel();
 
   G4LogicalVolume* det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
   //   det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());

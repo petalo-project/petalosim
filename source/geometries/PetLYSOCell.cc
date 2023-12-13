@@ -257,7 +257,7 @@ void PetLYSOCell::BuildSiPMPlane()
     }
   }
 
-  G4LogicalVolume *pdb_logic = pdb_->GetLogicalVolume();
+  G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
 
   G4double displ = active_size_ / 2. + pdb_z_ / 2.;
   rot.rotateY(pi / 2.);

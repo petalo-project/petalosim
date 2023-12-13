@@ -160,7 +160,7 @@ void PetLXeCell::BuildLXe()
 {
   G4double lXe_size_xy = xy_size_ + 2. * pdb_z_ + 30. * cm;
   lXe_size_z_ = z_size_ + 2. * pdb_z_ + z_LXe_;
-  G4Box *lXe_solid =
+  G4Box* lXe_solid =
       new G4Box("LXE", lXe_size_xy / 2., lXe_size_xy / 2., lXe_size_z_ / 2.);
 
   lXe_logic_ = new G4LogicalVolume(lXe_solid, lXe_, "LXE");
@@ -175,7 +175,7 @@ void PetLXeCell::BuildLXe()
 
 void PetLXeCell::BuildActive()
 {
-  G4Box *active_solid =
+  G4Box* active_solid =
       new G4Box("ACTIVE", xy_size_ / 2., xy_size_ / 2., z_size_ / 2.);
 
   active_logic_ =

@@ -87,7 +87,7 @@ void FullRingTiles::Construct()
 {
   // LAB. This is just a volume of air surrounding the detector
   G4double lab_size = 1. * m;
-  G4Box *lab_solid = new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
+  G4Box* lab_solid = new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
   lab_logic_ =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
@@ -113,26 +113,26 @@ void FullRingTiles::BuildCryostat()
   const G4double int_radius_cryo = inner_radius_ - cryo_thickn_ - space_for_elec;
   const G4double ext_radius_cryo = external_radius_ + cryo_thickn_ + space_for_elec;
 
-  G4Tubs *cryostat_solid =
+  G4Tubs* cryostat_solid =
       new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_ / 2., 0, twopi);
-  G4Material *steel = materials::Steel();
-  G4LogicalVolume *cryostat_logic =
+  G4Material* steel = materials::Steel();
+  G4LogicalVolume* cryostat_logic =
       new G4LogicalVolume(cryostat_solid, steel, "CRYOSTAT");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
                     "CRYOSTAT", lab_logic_, false, 0, true);
 
   G4double ext_offset = 4. * mm;
-  G4Tubs *LXe_solid =
+  G4Tubs* LXe_solid =
       new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
                  (lat_dimension_cell_ + 2. * kapton_thickn_) / 2., 0, twopi);
-  G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+  G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
   LXe->SetMaterialPropertiesTable(opticalprops::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
                     "LXE", cryostat_logic, false, 0, true);
 
-  G4Tubs *active_solid =
+  G4Tubs* active_solid =
       new G4Tubs("ACTIVE", inner_radius_, external_radius_ + ext_offset,
                  lat_dimension_cell_ / 2., 0, twopi);
   active_logic_ =
@@ -141,7 +141,7 @@ void FullRingTiles::BuildCryostat()
                     "ACTIVE", LXe_logic_, false, 0, true);
 
   // Set the ACTIVE volume as an ionization sensitive det
-  PetIonizationSD *ionisd = new PetIonizationSD("/PETALO/ACTIVE");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
   active_logic_->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
@@ -151,7 +151,7 @@ void FullRingTiles::BuildCryostat()
   G4Material *kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
 
-  G4Tubs *kapton_int_solid =
+  G4Tubs* kapton_int_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
                  lat_dimension_cell_ / 2., 0, twopi);
   G4LogicalVolume *kapton_int_logic =
@@ -167,10 +167,10 @@ void FullRingTiles::BuildCryostat()
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
                     "KAPTON", LXe_logic_, false, 0, true);
 
-  G4Tubs *kapton_lat_solid =
+  G4Tubs* kapton_lat_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
                  kapton_thickn_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_lat_logic =
+  G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
   G4double z_pos = lat_dimension_cell_ / 2. + kapton_thickn_ / 2.;
   new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
@@ -179,7 +179,7 @@ void FullRingTiles::BuildCryostat()
                     "KAPTON", LXe_logic_, false, 1, true);
 
   // OPTICAL SURFACE FOR REFLECTION
-  G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
+  G4OpticalSurface* db_opsur = new G4OpticalSurface("BORDER");
   db_opsur->SetType(dielectric_metal);
   db_opsur->SetModel(unified);
   db_opsur->SetFinish(ground);
@@ -264,9 +264,9 @@ void FullRingTiles::BuildSensors()
 
 void FullRingTiles::BuildPhantom()
 {
-  G4Tubs *phantom_solid = new G4Tubs("PHANTOM", 0., phantom_diam_ / 2.,
+  G4Tubs* phantom_solid = new G4Tubs("PHANTOM", 0., phantom_diam_ / 2.,
                                      phantom_length_ / 2., 0, twopi);
-  G4LogicalVolume *phantom_logic =
+  G4LogicalVolume* phantom_logic =
       new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), phantom_logic,
                     "PAHNTOM", lab_logic_, false, 0, true);

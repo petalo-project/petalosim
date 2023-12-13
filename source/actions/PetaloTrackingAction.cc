@@ -2,8 +2,8 @@
 // petalosim | PetaloTrackingAction.cc
 //
 // This class is the default tracking action of the PETALO simulation.
-// It stores in memory the trajectories of all particles, except optical photons
-// , with the relevant tracking information that will be
+// It stores in memory the trajectories of all particles, except forg
+// optical photons, with the relevant tracking information that will be
 // saved to the output file.
 //
 // The PETALO Collaboration

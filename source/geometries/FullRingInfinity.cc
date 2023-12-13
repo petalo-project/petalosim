@@ -201,7 +201,7 @@ void FullRingInfinity::Construct()
 {
   // LAB. This is just a volume of air surrounding the detector
   G4double lab_size = 10. * m;
-  G4Box *lab_solid =
+  G4Box* lab_solid =
     new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
   lab_logic_ =
@@ -337,7 +337,7 @@ void FullRingInfinity::BuildCryostat()
     G4Tubs* kapton_int_solid =
         new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
                     axial_length_ / 2., 0, twopi);
-    G4LogicalVolume *kapton_int_logic =
+    G4LogicalVolume* kapton_int_logic =
         new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
                       "KAPTON_INT", LXe_logic_, false, 0, false);
@@ -364,7 +364,7 @@ void FullRingInfinity::BuildCryostat()
                       "KAPTON_LAT_NEG", LXe_logic_, false, 1, false);
 
     // OPTICAL SURFACE FOR REFLECTION
-    G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
+    G4OpticalSurface* db_opsur = new G4OpticalSurface("BORDER");
     db_opsur->SetType(dielectric_metal);
     db_opsur->SetModel(unified);
     db_opsur->SetFinish(ground);
