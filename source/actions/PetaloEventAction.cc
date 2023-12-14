@@ -55,7 +55,7 @@ PetaloEventAction::~PetaloEventAction()
 {
 }
 
-void PetaloEventAction::BeginOfEventAction(const G4Event * /*event*/)
+void PetaloEventAction::BeginOfEventAction(const G4Event* /*event*/)
 {
   // Print out event number info
   if ((nevt_ % nupdate_) == 0)
@@ -66,7 +66,7 @@ void PetaloEventAction::BeginOfEventAction(const G4Event * /*event*/)
   }
 }
 
-void PetaloEventAction::EndOfEventAction(const G4Event *event)
+void PetaloEventAction::EndOfEventAction(const G4Event* event)
 {
   nevt_++;
 
@@ -80,7 +80,7 @@ void PetaloEventAction::EndOfEventAction(const G4Event *event)
 
     G4double edep = 0.;
 
-    G4TrajectoryContainer *tc = event->GetTrajectoryContainer();
+    G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
     if (tc) {
       for (unsigned int i = 0; i < tc->size(); ++i) {
         Trajectory* trj = dynamic_cast<Trajectory *>((*tc)[i]);

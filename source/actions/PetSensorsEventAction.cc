@@ -58,7 +58,7 @@ PetSensorsEventAction::~PetSensorsEventAction()
 {
 }
 
-void PetSensorsEventAction::BeginOfEventAction(const G4Event * /*event*/)
+void PetSensorsEventAction::BeginOfEventAction(const G4Event* /*event*/)
 {
   // Print out event number info
   if ((nevt_ % nupdate_) == 0)
@@ -69,7 +69,7 @@ void PetSensorsEventAction::BeginOfEventAction(const G4Event * /*event*/)
   }
 }
 
-void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
+void PetSensorsEventAction::EndOfEventAction(const G4Event* event)
 {
   nevt_++;
 

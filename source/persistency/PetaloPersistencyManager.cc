@@ -16,7 +16,6 @@
 
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/NexusApp.h"
 #include "nexus/DetectorConstruction.h"
 #include "nexus/FactoryBase.h"
@@ -400,12 +399,12 @@ void PetaloPersistencyManager::StoreSteps()
                            initial_volumes[key][step_id],
                            final_volumes[key][step_id],
                            proc_names[key][step_id],
-                           initial_poss   [key][step_id].x(),
-                           initial_poss   [key][step_id].y(),
-                           initial_poss   [key][step_id].z(),
-                           final_poss   [key][step_id].x(),
-                           final_poss   [key][step_id].y(),
-                           final_poss   [key][step_id].z());
+                           initial_poss[key][step_id].x(),
+                           initial_poss[key][step_id].y(),
+                           initial_poss[key][step_id].z(),
+                           final_poss[key][step_id].x(),
+                           final_poss[key][step_id].y(),
+                           final_poss[key][step_id].z());
     }
   }
   sa->Reset();

@@ -103,9 +103,9 @@ void PETitPyrexMix::Construct()
 {
   // Volume of air surrounding the detector //
   G4double lab_size = 1. * m;
-  G4Box *lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
+  G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
 
-  G4Material *air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+  G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   lab_logic_ = new G4LogicalVolume(lab_solid, air, "LAB");
   lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetLogicalVolume(lab_logic_);
@@ -207,7 +207,7 @@ void PETitPyrexMix::BuildBox()
     new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2.,
               v_l_panel_z_size_/2.);
 
-  G4LogicalVolume *v_l_panel_logic =
+  G4LogicalVolume* v_l_panel_logic =
     new G4LogicalVolume(v_l_panel_solid, pyrex, "LAT_PANEL");
   
   G4double v_l_panel_xpos = dist_lat_panels_/2. + panel_thickness_/2.;

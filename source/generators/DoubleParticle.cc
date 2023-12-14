@@ -52,8 +52,8 @@ energy_min_(0.), max_energy_(0.), geom_(0)
     msg_->DeclareProperty("max_energy", max_energy_,
       "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
-  min_energy.SetParameterName("max_energy", false);
-  min_energy.SetRange("max_energy>0.");
+  max_energy.SetParameterName("max_energy", false);
+  max_energy.SetRange("max_energy>0.");
   
   msg_->DeclareProperty("region", region_,
     "Region of the geometry where the vertex is generated.");
