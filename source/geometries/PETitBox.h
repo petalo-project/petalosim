@@ -14,10 +14,11 @@
 
 class G4Material;
 
+class PetIonizationSD;
+
 namespace nexus
 {
 class SpherePointSampler;
-class IonizationSD;
 }
 
 using namespace nexus;
@@ -34,7 +35,7 @@ class PETitBox : public GeometryBase
 
   void Construct();
   void SetXeMaterial(G4Material* mat);
-  void SetIoniSD(IonizationSD* ionisd);
+  void SetIoniSD(PetIonizationSD* ionisd);
   void SetMaxStepSize(G4double step_size);
   void SetLXePressure(G4double pressure);
   void SetVisibility(G4bool vis);
@@ -61,13 +62,13 @@ private:
   SpherePointSampler* source_gen_;
 
   G4Material* LXe_mat_;
-  IonizationSD* ionisd_;
+  PetIonizationSD* ionisd_;
 
   G4LogicalVolume* active_logic_;
 };
 
 inline void PETitBox::SetXeMaterial(G4Material* mat) {LXe_mat_ = mat;}
-inline void PETitBox::SetIoniSD(IonizationSD* ionisd) {ionisd_ = ionisd;}
+inline void PETitBox::SetIoniSD(PetIonizationSD* ionisd) {ionisd_ = ionisd;}
 inline void PETitBox::SetMaxStepSize(G4double step_size) {max_step_size_ = step_size;}
 inline void PETitBox::SetLXePressure(G4double pressure) {pressure_ = pressure;}
 inline void PETitBox::SetVisibility(G4bool vis) {visibility_ = vis;}

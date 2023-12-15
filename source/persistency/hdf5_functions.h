@@ -115,14 +115,22 @@ typedef struct{
   hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
   hid_t createGroup(hid_t file, std::string& groupName);
 
-  void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeStep(step_info_t* step, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeChargeData(charge_data_t* chargeData, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype,
+                hsize_t counter);
+  void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype,
+                    hsize_t counter);
+  void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype,
+                   hsize_t counter);
+  void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype,
+                hsize_t counter);
+  void writeParticle(particle_info_t* particleInfo, hid_t dataset,
+                     hid_t memtype, hsize_t counter);
+  void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype,
+                   hsize_t counter);
+  void writeStep(step_info_t* step, hid_t dataset, hid_t memtype,
+                 hsize_t counter);
+  void writeChargeData(charge_data_t* chargeData, hid_t dataset, hid_t memtype,
+                       hsize_t counter);
 
 
 #endif

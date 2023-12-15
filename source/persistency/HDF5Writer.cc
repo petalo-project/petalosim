@@ -56,7 +56,8 @@ void HDF5Writer::Open(std::string fileName, bool debug)
 
   std::string particle_info_table_name = "particles";
   memtypeParticleInfo_ = createParticleInfoType();
-  particleInfoTable_ = createTable(group_, particle_info_table_name, memtypeParticleInfo_);
+  particleInfoTable_ = createTable(group_, particle_info_table_name,
+                                   memtypeParticleInfo_);
 
   std::string sns_pos_table_name = "sns_positions";
   memtypeSnsPos_ = createSensorPosType();
@@ -64,7 +65,8 @@ void HDF5Writer::Open(std::string fileName, bool debug)
 
   std::string charge_data_table_name = "charge_response";
   memtypeChargeData_ = createChargeDataType();
-  chargeDataTable_ = createTable(group_, charge_data_table_name, memtypeChargeData_);
+  chargeDataTable_ = createTable(group_, charge_data_table_name,
+                                 memtypeChargeData_);
 
   if (debug) {
     std::string debug_group_name = "/DEBUG";
@@ -95,7 +97,8 @@ void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
   irun_++;
 }
 
-void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int charge)
+void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id,
+                                     unsigned int charge)
 {
   sns_data_t snsData;
   snsData.event_id = evt_number;
@@ -106,7 +109,8 @@ void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, uns
   ismp_++;
 }
 
-void HDF5Writer::WriteSensorTofInfo(int evt_number, int sensor_id, float time, unsigned int track_id)
+void HDF5Writer::WriteSensorTofInfo(int evt_number, int sensor_id, float time,
+                                    unsigned int track_id)
 {
   sns_tof_t snsTof;
   snsTof.event_id = evt_number;
@@ -119,7 +123,10 @@ void HDF5Writer::WriteSensorTofInfo(int evt_number, int sensor_id, float time, u
 }
 
 
-void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label)
+void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx,
+                              float hit_position_x, float hit_position_y,
+                              float hit_position_z, float hit_time,
+                              float hit_energy, const char* label)
 {
   hit_info_t trueInfo;
   trueInfo.event_id = evt_number;
@@ -136,7 +143,23 @@ void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, float hit_posit
   ihit_++;
 }
 
-void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char* particle_name, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, const char* initial_volume, const char* final_volume, float momentum_x, float momentum_y, float momentum_z, float final_momentum_x, float final_momentum_y, float final_momentum_z, float kin_energy, float length, const char* creator_proc, const char* final_proc)
+void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx,
+                                   const char* particle_name, char primary,
+                                   int mother_id, float initial_vertex_x,
+                                   float initial_vertex_y,
+                                   float initial_vertex_z,
+                                   float initial_vertex_t,
+                                   float final_vertex_x,
+                                   float final_vertex_y, float final_vertex_z,
+                                   float final_vertex_t,
+                                   const char* initial_volume,
+                                   const char* final_volume, float momentum_x,
+                                   float momentum_y, float momentum_z,
+                                   float final_momentum_x,
+                                   float final_momentum_y,
+                                   float final_momentum_z, float kin_energy,
+                                   float length, const char* creator_proc,
+                                   const char* final_proc)
 {
   particle_info_t trueInfo;
   trueInfo.event_id = evt_number;
@@ -174,7 +197,9 @@ void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char
   ipart_++;
 }
 
-void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_name, float x, float y, float z)
+void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id,
+                                    const char* sensor_name, float x, float y,
+                                    float z)
 {
   sns_pos_t snsPos;
   snsPos.sensor_id = sensor_id;
@@ -221,7 +246,8 @@ void HDF5Writer::WriteStep(int evt_number,
   istep_++;
 }
 
-void HDF5Writer::WriteChargeDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
+void HDF5Writer::WriteChargeDataInfo(int evt_number, unsigned int sensor_id,
+                                     unsigned int time_bin, unsigned int charge)
 {
   charge_data_t chargeData;
   chargeData.event_id = evt_number;

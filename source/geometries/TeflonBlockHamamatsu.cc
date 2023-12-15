@@ -7,8 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "TeflonBlockHamamatsu.h"
-
-#include "nexus/IonizationSD.h"
+#include "PetIonizationSD.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -46,7 +45,8 @@ void TeflonBlockHamamatsu::Construct()
     new G4Box("TEFLON_BLOCK", teflon_block_xy/2., teflon_block_xy/2., teflon_block_thick_/2.);
   
   
-  G4Material *teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  G4Material* teflon =
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
   teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   
   G4LogicalVolume* teflon_block_logic =
@@ -83,8 +83,10 @@ void TeflonBlockHamamatsu::Construct()
           G4double holes_pos_x = set_holes_x - 3*(teflon_holes_xy/2. + dist_between_holes_xy/2.)
             + k*(teflon_holes_xy + dist_between_holes_xy);
           
-          new G4PVPlacement(0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z), teflon_hole_logic,
-                            "ACTIVE", teflon_block_logic, false, copy_no, false);
+          new G4PVPlacement(0, G4ThreeVector(holes_pos_x, holes_pos_y, holes_pos_z),
+                            teflon_hole_logic,
+                            "ACTIVE", teflon_block_logic,
+                            false, copy_no, false);
           copy_no += 1;
         }
       }

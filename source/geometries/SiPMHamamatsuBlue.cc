@@ -50,10 +50,11 @@ void SiPMHamamatsuBlue::Construct()
 
   SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
-  G4Box *sipm_solid = new G4Box("SiPMHmtsuBlue", sipm_x / 2., sipm_y / 2., sipm_z / 2);
+  G4Box* sipm_solid =
+    new G4Box("SiPMHmtsuBlue", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *plastic = petmaterials::FR4();
-  G4LogicalVolume *sipm_logic =
+  G4Material* plastic = petmaterials::FR4();
+  G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, plastic, "SiPMHmtsuBlue");
 
   this->SetLogicalVolume(sipm_logic);
@@ -64,13 +65,13 @@ void SiPMHamamatsuBlue::Construct()
   G4double active_y = sipm_y;
   G4double active_depth = 0.1 * mm;
 
-  G4Box *active_solid =
+  G4Box* active_solid =
       new G4Box("PHOTODIODES", active_x / 2., active_y / 2., active_depth / 2);
 
-  G4Material *silicon =
+  G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
-  G4LogicalVolume *active_logic =
+  G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z / 2. - active_depth / 2.),
@@ -98,11 +99,11 @@ void SiPMHamamatsuBlue::Construct()
                                   0.3145, 0.2625, 0.211,
                                   0.1055, 0.026};
 
-  G4MaterialPropertiesTable *sipm_mt = new G4MaterialPropertiesTable();
+  G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
   sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
   sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-  G4OpticalSurface *sipm_opsurf =
+  G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
   sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
@@ -111,11 +112,11 @@ void SiPMHamamatsuBlue::Construct()
   // SENSITIVE DETECTOR ////////////////////////////////////////////
 
   G4String sdname = "/SIPM/SiPMHmtsuBlue";
-  G4SDManager *sdmgr = G4SDManager::GetSDMpointer();
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
-    ToFSD *sipmsd = new ToFSD(sdname);
+    ToFSD* sipmsd = new ToFSD(sdname);
     if (sensor_depth_ == -1)
       G4Exception("[SiPMHamamatsuBlue]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");

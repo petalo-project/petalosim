@@ -27,8 +27,6 @@
 #include <G4MaterialPropertiesTable.hh>
 #include <Randomize.hh>
 
-#include "CLHEP/Units/SystemOfUnits.h"
-
 using namespace nexus;
 using namespace CLHEP;
 
@@ -42,9 +40,9 @@ LXeScintillationGenerator::LXeScintillationGenerator() :
     "Control commands of LXe scintillation generator.");
 
   msg_->DeclareProperty("region", region_,
-                           "Set the region of the geometry where the vertex will be generated.");
+    "Region of the geometry where the vertex is generated.");
 
-  msg_->DeclareProperty("nphotons", nphotons_, "Set number of photons");
+  msg_->DeclareProperty("nphotons", nphotons_, "Number of photons");
 
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -70,9 +68,10 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   // Energy is sampled from integral (like it is
   // done in G4Scintillation)
   G4MaterialPropertiesTable* mpt = opticalprops::LXe();
-  // Using fast or slow component here is irrelevant, since we're not using time
-  // and they're are the same in energy.
-  G4MaterialPropertyVector* spectrum = mpt->GetProperty("SCINTILLATIONCOMPONENT1");
+  // Using fast or slow component here is irrelevant, since we're not using
+  // time and they're the same in energy.
+  G4MaterialPropertyVector* spectrum =
+    mpt->GetProperty("SCINTILLATIONCOMPONENT1");
   G4PhysicsOrderedFreeVector* spectrum_integral =
       new G4PhysicsOrderedFreeVector();
   ComputeCumulativeDistribution(*spectrum, *spectrum_integral);
@@ -94,7 +93,8 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
       G4double pz = pmod * momentum_direction_.z();
 
       // Create the new primary particle and set it some properties
-      G4PrimaryParticle* particle = new G4PrimaryParticle(particle_definition, px, py, pz);
+      G4PrimaryParticle* particle =
+        new G4PrimaryParticle(particle_definition, px, py, pz);
 
       G4ThreeVector polarization = G4RandomDirection();
       particle->SetPolarization(polarization);

@@ -83,10 +83,13 @@ void PetSaveAllSteppingAction::UserSteppingAction(const G4Step* step)
 
 void PetSaveAllSteppingAction::AddSelectedParticle(G4String particle_name)
 {
-  G4ParticleDefinition* pdef = G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
+  G4ParticleDefinition* pdef =
+    G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
   if (!pdef) {
-    G4String msg = "No particle description was found for particle name " + particle_name;
-    G4Exception("[PetSaveAllSteppingAction]", "AddSelectedParticle()", FatalException, msg);
+    G4String msg =
+      "No particle description was found for particle " + particle_name;
+    G4Exception("[PetSaveAllSteppingAction]", "AddSelectedParticle()",
+                FatalException, msg);
   }
   selected_particles_.push_back(pdef);
 }
@@ -102,12 +105,14 @@ G4bool PetSaveAllSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
 {
   if (!selected_particles_.size()) return true;
 
-  auto it = std::find(selected_particles_.begin(), selected_particles_.end(), pdef);
+  auto it =
+    std::find(selected_particles_.begin(), selected_particles_.end(), pdef);
   return it != selected_particles_.end();
 }
 
 
-G4bool PetSaveAllSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_volume)
+G4bool PetSaveAllSteppingAction::KeepVolume(G4String& initial_volume,
+                                            G4String& final_volume)
 {
   if (!selected_volumes_.size()) return true;
 

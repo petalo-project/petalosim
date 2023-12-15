@@ -9,7 +9,6 @@
 // ----------------------------------------------------------------------------
 
 #include "DoubleParticle.h"
-#include "Pet2boxes.h"
 
 #include "nexus/DetectorConstruction.h"
 #include "nexus/GeometryBase.h"
@@ -44,20 +43,23 @@ energy_min_(0.), max_energy_(0.), geom_(0)
 
   G4GenericMessenger::Command& min_energy =
     msg_->DeclareProperty("min_energy", energy_min_,
-      "Set minimum kinetic energy of the particle.");
+      "Minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
     msg_->DeclareProperty("max_energy", max_energy_,
-      "Set maximum kinetic energy of the particle");
+      "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
-
+  max_energy.SetParameterName("max_energy", false);
+  max_energy.SetRange("max_energy>0.");
+  
   msg_->DeclareProperty("region", region_,
-    "Set the region of the geometry where the vertex will be generated.");
+    "Region of the geometry where the vertex is generated.");
 
-  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  DetectorConstruction* detconst =
+    (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
 }
 
@@ -88,8 +90,10 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
   G4ThreeVector  pos1 = geom_->GenerateVertex(region_);
   G4ThreeVector  pos2 = geom_->GenerateVertex(region_);
 
-  G4double time1 = sqrt(pos1.getX()*pos1.getX() + pos1.getY()*pos1.getY() + pos1.getZ()*pos1.getZ())/c_light;
-  G4double time2 = sqrt(pos2.getX()*pos2.getX() + pos2.getY()*pos2.getY() + pos2.getZ()*pos2.getZ())/c_light;
+  G4double time1 = sqrt(pos1.getX()*pos1.getX() + pos1.getY()*pos1.getY() +
+                        pos1.getZ()*pos1.getZ())/c_light;
+  G4double time2 = sqrt(pos2.getX()*pos2.getX() + pos2.getY()*pos2.getY() +
+                        pos2.getZ()*pos2.getZ())/c_light;
 
   // Particle generated at start-of-event
   // G4cout << time1/picosecond << ", " << time2/picosecond << G4endl;

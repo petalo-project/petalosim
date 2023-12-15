@@ -12,7 +12,6 @@
 #include "SiPMHamamatsuBlue.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>

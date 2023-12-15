@@ -58,7 +58,7 @@ PetSensorsEventAction::~PetSensorsEventAction()
 {
 }
 
-void PetSensorsEventAction::BeginOfEventAction(const G4Event * /*event*/)
+void PetSensorsEventAction::BeginOfEventAction(const G4Event* /*event*/)
 {
   // Print out event number info
   if ((nevt_ % nupdate_) == 0)
@@ -69,7 +69,7 @@ void PetSensorsEventAction::BeginOfEventAction(const G4Event * /*event*/)
   }
 }
 
-void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
+void PetSensorsEventAction::EndOfEventAction(const G4Event* event)
 {
   nevt_++;
 
@@ -83,12 +83,12 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
 
     G4double edep = 0.;
 
-    G4TrajectoryContainer *tc = event->GetTrajectoryContainer();
+    G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
     if (tc)
     {
       for (unsigned int i = 0; i < tc->size(); ++i)
       {
-        Trajectory *trj = dynamic_cast<Trajectory *>((*tc)[i]);
+        Trajectory* trj = dynamic_cast<Trajectory *>((*tc)[i]);
         edep += trj->GetEnergyDeposit();
         // Draw tracks in visual mode
         if (G4VVisManager::GetConcreteInstance())
@@ -110,7 +110,8 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
 
     if (hcname == ToFSD::GetCollectionUniqueName()){
       G4VHitsCollection* SensHits = hce->GetHC(hcid);
-      PetSensorHitsCollection* hits = dynamic_cast<PetSensorHitsCollection*>(SensHits);
+      PetSensorHitsCollection* hits =
+        dynamic_cast<PetSensorHitsCollection*>(SensHits);
       if (!hits) return;
       for (size_t i=0; i<hits->entries(); i++) {
         PetSensorHit* hit = dynamic_cast<PetSensorHit*>(hits->GetHit(i));
@@ -124,7 +125,8 @@ void PetSensorsEventAction::EndOfEventAction(const G4Event *event)
       }
     }
 
-    PetaloPersistencyManager *pm = dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
+    PetaloPersistencyManager* pm =
+      dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
 
     if (!event->IsAborted() && edep > 0)
     {

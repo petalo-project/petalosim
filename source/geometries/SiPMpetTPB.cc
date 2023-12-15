@@ -38,9 +38,11 @@ SiPMpetTPB::SiPMpetTPB() : GeometryBase(),
                            phys_(1)
 {
   /// Messenger
-  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
+  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/",
+                                "Control commands of geometry.");
   msg_->DeclareProperty("SiPMpet_vis", visibility_, "SiPMpet Visibility");
-  msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
+  msg_->DeclareProperty("refr_index", refr_index_,
+                        "Refraction index for epoxy");
   //Are we using physical opt properties?
   msg_->DeclareProperty("physics", phys_, "physical optical properties");
 
@@ -71,21 +73,23 @@ void SiPMpetTPB::Construct()
   // _dimensions.setY(sipm_y);
   // _dimensions.setZ(sipm_z);
 
-  G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
+  G4Box* sipm_solid =
+    new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = materials::Epoxy();
-  G4cout << "Epoxy in SiPMTPB used with constant refraction index = " << refr_index_ << G4endl;
+  G4Material* epoxy = materials::Epoxy();
+  G4cout << "Epoxy in SiPMTPB used with constant refraction index = "
+         << refr_index_ << G4endl;
   epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
 
-  G4LogicalVolume *sipm_logic =
+  G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
 
   this->SetLogicalVolume(sipm_logic);
 
   // TPB coating
   G4double tpb_z = 0.001 * mm;
-  G4Box *tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
-  G4Material *TPB = materials::TPB();
+  G4Box* tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
+  G4Material* TPB = materials::TPB();
   if (phys_)
   {
     G4cout << "TPB with refraction index equal to LXe" << G4endl;
@@ -97,7 +101,7 @@ void SiPMpetTPB::Construct()
     TPB->SetMaterialPropertiesTable(petopticalprops::TPB_LXe_nconst(decay_time_));
   }
 
-  G4LogicalVolume *tpb_logic =
+  G4LogicalVolume* tpb_logic =
       new G4LogicalVolume(tpb_solid, TPB, "TPB");
 
   G4double pos_z = (sipm_z - tpb_z) / 2.;
@@ -127,17 +131,19 @@ void SiPMpetTPB::Construct()
   G4double active_side = size;
   G4double active_depth = 0.01 * mm;
 
-  G4Box *active_solid =
-      new G4Box("PHOTODIODES", active_side / 2., active_side / 2., active_depth / 2);
+  G4Box* active_solid =
+      new G4Box("PHOTODIODES", active_side / 2., active_side / 2.,
+                active_depth / 2);
 
-  G4Material *silicon =
+  G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
-  G4LogicalVolume *active_logic =
+  G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z / 2. - active_depth / 2. - .1 * mm), active_logic,
-                    "PHOTODIODES", sipm_logic, false, 0, false);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - .1*mm),
+                    active_logic, "PHOTODIODES", sipm_logic, false, 0, false);
 
   // OPTICAL SURFACES //////////////////////////////////////////////
 
@@ -145,14 +151,15 @@ void SiPMpetTPB::Construct()
 
   const G4int entries = 21;
 
-  G4double energies[entries] = {1.54980241262 * eV, 1.59979603883 * eV,
-                                1.65312257346 * eV, 1.71012680013 * eV, 1.77120275727 * eV,
-                                1.8368028594 * eV, 1.90744912322 * eV, 1.98374708815 * eV,
-                                2.06640321682 * eV, 2.15624683494 * eV, 2.25425805471 * eV,
-                                2.36160367637 * eV, 2.47968386018 * eV, 2.61019353704 * eV,
-                                2.75520428909 * eV, 2.91727512963 * eV, 3.09960482523 * eV,
-                                3.30624514691 * eV, 3.54240551455 * eV, 3.81489824644 * eV,
-                                3.96749 * eV};
+  G4double energies[entries] =
+    {1.54980241262 * eV, 1.59979603883 * eV,
+     1.65312257346 * eV, 1.71012680013 * eV, 1.77120275727 * eV,
+     1.8368028594 * eV, 1.90744912322 * eV, 1.98374708815 * eV,
+     2.06640321682 * eV, 2.15624683494 * eV, 2.25425805471 * eV,
+     2.36160367637 * eV, 2.47968386018 * eV, 2.61019353704 * eV,
+     2.75520428909 * eV, 2.91727512963 * eV, 3.09960482523 * eV,
+     3.30624514691 * eV, 3.54240551455 * eV, 3.81489824644 * eV,
+     3.96749 * eV};
   G4double reflectivity[entries] = {0., 0., 0., 0., 0.,
                                     0., 0., 0., 0., 0.,
                                     0., 0., 0., 0., 0.,
@@ -191,11 +198,11 @@ void SiPMpetTPB::Construct()
   //   efficiency_red[i] = efficiency[i]*.20;
   // }
 
-  G4MaterialPropertiesTable *sipm_mt = new G4MaterialPropertiesTable();
+  G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
   sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
   sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-  G4OpticalSurface *sipm_opsurf =
+  G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
   sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
@@ -204,12 +211,12 @@ void SiPMpetTPB::Construct()
   // SENSITIVE DETECTOR ////////////////////////////////////////////
 
   G4String sdname = "/SIPM/SiPMpetTPB";
-  G4SDManager *sdmgr = G4SDManager::GetSDMpointer();
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
     //     SensorSD* sipmsd = new SensorSD(sdname);
-    ToFSD *sipmsd = new ToFSD(sdname);
+    ToFSD* sipmsd = new ToFSD(sdname);
     sipmsd->SetDetectorVolumeDepth(0);
     sipmsd->SetDetectorNamingOrder(1000.);
     //    sipmsd->SetMotherVolumeDepth(1);

@@ -9,8 +9,8 @@
 #include "Pet2boxes.h"
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
+#include "PetIonizationSD.h"
 
-#include "nexus/IonizationSD.h"
 #include "nexus/BoxPointSampler.h"
 #include "nexus/OpticalMaterialProperties.h"
 #include "nexus/MaterialsList.h"
@@ -126,7 +126,7 @@ void Pet2boxes::BuildLXe()
 {
   G4double lXe_size = active_size_ + 2. * db_z_;
   G4double lXe_size2 = z_size_ + 2. * db_z_;
-  G4Box *lXe_solid =
+  G4Box* lXe_solid =
       new G4Box("LXE", lXe_size / 2., lXe_size / 2., lXe_size2 / 2.);
 
   lXe_logic_ = new G4LogicalVolume(lXe_solid, lXe_, "LXE");
@@ -137,10 +137,10 @@ void Pet2boxes::BuildLXe()
 
 void Pet2boxes::BuildActive()
 {
-  G4Box *active_solid =
+  G4Box* active_solid =
       new G4Box("ACTIVE", active_size_ / 2., active_size_ / 2., z_size_ / 2.);
 
-  G4LogicalVolume *active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
+  G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   // G4VisAttributes red_color;
   // red_color.SetColor(1., 0., 0.);
@@ -151,7 +151,7 @@ void Pet2boxes::BuildActive()
                     "ACTIVE", lXe_logic_, false, 0, true);
 
   // Set the ACTIVE volume as an ionization sensitive active
-  IonizationSD *ionisd = new IonizationSD("/PETALX/ACTIVE");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALX/ACTIVE");
   active_logic->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
@@ -165,8 +165,8 @@ void Pet2boxes::BuildSiPMPlane()
   pdb_->SetSize(z_size_, active_size_);
   pdb_->Construct();
 
-  G4LogicalVolume *db_logic = db_->GetLogicalVolume();
-  G4LogicalVolume *pdb_logic = pdb_->GetLogicalVolume();
+  G4LogicalVolume* db_logic = db_->GetLogicalVolume();
+  G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
   G4double db_zsize = db_->GetDimensions().z();
   // G4cout << "dice board x = " << db_xsize << ", y = "
   // 	   << db_ysize << ", z = " <<  db_zsize << std::endl;

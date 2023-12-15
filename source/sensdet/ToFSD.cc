@@ -40,7 +40,8 @@ G4String ToFSD::GetCollectionUniqueName()
 void ToFSD::Initialize(G4HCofThisEvent* HCE)
 {
   // Create a new collection of PMT hits
-  HC_ = new PetSensorHitsCollection(this->GetName(), this->GetCollectionName(0));
+  HC_ = new PetSensorHitsCollection(this->GetName(),
+                                    this->GetCollectionName(0));
 
   G4int HCID = G4SDManager::GetSDMpointer()->
     GetCollectionID(this->GetName() + "/" + this->GetCollectionName(0));
@@ -51,11 +52,11 @@ void ToFSD::Initialize(G4HCofThisEvent* HCE)
 G4bool ToFSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
   // Check whether the track is an optical photon
-  G4ParticleDefinition *pdef = step->GetTrack()->GetDefinition();
+  G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
   if (pdef != G4OpticalPhoton::Definition())
     return false;
 
-  const G4VTouchable *touchable =
+  const G4VTouchable* touchable =
     step->GetPostStepPoint()->GetTouchable();
 
   G4int sns_id = FindID(touchable);

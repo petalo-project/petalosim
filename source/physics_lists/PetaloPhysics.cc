@@ -7,7 +7,6 @@
 // ----------------------------------------------------------------------------
 
 #include "PetaloPhysics.h"
-#include "WavelengthShifting.h"
 #include "PositronAnnihilation.h"
 #include "PetaloPersistencyManager.h"
 
@@ -60,6 +59,7 @@ PetaloPhysics::~PetaloPhysics()
 {
   delete msg_;
   delete wls_;
+  delete pos_annihil_;
 }
 
 void PetaloPhysics::ConstructParticle()
@@ -70,7 +70,7 @@ void PetaloPhysics::ConstructParticle()
 
 void PetaloPhysics::ConstructProcess()
 {
-  G4ProcessManager *pmanager = 0;
+  G4ProcessManager* pmanager = 0;
 
   // Add our own wavelength shifting process for the optical photon
   pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
@@ -80,14 +80,15 @@ void PetaloPhysics::ConstructProcess()
                 "G4OpticalPhoton without a process manager.");
   }
 
-  wls_ = new WavelengthShifting();
+  wls_ = new nexus::WavelengthShifting();
   pmanager->AddDiscreteProcess(wls_);
 
   pmanager = G4Positron::Definition()->GetProcessManager();
 
   // Remove Geant4 annihilation process
   G4VProcess* eplusAnnihilation =
-    G4ProcessTable::GetProcessTable()->FindProcess("annihil", G4Positron::Definition());
+    G4ProcessTable::GetProcessTable()->FindProcess("annihil",
+                                                   G4Positron::Definition());
   pmanager->RemoveProcess(eplusAnnihilation);
   // Add our custom-made process
   pos_annihil_ = new PositronAnnihilation();
@@ -98,7 +99,7 @@ void PetaloPhysics::ConstructProcess()
   if (risetime_)
   {
     pmanager = G4Electron::Definition()->GetProcessManager();
-    G4Scintillation *theScintillationProcess =
+    G4Scintillation* theScintillationProcess =
         (G4Scintillation *)G4ProcessTable::GetProcessTable()->FindProcess("Scintillation",
                                                                           G4Electron::Definition());
     theScintillationProcess->SetFiniteRiseTime(true);
@@ -107,8 +108,9 @@ void PetaloPhysics::ConstructProcess()
   if (noCompt_)
   {
     pmanager = G4Gamma::Definition()->GetProcessManager();
-    G4VProcess *cs =
-      G4ProcessTable::GetProcessTable()->FindProcess("compt", G4Gamma::Definition());
+    G4VProcess* cs =
+      G4ProcessTable::GetProcessTable()->FindProcess("compt",
+                                                     G4Gamma::Definition());
     pmanager->RemoveProcess(cs);
   }
 

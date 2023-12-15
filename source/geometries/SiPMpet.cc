@@ -37,7 +37,8 @@ SiPMpet::SiPMpet() : GeometryBase(),
                      visibility_(0)
 {
   /// Messenger
-  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
+  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/",
+                                "Control commands of geometry.");
   msg_->DeclareProperty("SiPMpet_vis", visibility_, "SiPMpet Visibility");
 }
 
@@ -62,19 +63,20 @@ void SiPMpet::Construct()
   dimensions_.setY(sipm_y);
   dimensions_.setZ(sipm_z);
 
-  G4Box *sipm_solid = new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
+  G4Box* sipm_solid =
+    new G4Box("SIPMpet", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = materials::Epoxy();
+  G4Material* epoxy = materials::Epoxy();
   epoxy->SetMaterialPropertiesTable(petopticalprops::GlassEpoxy());
 
-  G4LogicalVolume *sipm_logic =
+  G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
 
   this->SetLogicalVolume(sipm_logic);
 
   // TPB coating
   G4double tpb_z = 0.001 * mm;
-  G4Box *tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
+  G4Box* tpb_solid = new G4Box("TPB", sipm_x / 2., sipm_y / 2., tpb_z / 2);
   G4Material *TPB = materials::TPB();
   TPB->SetMaterialPropertiesTable(petopticalprops::TPB());
   G4LogicalVolume *tpb_logic =
@@ -107,13 +109,14 @@ void SiPMpet::Construct()
   G4double active_side = 6.0 * mm;
   G4double active_depth = 0.01 * mm;
 
-  G4Box *active_solid =
-      new G4Box("PHOTODIODES", active_side / 2., active_side / 2., active_depth / 2);
+  G4Box* active_solid =
+      new G4Box("PHOTODIODES", active_side / 2., active_side / 2.,
+                active_depth / 2);
 
-  G4Material *silicon =
+  G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
-  G4LogicalVolume *active_logic =
+  G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic,
@@ -125,14 +128,15 @@ void SiPMpet::Construct()
 
   const G4int entries = 21;
 
-  G4double energies[entries] = {1.54980241262 * eV, 1.59979603883 * eV,
-                                1.65312257346 * eV, 1.71012680013 * eV, 1.77120275727 * eV,
-                                1.8368028594 * eV, 1.90744912322 * eV, 1.98374708815 * eV,
-                                2.06640321682 * eV, 2.15624683494 * eV, 2.25425805471 * eV,
-                                2.36160367637 * eV, 2.47968386018 * eV, 2.61019353704 * eV,
-                                2.75520428909 * eV, 2.91727512963 * eV, 3.09960482523 * eV,
-                                3.30624514691 * eV, 3.54240551455 * eV, 3.81489824644 * eV,
-                                3.96749 * eV};
+  G4double energies[entries] =
+    {1.54980241262 * eV, 1.59979603883 * eV,
+     1.65312257346 * eV, 1.71012680013 * eV, 1.77120275727 * eV,
+     1.8368028594 * eV, 1.90744912322 * eV, 1.98374708815 * eV,
+     2.06640321682 * eV, 2.15624683494 * eV, 2.25425805471 * eV,
+     2.36160367637 * eV, 2.47968386018 * eV, 2.61019353704 * eV,
+     2.75520428909 * eV, 2.91727512963 * eV, 3.09960482523 * eV,
+     3.30624514691 * eV, 3.54240551455 * eV, 3.81489824644 * eV,
+     3.96749 * eV};
   G4double reflectivity[entries] = {0., 0., 0., 0., 0.,
                                     0., 0., 0., 0., 0.,
                                     0., 0., 0., 0., 0.,
@@ -147,11 +151,11 @@ void SiPMpet::Construct()
                                   0.35, 0.315, 0.185,
                                   0.06};
 
-  G4MaterialPropertiesTable *sipm_mt = new G4MaterialPropertiesTable();
+  G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
   sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
   sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-  G4OpticalSurface *sipm_opsurf =
+  G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
   sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
@@ -160,12 +164,12 @@ void SiPMpet::Construct()
   // SENSITIVE DETECTOR ////////////////////////////////////////////
 
   G4String sdname = "/SIPMpet/SiPM";
-  G4SDManager *sdmgr = G4SDManager::GetSDMpointer();
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
     //      SensorSD* sipmsd = new SensorSD(sdname);
-    ToFSD *sipmsd = new ToFSD(sdname);
+    ToFSD* sipmsd = new ToFSD(sdname);
     sipmsd->SetDetectorVolumeDepth(0);
     sipmsd->SetDetectorNamingOrder(1000.);
     sipmsd->SetMotherVolumeDepth(1);

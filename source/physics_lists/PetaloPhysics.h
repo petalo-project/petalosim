@@ -9,11 +9,12 @@
 #ifndef PETALO_PHYSICS_H
 #define PETALO_PHYSICS_H
 
+#include "nexus/WavelengthShifting.h"
+
 #include <G4VPhysicsConstructor.hh>
 #include <VDetector.hh>
 
 class G4GenericMessenger;
-class WavelengthShifting;
 class PositronAnnihilation;
 
 class PetaloPhysics : public G4VPhysicsConstructor
@@ -29,7 +30,7 @@ public:
   /// Construct all required physics processes (Geant4 mandatory method)
   virtual void ConstructProcess();
 
-  VDetector *petalo_;
+  VDetector* petalo_;
 
 private:
   G4bool risetime_; ///< Rise time for LYSO
@@ -42,8 +43,10 @@ private:
 
   G4String petalo_detector_;
 
-  G4GenericMessenger *msg_;
-  WavelengthShifting *wls_;
+  G4GenericMessenger* msg_;
+
+  nexus::WavelengthShifting* wls_;
+  
   PositronAnnihilation* pos_annihil_;
 };
 

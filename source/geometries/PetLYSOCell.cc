@@ -13,9 +13,9 @@
 #include "PetOpticalMaterialProperties.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/BoxPointSampler.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
@@ -136,10 +136,10 @@ void PetLYSOCell::BuildDetector()
   G4double det_size = active_size_ + 2. * pdb_z_ + 2. * det_thickness_;
   G4double det_size2 =
       z_size_ + 2. * sipm_->GetDimensions().z() + 2. * det_thickness_;
-  G4Box *det_solid =
+  G4Box* det_solid =
       //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
       new G4Box("WALL", det_size / 2., det_size / 2., det_size2 / 2.);
-  G4Material *steel = materials::Steel();
+  G4Material* steel = materials::Steel();
 
   det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
   det_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -152,7 +152,7 @@ void PetLYSOCell::BuildLYSO()
 {
   G4double lyso_size = active_size_ + 2. * pdb_z_;
   G4double lyso_size2 = z_size_ + 2. * sipm_->GetDimensions().z();
-  G4Box *lyso_solid =
+  G4Box* lyso_solid =
       new G4Box("LYSO", lyso_size / 2., lyso_size / 2., lyso_size2 / 2.);
 
   lyso_logic_ = new G4LogicalVolume(lyso_solid, lyso_, "LYSO");
@@ -163,12 +163,12 @@ void PetLYSOCell::BuildLYSO()
 
 void PetLYSOCell::BuildActive()
 {
-  G4Box *active_solid =
+  G4Box* active_solid =
       new G4Box("ACTIVE_LYSO", active_size_ / 2., active_size_ / 2., z_size_ / 2.);
   // G4Box* active_solid =
   //   new G4Box("ACTIVE", lXe_size/2., lXe_size/2., lXe_size2/2.);
 
-  G4LogicalVolume *active_logic =
+  G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, lyso_, "ACTIVE_LYSO");
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   // G4VisAttributes red_color;
@@ -180,7 +180,7 @@ void PetLYSOCell::BuildActive()
                     "ACTIVE_LYSO", lyso_logic_, false, 0, true);
 
   // Set the ACTIVE volume as an ionization sensitive active
-  IonizationSD *ionisd = new IonizationSD("/PETALX/ACTIVE_LYSO");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALX/ACTIVE_LYSO");
   active_logic->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
@@ -257,7 +257,7 @@ void PetLYSOCell::BuildSiPMPlane()
     }
   }
 
-  G4LogicalVolume *pdb_logic = pdb_->GetLogicalVolume();
+  G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
 
   G4double displ = active_size_ / 2. + pdb_z_ / 2.;
   rot.rotateY(pi / 2.);

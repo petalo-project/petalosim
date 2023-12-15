@@ -11,9 +11,9 @@
 #include "SiPMpetFBK.h"
 #include "Tile.h"
 #include "PetOpticalMaterialProperties.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/CylinderPointSampler.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/OpticalMaterialProperties.h"
@@ -62,13 +62,15 @@ FullRingTiles::FullRingTiles() : GeometryBase(),
   depth_cmd.SetRange("depth>0.");
 
   G4GenericMessenger::Command &inner_r_cmd =
-      msg_->DeclareProperty("inner_radius", inner_radius_, "Inner radius of ring");
+      msg_->DeclareProperty("inner_radius", inner_radius_,
+                            "Inner radius of ring");
   inner_r_cmd.SetUnitCategory("Length");
   inner_r_cmd.SetParameterName("inner_radius", false);
   inner_r_cmd.SetRange("inner_radius>0.");
 
   msg_->DeclareProperty("tile_rows", n_tile_rows_, "Number of tile rows");
-  msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
+  msg_->DeclareProperty("instrumented_faces", instr_faces_,
+                        "Number of instrumented faces");
 
   tile_ = new Tile();
 
@@ -76,7 +78,8 @@ FullRingTiles::FullRingTiles() : GeometryBase(),
   phantom_length_ = 10. * cm;
 
   cylindric_gen_ =
-      new CylinderPointSampler(0., phantom_length_, phantom_diam_ / 2., 0., G4ThreeVector(0., 0., 0.));
+      new CylinderPointSampler(0., phantom_length_, phantom_diam_ / 2., 0.,
+                               G4ThreeVector(0., 0., 0.));
 }
 
 FullRingTiles::~FullRingTiles()
@@ -87,7 +90,8 @@ void FullRingTiles::Construct()
 {
   // LAB. This is just a volume of air surrounding the detector
   G4double lab_size = 1. * m;
-  G4Box *lab_solid = new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
+  G4Box* lab_solid =
+    new G4Box("LAB", lab_size / 2., lab_size / 2., lab_size / 2.);
 
   lab_logic_ =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
@@ -102,7 +106,8 @@ void FullRingTiles::Construct()
   G4cout << "Lateral dimensions (mm) = " << lat_dimension_cell_ / mm << G4endl;
 
   external_radius_ = inner_radius_ + depth_;
-  G4cout << "Radial dimensions (mm): " << inner_radius_ / mm << ", " << external_radius_ / mm << G4endl;
+  G4cout << "Radial dimensions (mm): " << inner_radius_ / mm
+         << ", " << external_radius_ / mm << G4endl;
   BuildCryostat();
   BuildSensors();
 }
@@ -110,29 +115,33 @@ void FullRingTiles::Construct()
 void FullRingTiles::BuildCryostat()
 {
   const G4double space_for_elec = 2. * cm;
-  const G4double int_radius_cryo = inner_radius_ - cryo_thickn_ - space_for_elec;
-  const G4double ext_radius_cryo = external_radius_ + cryo_thickn_ + space_for_elec;
+  const G4double int_radius_cryo =
+    inner_radius_ - cryo_thickn_ - space_for_elec;
+  const G4double ext_radius_cryo =
+    external_radius_ + cryo_thickn_ + space_for_elec;
 
-  G4Tubs *cryostat_solid =
-      new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_ / 2., 0, twopi);
-  G4Material *steel = materials::Steel();
-  G4LogicalVolume *cryostat_logic =
+  G4Tubs* cryostat_solid =
+      new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_ / 2.,
+                 0, twopi);
+  G4Material* steel = materials::Steel();
+  G4LogicalVolume* cryostat_logic =
       new G4LogicalVolume(cryostat_solid, steel, "CRYOSTAT");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
                     "CRYOSTAT", lab_logic_, false, 0, true);
 
   G4double ext_offset = 4. * mm;
-  G4Tubs *LXe_solid =
-      new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
+  G4Tubs* LXe_solid =
+      new G4Tubs("LXE", inner_radius_ - kapton_thickn_,
+                 external_radius_ + ext_offset + kapton_thickn_,
                  (lat_dimension_cell_ + 2. * kapton_thickn_) / 2., 0, twopi);
-  G4Material *LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+  G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
   LXe->SetMaterialPropertiesTable(opticalprops::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
                     "LXE", cryostat_logic, false, 0, true);
 
-  G4Tubs *active_solid =
+  G4Tubs* active_solid =
       new G4Tubs("ACTIVE", inner_radius_, external_radius_ + ext_offset,
                  lat_dimension_cell_ / 2., 0, twopi);
   active_logic_ =
@@ -141,36 +150,38 @@ void FullRingTiles::BuildCryostat()
                     "ACTIVE", LXe_logic_, false, 0, true);
 
   // Set the ACTIVE volume as an ionization sensitive det
-  IonizationSD *ionisd = new IonizationSD("/PETALO/ACTIVE");
+  PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
   active_logic_->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
   // Limit the step size in ACTIVE volume for better tracking precision
   active_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
 
-  G4Material *kapton =
+  G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
 
-  G4Tubs *kapton_int_solid =
+  G4Tubs* kapton_int_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
                  lat_dimension_cell_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_int_logic =
+  G4LogicalVolume* kapton_int_logic =
       new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
                     "KAPTON", LXe_logic_, false, 0, true);
 
-  G4Tubs *kapton_ext_solid =
-      new G4Tubs("KAPTON", external_radius_ + ext_offset, external_radius_ + ext_offset + kapton_thickn_,
+  G4Tubs* kapton_ext_solid =
+      new G4Tubs("KAPTON", external_radius_ + ext_offset,
+                 external_radius_ + ext_offset + kapton_thickn_,
                  lat_dimension_cell_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_ext_logic =
+  G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
                     "KAPTON", LXe_logic_, false, 0, true);
 
-  G4Tubs *kapton_lat_solid =
-      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
+  G4Tubs* kapton_lat_solid =
+      new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_,
+                 external_radius_ + ext_offset + kapton_thickn_,
                  kapton_thickn_ / 2., 0, twopi);
-  G4LogicalVolume *kapton_lat_logic =
+  G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
   G4double z_pos = lat_dimension_cell_ / 2. + kapton_thickn_ / 2.;
   new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
@@ -179,7 +190,7 @@ void FullRingTiles::BuildCryostat()
                     "KAPTON", LXe_logic_, false, 1, true);
 
   // OPTICAL SURFACE FOR REFLECTION
-  G4OpticalSurface *db_opsur = new G4OpticalSurface("BORDER");
+  G4OpticalSurface* db_opsur = new G4OpticalSurface("BORDER");
   db_opsur->SetType(dielectric_metal);
   db_opsur->SetModel(unified);
   db_opsur->SetFinish(ground);
@@ -207,7 +218,8 @@ void FullRingTiles::BuildSensors()
   G4double tile_sep = 0.050 * mm;
   G4double block_size = 2 * tile_dim_.x() + tile_sep + batch_sep;
   G4int n_batches_per_row = 2 * pi * external_radius_ / block_size;
-  G4cout << "Number of SiPMs: " << n_batches_per_row * 2 * n_tile_rows_ * 32 << G4endl;
+  G4cout << "Number of SiPMs: " << n_batches_per_row * 2 * n_tile_rows_ * 32
+         << G4endl;
   G4double step = 2. * pi / n_batches_per_row;
 
   // The external radius distance must be at the level of the SiPM surfaces
@@ -242,16 +254,16 @@ void FullRingTiles::BuildSensors()
     {
       G4double angle = i * step;
       rot.rotateZ(step);
-      x_pos = -radius * sin(angle) + (tile_dim_.x() + tile_sep) / 2 * cos(angle);
-      y_pos = radius * cos(angle) + (tile_dim_.x() + tile_sep) / 2 * sin(angle);
+      x_pos = -radius * sin(angle) + (tile_dim_.x() + tile_sep)/2 * cos(angle);
+      y_pos = radius * cos(angle) + (tile_dim_.x() + tile_sep)/2 * sin(angle);
       position.setX(x_pos);
       position.setY(y_pos);
       vol_name = "TILE_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
                         vol_name, active_logic_, false, copy_no, false);
       copy_no += 1;
-      x_pos = -radius * sin(angle) - (tile_dim_.x() + tile_sep) / 2 * cos(angle);
-      y_pos = radius * cos(angle) - (tile_dim_.x() + tile_sep) / 2 * sin(angle);
+      x_pos = -radius * sin(angle) - (tile_dim_.x() + tile_sep)/2 * cos(angle);
+      y_pos = radius * cos(angle) - (tile_dim_.x() + tile_sep)/2 * sin(angle);
       position.setX(x_pos);
       position.setY(y_pos);
       vol_name = "TILE_" + std::to_string(copy_no);
@@ -264,9 +276,9 @@ void FullRingTiles::BuildSensors()
 
 void FullRingTiles::BuildPhantom()
 {
-  G4Tubs *phantom_solid = new G4Tubs("PHANTOM", 0., phantom_diam_ / 2.,
+  G4Tubs* phantom_solid = new G4Tubs("PHANTOM", 0., phantom_diam_ / 2.,
                                      phantom_length_ / 2., 0, twopi);
-  G4LogicalVolume *phantom_logic =
+  G4LogicalVolume* phantom_logic =
       new G4LogicalVolume(phantom_solid, materials::PEEK(), "PHANTOM");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), phantom_logic,
                     "PAHNTOM", lab_logic_, false, 0, true);

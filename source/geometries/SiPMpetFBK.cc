@@ -41,9 +41,11 @@ SiPMpetFBK::SiPMpetFBK() : GeometryBase(),
 
 {
   /// Messenger
-  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
+  msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/",
+                                "Control commands of geometry.");
   msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
-  msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
+  msg_->DeclareProperty("refr_index", refr_index_,
+                        "Refraction index for epoxy");
   msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
 
   G4GenericMessenger::Command &size_cmd =
@@ -69,9 +71,10 @@ void SiPMpetFBK::Construct()
 
   SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
-  G4Box *sipm_solid = new G4Box("SiPMpetFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
+  G4Box* sipm_solid =
+    new G4Box("SiPMpetFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
-  G4Material *epoxy = materials::Epoxy();
+  G4Material* epoxy = materials::Epoxy();
   if (refr_index_ > 0)
   {
     epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
@@ -81,7 +84,7 @@ void SiPMpetFBK::Construct()
     epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyLXeRefr());
   }
 
-  G4LogicalVolume *sipm_logic =
+  G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMpetFBK");
 
   this->SetLogicalVolume(sipm_logic);
@@ -92,26 +95,28 @@ void SiPMpetFBK::Construct()
   G4double active_y = sipm_y;
   G4double active_depth = 0.01 * mm;
 
-  G4Box *active_solid =
+  G4Box* active_solid =
       new G4Box("PHOTODIODES", active_x / 2., active_y / 2., active_depth / 2);
 
-  G4Material *silicon =
+  G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
-  G4LogicalVolume *active_logic =
+  G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z / 2. - active_depth / 2. - offset),
+  new G4PVPlacement(0,
+                    G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - offset),
                     active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
 
   // OPTICAL SURFACES /////////////////////////////////////////////
 
   const G4int entries = 12;
 
-  G4double energies[entries] = {1.5 * eV, 6.19919 * eV, 6.35814 * eV, 6.52546 * eV,
-                                6.70182 * eV, 6.88799 * eV, 7.08479 * eV,
-                                7.29316 * eV, 7.51417 * eV, 7.74898 * eV,
-                                7.99895 * eV, 8.26558 * eV};
+  G4double energies[entries] =
+    {1.5 * eV, 6.19919 * eV, 6.35814 * eV, 6.52546 * eV,
+     6.70182 * eV, 6.88799 * eV, 7.08479 * eV,
+     7.29316 * eV, 7.51417 * eV, 7.74898 * eV,
+     7.99895 * eV, 8.26558 * eV};
   G4double reflectivity[entries] = {0., 0., 0., 0.,
                                     0., 0., 0.,
                                     0., 0., 0.,
@@ -121,11 +126,11 @@ void SiPMpetFBK::Construct()
                                   eff_, eff_, eff_,
                                   eff_, eff_};
 
-  G4MaterialPropertiesTable *sipm_mt = new G4MaterialPropertiesTable();
+  G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
   sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
   sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-  G4OpticalSurface *sipm_opsurf =
+  G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
   sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
@@ -134,11 +139,11 @@ void SiPMpetFBK::Construct()
   // SENSITIVE DETECTOR ////////////////////////////////////////////
 
   G4String sdname = "/SIPM/SiPMpetFBK";
-  G4SDManager *sdmgr = G4SDManager::GetSDMpointer();
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false))
   {
-    ToFSD *sipmsd = new ToFSD(sdname);
+    ToFSD* sipmsd = new ToFSD(sdname);
 
     if (sensor_depth_ == -1)
       G4Exception("[SiPMpetFBK]", "Construct()", FatalException,

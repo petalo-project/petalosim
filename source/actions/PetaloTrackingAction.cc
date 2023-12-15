@@ -2,8 +2,8 @@
 // petalosim | PetaloTrackingAction.cc
 //
 // This class is the default tracking action of the PETALO simulation.
-// It stores in memory the trajectories of all particles, except optical photons
-// , with the relevant tracking information that will be
+// It stores in memory the trajectories of all particles, except for
+// optical photons, with the relevant tracking information that will be
 // saved to the output file.
 //
 // The PETALO Collaboration
@@ -82,6 +82,7 @@ void PetaloTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalMomentum(track->GetMomentum());
 
   // Record last process of the track
-  G4String proc_name = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+  G4String proc_name =
+    track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   trj->SetFinalProcess(proc_name);
 }

@@ -26,8 +26,8 @@ using namespace nexus;
 
 REGISTER_CLASS(PetaloEventAction, G4UserEventAction)
 
-PetaloEventAction::PetaloEventAction() : G4UserEventAction(), nevt_(0), nupdate_(10), min_energy_(0.),
-                                         max_energy_(DBL_MAX)
+PetaloEventAction::PetaloEventAction(): G4UserEventAction(), nevt_(0),
+  nupdate_(10), min_energy_(0.), max_energy_(DBL_MAX)
 {
   msg_ = new G4GenericMessenger(this, "/Actions/PetaloEventAction/");
 
@@ -55,7 +55,7 @@ PetaloEventAction::~PetaloEventAction()
 {
 }
 
-void PetaloEventAction::BeginOfEventAction(const G4Event * /*event*/)
+void PetaloEventAction::BeginOfEventAction(const G4Event* /*event*/)
 {
   // Print out event number info
   if ((nevt_ % nupdate_) == 0)
@@ -66,7 +66,7 @@ void PetaloEventAction::BeginOfEventAction(const G4Event * /*event*/)
   }
 }
 
-void PetaloEventAction::EndOfEventAction(const G4Event *event)
+void PetaloEventAction::EndOfEventAction(const G4Event* event)
 {
   nevt_++;
 
@@ -80,16 +80,16 @@ void PetaloEventAction::EndOfEventAction(const G4Event *event)
 
     G4double edep = 0.;
 
-    G4TrajectoryContainer *tc = event->GetTrajectoryContainer();
+    G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
     if (tc) {
       for (unsigned int i = 0; i < tc->size(); ++i) {
-        Trajectory *trj = dynamic_cast<Trajectory *>((*tc)[i]);
+        Trajectory* trj = dynamic_cast<Trajectory *>((*tc)[i]);
         edep += trj->GetEnergyDeposit();
       }
     }
 
-    PetaloPersistencyManager *pm =
-      dynamic_cast<PetaloPersistencyManager *>(G4VPersistencyManager::GetPersistencyManager());
+    PetaloPersistencyManager* pm =
+      dynamic_cast<PetaloPersistencyManager*>(G4VPersistencyManager::GetPersistencyManager());
 
     if (!event->IsAborted() && edep > 0)
     {

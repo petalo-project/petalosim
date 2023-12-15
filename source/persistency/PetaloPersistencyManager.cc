@@ -12,10 +12,10 @@
 #include "ToFSD.h"
 #include "ChargeSD.h"
 #include "PetSaveAllSteppingAction.h"
+#include "PetIonizationSD.h"
 
 #include "nexus/Trajectory.h"
 #include "nexus/TrajectoryMap.h"
-#include "nexus/IonizationSD.h"
 #include "nexus/NexusApp.h"
 #include "nexus/DetectorConstruction.h"
 #include "nexus/FactoryBase.h"
@@ -34,8 +34,6 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 using namespace nexus;
 using namespace CLHEP;
@@ -166,7 +164,8 @@ void PetaloPersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
       std::string key, value;
       std::getline(init_read, key, ' ');
       std::getline(init_read, value);
-      if ((key == "/nexus/RegisterTrackingAction") && (value == "OpticalTrackingAction")) {
+      if ((key == "/nexus/RegisterTrackingAction") &&
+          (value == "OpticalTrackingAction")) {
         save_opt_phot = true;
         break;
       }
@@ -241,7 +240,7 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
     // Fetch collection using the id number
     G4VHitsCollection* hits = hce->GetHC(hcid);
 
-    if (hcname == IonizationSD::GetCollectionUniqueName()) {
+    if (hcname == PetIonizationSD::GetCollectionUniqueName()) {
       if (sns_only_ == false) {
 	StoreIonizationHits(hits);
       }
@@ -251,10 +250,10 @@ void PetaloPersistencyManager::StoreHits(G4HCofThisEvent* hce)
     else if (hcname == ChargeSD::GetCollectionUniqueName())
       StoreChargeHits(hits);
     else {
-      G4String msg =
+      G4String er =
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
-      G4Exception("StoreHits()", "[PetaloPersistencyManager]", JustWarning, msg);
+      G4Exception("StoreHits()", "[PetaloPersistencyManager]", JustWarning, er);
     }
   }
 }
@@ -304,13 +303,15 @@ void PetaloPersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
       std::string sdname = hits->GetSDname();
       G4ThreeVector xyz = hit->GetPosition();
       if (save_tot_charge_ == true) {
-        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)s_id, (unsigned int)charge);
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)s_id,
+                                       (unsigned int)charge);
       }
       std::vector<G4int>::iterator pos_it =
         std::find(sns_posvec_.begin(), sns_posvec_.end(), s_id);
       if (pos_it == sns_posvec_.end()) {
         h5writer_->WriteSensorPosInfo((unsigned int)s_id, sdname.c_str(),
-                                      (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+                                      (float)xyz.x(), (float)xyz.y(),
+                                      (float)xyz.z());
         sns_posvec_.push_back(s_id);
       }
       // Save also individual photons
@@ -357,17 +358,20 @@ void PetaloPersistencyManager::StoreChargeHits(G4VHitsCollection* hc)
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       unsigned int time_bin = (unsigned int)((*it).first/wire_bin_size_+0.5);
       unsigned int charge   = (unsigned int)((*it).second+0.5);
-      h5writer_->WriteChargeDataInfo(nevt_, (unsigned int)hit->GetSensorID(), time_bin, charge);
+      h5writer_->WriteChargeDataInfo(nevt_, (unsigned int)hit->GetSensorID(),
+                                     time_bin, charge);
     }
 
 
     std::vector<G4int>::iterator pos_it =
-      std::find(charge_posvec_.begin(), charge_posvec_.end(), hit->GetSensorID());
+      std::find(charge_posvec_.begin(), charge_posvec_.end(),
+                hit->GetSensorID());
     if (pos_it == charge_posvec_.end()) {
       std::string sdname = hits->GetSDname();
       G4ThreeVector xyz  = hit->GetPosition();
-      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetSensorID(), sdname.c_str(),
-                                    (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetSensorID(),
+                                    sdname.c_str(), (float)xyz.x(),
+                                    (float)xyz.y(), (float)xyz.z());
       charge_posvec_.push_back(hit->GetSensorID());
     }
   }
@@ -395,12 +399,12 @@ void PetaloPersistencyManager::StoreSteps()
                            initial_volumes[key][step_id],
                            final_volumes[key][step_id],
                            proc_names[key][step_id],
-                           initial_poss   [key][step_id].x(),
-                           initial_poss   [key][step_id].y(),
-                           initial_poss   [key][step_id].z(),
-                           final_poss   [key][step_id].x(),
-                           final_poss   [key][step_id].y(),
-                           final_poss   [key][step_id].z());
+                           initial_poss[key][step_id].x(),
+                           initial_poss[key][step_id].y(),
+                           initial_poss[key][step_id].z(),
+                           final_poss[key][step_id].x(),
+                           final_poss[key][step_id].y(),
+                           final_poss[key][step_id].z());
     }
   }
   sa->Reset();
@@ -456,7 +460,7 @@ void PetaloPersistencyManager::SaveConfigurationInfo(G4String file_name)
     std::getline(ss, key, ' ');
     std::getline(ss, value);
 
-    if (key != "") {
+    if (!key.empty()) {
       auto found_other_macro = key.find("/control/execute");
       if (found_other_macro == std::string::npos) {
         if (key[0] == '\n') {

@@ -10,7 +10,6 @@
 
 #include <Randomize.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
 
 using namespace CLHEP;
@@ -18,7 +17,8 @@ using namespace CLHEP;
 G4ThreeVector GenerateNonCollinearVector(G4ThreeVector dir, G4double angle)
 {
   G4double Phi = (twopi * G4UniformRand())/2. ;
-  G4ThreeVector non_coll_dir(sin(angle)*cos(Phi), sin(angle)*sin(Phi), cos(angle));
+  G4ThreeVector non_coll_dir(sin(angle)*cos(Phi), sin(angle)*sin(Phi),
+                             cos(angle));
   non_coll_dir.rotateUz(dir.unit());
   return non_coll_dir;
 }
