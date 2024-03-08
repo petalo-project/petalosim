@@ -1,3 +1,9 @@
+tag v4_01_00 - 8 Mar 2023
+	- Adapt the code to G4 v11.2 and to latest nexus changes
+	- Remove dependence on nexus IonizationSD
+	- Remove petalosim WavelengthShifting process and use nexus one instead
+	- Remove permanent writing of h5 files in automatic tests
+
 tag v4_00_02 - 26 Oct 2023
 	- Fix the position of the teflon block in the FBK configuration
 
