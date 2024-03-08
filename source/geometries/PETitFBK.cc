@@ -17,7 +17,6 @@
 
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
-#include "nexus/SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
