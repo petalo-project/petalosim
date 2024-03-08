@@ -11,7 +11,7 @@
 #include "PetPlainDice.h"
 #include "PetIonizationSD.h"
 
-#include "nexus/BoxPointSampler.h"
+#include "nexus/BoxPointSamplerLegacy.h"
 #include "nexus/OpticalMaterialProperties.h"
 #include "nexus/MaterialsList.h"
 
@@ -81,12 +81,12 @@ void Pet2boxes::Construct()
   db_z_ = db_->GetDimensions().z();
 
   // Vertex Generators
-  active_gen_ = new BoxPointSampler(active_size_, active_size_, z_size_, 0.,
-                                    G4ThreeVector(0., 0., 0.), 0);
+  active_gen_ = new BoxPointSamplerLegacy(active_size_, active_size_, z_size_, 0.,
+                                          G4ThreeVector(0., 0., 0.), 0);
 
   double zpos_generation = z_size_ / 2. + db_z_ + det_thickness_ + 1. * mm;
-  surf_gen_ = new BoxPointSampler(active_size_, active_size_, 0., 0.,
-                                  G4ThreeVector(0., 0., -zpos_generation), 0);
+  surf_gen_ = new BoxPointSamplerLegacy(active_size_, active_size_, 0., 0.,
+                                        G4ThreeVector(0., 0., -zpos_generation), 0);
 
   // // LAB. This is just a volume of air surrounding the detector
   // G4double lab_size = 1.*m;

@@ -13,7 +13,7 @@
 #include "PetOpticalMaterialProperties.h"
 #include "PetIonizationSD.h"
 
-#include "nexus/CylinderPointSampler.h"
+#include "nexus/CylinderPointSamplerLegacy.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
 #include "nexus/OpticalMaterialProperties.h"
@@ -78,8 +78,8 @@ FullRingTiles::FullRingTiles() : GeometryBase(),
   phantom_length_ = 10. * cm;
 
   cylindric_gen_ =
-      new CylinderPointSampler(0., phantom_length_, phantom_diam_ / 2., 0.,
-                               G4ThreeVector(0., 0., 0.));
+    new CylinderPointSamplerLegacy(0., phantom_length_, phantom_diam_ / 2., 0.,
+                                   G4ThreeVector(0., 0., 0.));
 }
 
 FullRingTiles::~FullRingTiles()

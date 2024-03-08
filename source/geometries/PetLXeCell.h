@@ -17,7 +17,7 @@ class G4Material;
 
 namespace nexus
 {
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
 }
 
 class PetPlainDice;
@@ -66,13 +66,13 @@ private:
   G4double max_step_size_; /// Maximum Step Size
 
   //Vertex generator
-  BoxPointSampler *active_gen_;
+  BoxPointSamplerLegacy *active_gen_;
 
   /// Messenger for the definition of control commands
   G4GenericMessenger *msg_;
 
   /// Vertex generator from a surface just outside the detector walls
-  BoxPointSampler *surf_gen_;
+  BoxPointSamplerLegacy *surf_gen_;
 
   // Dice class
   // PetKDBFixedPitch* db_;

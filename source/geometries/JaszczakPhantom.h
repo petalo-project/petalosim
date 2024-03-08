@@ -18,7 +18,7 @@ class G4Navigator;
 namespace nexus
 {
   class SpherePointSampler;
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
 }
 
 using namespace nexus;
@@ -44,7 +44,7 @@ class JaszczakPhantom: public GeometryBase
   G4GenericMessenger *msg_;
   G4Navigator* geom_navigator_;
 
-  CylinderPointSampler2020* cyl_gen_;
+  CylinderPointSampler* cyl_gen_;
 
   G4double bckg_activity_;
   G4double sphere_activity_;

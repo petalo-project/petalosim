@@ -172,8 +172,9 @@ void PETitBox::Construct()
                     "NA22_SOURCE_SUPPORT", air_source_tube_logic,
                     false, 0, false);
 
-  source_gen_ = new SpherePointSampler(0, na22.GetSourceDiameter()/2,
-                                       G4ThreeVector(0, source_offset_y, 0.));
+  source_gen_ =
+    new SpherePointSampler(0, na22.GetSourceDiameter()/2, 0., twopi, 0, pi,
+                           G4ThreeVector(0, source_offset_y, 0.), 0);
 
   // SOURCE TUBE INSIDE BOX ////////////////////////////////////
   G4Tubs* source_tube_inside_box_solid =
@@ -223,7 +224,7 @@ G4ThreeVector PETitBox::GenerateVertex(const G4String &region) const
 {
   G4ThreeVector vertex;
   if (region == "SOURCE") {
-      vertex = source_gen_->GenerateVertex("VOLUME");
+      vertex = source_gen_->GenerateVertex(VOLUME);
   } else {
     G4Exception("[PETitBox]", "GenerateVertex()", FatalException,
                 "Unknown vertex generation region!");
