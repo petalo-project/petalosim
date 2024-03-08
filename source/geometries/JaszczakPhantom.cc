@@ -10,7 +10,7 @@
 
 #include "nexus/FactoryBase.h"
 #include "nexus/Visibilities.h"
-#include "nexus/CylinderPointSampler2020.h"
+#include "nexus/CylinderPointSampler.h"
 
 #include <G4Tubs.hh>
 #include <G4Orb.hh>
@@ -94,7 +94,7 @@ void JaszczakPhantom::Construct()
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), water_logic, water_name, cylinder_logic,
                       false, 0, true);
 
-  cyl_gen_ = new CylinderPointSampler2020(water_phys);
+  cyl_gen_ = new CylinderPointSampler(water_phys);
 
   // Spheres
   std::vector<G4double> sphere_radii =
@@ -187,7 +187,7 @@ G4ThreeVector JaszczakPhantom::GenerateVertex(const G4String &/*region*/) const
   G4VPhysicalVolume* VertexVolume;
 
   while (true) {
-    vertex = cyl_gen_->GenerateVertex("VOLUME");
+    vertex = cyl_gen_->GenerateVertex(VOLUME);
     VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(vertex, 0, false);
     G4String vol_name = VertexVolume->GetName();
 

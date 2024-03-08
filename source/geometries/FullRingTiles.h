@@ -18,7 +18,7 @@ class G4LogicalVolume;
 class Tile;
 namespace nexus
 {
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
 }
 
 using namespace nexus;
@@ -69,7 +69,7 @@ private:
   G4LogicalVolume *tile_logic_;
   G4ThreeVector tile_dim_;
 
-  CylinderPointSampler *cylindric_gen_;
+  CylinderPointSamplerLegacy *cylindric_gen_;
 };
 
 #endif

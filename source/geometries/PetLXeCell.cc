@@ -13,7 +13,7 @@
 #include "PetOpticalMaterialProperties.h"
 #include "PetIonizationSD.h"
 
-#include "nexus/BoxPointSampler.h"
+#include "nexus/BoxPointSamplerLegacy.h"
 #include "nexus/Visibilities.h"
 #include "nexus/OpticalMaterialProperties.h"
 
@@ -109,13 +109,13 @@ void PetLXeCell::Construct()
   sipm_->Construct();
 
   // Vertex Generators
-  active_gen_ = new BoxPointSampler(xy_size_, xy_size_, z_size_, 0.,
-                                    G4ThreeVector(0., 0., 0.), 0);
+  active_gen_ = new BoxPointSamplerLegacy(xy_size_, xy_size_, z_size_, 0.,
+                                          G4ThreeVector(0., 0., 0.), 0);
 
   double zpos_generation =
       z_size_ / 2. + sipm_->GetDimensions().z() + det_thickness_ + 1. * mm;
-  surf_gen_ = new BoxPointSampler(xy_size_, xy_size_, 0., 0.,
-                                  G4ThreeVector(0., 0., -zpos_generation), 0);
+  surf_gen_ = new BoxPointSamplerLegacy(xy_size_, xy_size_, 0., 0.,
+                                        G4ThreeVector(0., 0., -zpos_generation), 0);
 
   lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
   if (phys_)
