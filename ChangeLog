@@ -1,3 +1,6 @@
+tag v4_01_01 - 8 Mar 2023
+	- Fix Qt dependence to compile on clusters/Linux OS
+
 tag v4_01_00 - 8 Mar 2023
 	- Adapt the code to G4 v11.2 and to latest nexus changes
 	- Remove dependence on nexus IonizationSD
