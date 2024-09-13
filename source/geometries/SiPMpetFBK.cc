@@ -9,7 +9,7 @@
 #include "SiPMpetFBK.h"
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 
 #include "nexus/SensorSD.h"
 #include "nexus/Visibilities.h"
@@ -77,11 +77,11 @@ void SiPMpetFBK::Construct()
   G4Material* epoxy = materials::Epoxy();
   if (refr_index_ > 0)
   {
-    epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
+    epoxy->SetMaterialPropertiesTable(petmaterialprops::EpoxyFixedRefr(refr_index_));
   }
   else
   {
-    epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyLXeRefr());
+    epoxy->SetMaterialPropertiesTable(petmaterialprops::EpoxyLXeRefr());
   }
 
   G4LogicalVolume* sipm_logic =

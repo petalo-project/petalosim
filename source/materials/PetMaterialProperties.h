@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// petalosim | PetOpticalMaterialProperties.h
+// petalosim | PetMaterialProperties.h
 //
-// Optical properties of relevant materials.
+// Properties of relevant materials.
 //
 // The PETALO Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef P_OPTICAL_MATERIAL_PROPERTIES_H
-#define P_OPTICAL_MATERIAL_PROPERTIES_H
+#ifndef P_MATERIAL_PROPERTIES_H
+#define P_MATERIAL_PROPERTIES_H
 
 #include <globals.hh>
 
@@ -19,7 +19,7 @@ using namespace CLHEP;
 
 /// This is a stateless class where all methods are static functions.
 
-namespace petopticalprops
+namespace petmaterialprops
 {
   G4MaterialPropertiesTable* Epoxy();
   G4MaterialPropertiesTable* GlassEpoxy();
