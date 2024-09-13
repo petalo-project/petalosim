@@ -8,7 +8,7 @@
 
 #include "TileFBK.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "SiPMFBKVUV.h"
 #include "SiPMCells.h"
 
@@ -61,7 +61,7 @@ void TileFBK::Construct()
   // OPTICAL SURFACE FOR REFLECTION
   G4OpticalSurface *fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-  fr4_opsurf->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(GetTileReflectivity()));
+  fr4_opsurf->SetMaterialPropertiesTable(petmaterialprops::ReflectantSurface(GetTileReflectivity()));
 
   new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 

@@ -9,12 +9,12 @@
 
 #include "PETitBox.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "Na22Source.h"
 #include "PetIonizationSD.h"
 
 #include "nexus/Visibilities.h"
-#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialProperties.h"
 #include "nexus/SpherePointSampler.h"
 
 #include <G4LogicalVolume.hh>
@@ -120,7 +120,7 @@ void PETitBox::Construct()
       new G4Box("VACUUM_HAT", vacuum_hat_xsize/2., vacuum_hat_ysize/2., vacuum_hat_zsize/2.);
 
   G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-  vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
+  vacuum->SetMaterialPropertiesTable(materialprops::Vacuum());
   G4LogicalVolume* vacuum_hat_logic =
       new G4LogicalVolume(vacuum_hat_solid, vacuum, "VACUUM_HAT");
 

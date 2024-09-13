@@ -10,7 +10,7 @@
 #include "PetMaterialsList.h"
 #include "PetKDBFixedPitch.h"
 #include "PetPlainDice.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
 #include "PetIonizationSD.h"
@@ -117,12 +117,12 @@ void PetLYSOCell::Construct()
   if (phys_)
   {
     G4cout << "LYSO used with optical properties" << G4endl;
-    lyso_->SetMaterialPropertiesTable(petopticalprops::LYSO());
+    lyso_->SetMaterialPropertiesTable(petmaterialprops::LYSO());
   }
   else
   {
     G4cout << "LYSO used with constant refraction index = 1.8" << G4endl;
-    lyso_->SetMaterialPropertiesTable(petopticalprops::LYSO_nconst());
+    lyso_->SetMaterialPropertiesTable(petmaterialprops::LYSO_nconst());
   }
 
   BuildDetector();
