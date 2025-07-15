@@ -1,0 +1,28 @@
+### GEOMETRY
+#/Geometry/filter_transmitance/visibility_ false
+
+
+### GENERATOR
+/Generator/SingleParticle/particle opticalphoton
+/Generator/SingleParticle/min_energy 1.1271 eV
+/Generator/SingleParticle/max_energy 1.1271 eV
+/Generator/SingleParticle/region CENTER
+/Generator/SingleParticle/momentum 0 0 +1 mm
+
+### PHYSICS
+#/process/optical/processActivation Scintillation true
+#/process/optical/processActivation Cerenkov      true
+
+### VERBOSITIES
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+/nexus/random_seed 132323
+
+### OUTPUT FILE
+#/petalosim/persistency/start_id 0
+#/petalosim/persistency/output_file petit
+
