@@ -14,10 +14,8 @@
 class G4GenericMessenger;
 class G4Material;
 
-namespace nexus
-{
-class IonizationSD;
-}
+class PetIonizationSD;
+
 
 using namespace nexus;
 
@@ -32,16 +30,17 @@ public:
   void Construct();
 
   void SetHoleMaterial(G4Material* mat);
-  void SetIoniSD(IonizationSD* ionisd);
+  void SetIoniSD(PetIonizationSD* ionisd);
   void SetMaxStepSize(G4double step_size);
 
   G4double GetTeflonThickness() const;
   G4double GetTeflonRecessDepth() const;
+  G4LogicalVolume* GetRecessLogic() const;
 
  private:
 
   G4Material* mat_;
-  IonizationSD* ionisd_;
+  PetIonizationSD* ionisd_;
   G4double teflon_block_thick_;
   G4double max_step_size_;
   G4double teflon_recess_depth_;
@@ -49,15 +48,18 @@ public:
   
   /// Messenger for the definition of control commands
   G4GenericMessenger* msg_;
-
+  
+  // Logical volume of the recess for placing the filter
+  G4LogicalVolume* teflon_recess_logic_;
 
 
 };
 
 inline void TeflonBlockHamamatsuFilter::SetHoleMaterial(G4Material* mat) {mat_ = mat;}
-inline void TeflonBlockHamamatsuFilter::SetIoniSD(IonizationSD* ionisd) {ionisd_ = ionisd;}
+inline void TeflonBlockHamamatsuFilter::SetIoniSD(PetIonizationSD* ionisd) {ionisd_ = ionisd;}
 inline void TeflonBlockHamamatsuFilter::SetMaxStepSize(G4double step_size) {max_step_size_ = step_size;}
 inline G4double TeflonBlockHamamatsuFilter::GetTeflonThickness() const {return teflon_block_thick_;}
 inline G4double TeflonBlockHamamatsuFilter::GetTeflonRecessDepth() const {return teflon_recess_depth_;}
+inline G4LogicalVolume* TeflonBlockHamamatsuFilter::GetRecessLogic() const {return teflon_recess_logic_;}
 
 #endif
