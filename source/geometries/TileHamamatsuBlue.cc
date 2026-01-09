@@ -8,7 +8,7 @@
 
 #include "TileHamamatsuBlue.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "SiPMHamamatsuBlue.h"
 
 #include "nexus/Visibilities.h"
@@ -64,7 +64,7 @@ void TileHamamatsuBlue::Construct()
   // OPTICAL SURFACE FOR REFLECTION
   G4OpticalSurface *fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-  fr4_opsurf->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(GetTileReflectivity()));
+  fr4_opsurf->SetMaterialPropertiesTable(petmaterialprops::ReflectantSurface(GetTileReflectivity()));
 
   new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
@@ -86,7 +86,7 @@ void TileHamamatsuBlue::Construct()
       new G4Box("Epoxy", tile_x_ / 2., tile_y_ / 2., epoxy_depth / 2);
 
   G4Material *epoxy = materials::Epoxy();
-  epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
+  epoxy->SetMaterialPropertiesTable(petmaterialprops::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume *epoxy_logic =
       new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");

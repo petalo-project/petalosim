@@ -11,7 +11,7 @@
 
 #include "nexus/Visibilities.h"
 #include "nexus/MaterialsList.h"
-#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -133,7 +133,7 @@ void Tile::Construct()
   G4Box *quartz_solid = new G4Box("TILE_WINDOW", quartz_x / 2., quartz_y / 2., quartz_z / 2);
 
   G4Material *quartz = materials::FusedSilica();
-  quartz->SetMaterialPropertiesTable(opticalprops::FusedSilica());
+  quartz->SetMaterialPropertiesTable(materialprops::FusedSilica());
   G4LogicalVolume *quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_WINDOW");
 

@@ -9,7 +9,7 @@
 
 #include "FullRingInfinity.h"
 #include "SiPMpetVUV.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "PetIonizationSD.h"
 #include "ChargeSD.h"
 #include "JaszczakPhantom.h"
@@ -17,7 +17,7 @@
 #include "nexus/SpherePointSampler.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
-#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialProperties.h"
 #include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
@@ -305,7 +305,7 @@ void FullRingInfinity::BuildCryostat()
       new G4Tubs("LXE", lxe_int_radius, lxe_ext_radius,
                  lxe_width/2., 0, twopi);
     LXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-    LXe_->SetMaterialPropertiesTable(opticalprops::LXe());
+    LXe_->SetMaterialPropertiesTable(materialprops::LXe());
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe_, "LXE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
@@ -369,7 +369,7 @@ void FullRingInfinity::BuildCryostat()
     db_opsur->SetModel(unified);
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
-    db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(wall_refl_));
+    db_opsur->SetMaterialPropertiesTable(petmaterialprops::ReflectantSurface(wall_refl_));
     new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
     new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
     new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
@@ -595,7 +595,7 @@ void FullRingInfinity::BuildSeparators()
 
   G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
-  teflon_optSurf->SetMaterialPropertiesTable(petopticalprops::PTFE());
+  teflon_optSurf->SetMaterialPropertiesTable(petmaterialprops::PTFE());
   new G4LogicalSkinSurface("TEFLON_OPSURF", sep_logic, teflon_optSurf);
 
   G4VisAttributes sep_col{{1. ,  .0 ,  .0 , .5}};

@@ -12,7 +12,7 @@
 #include "PetIonizationSD.h"
 
 #include "nexus/BoxPointSamplerLegacy.h"
-#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialProperties.h"
 #include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
@@ -98,7 +98,7 @@ void Pet2boxes::Construct()
   // this->SetLogicalVolume(lab_logic_);
 
   lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  lXe_->SetMaterialPropertiesTable(opticalprops::LXe());
+  lXe_->SetMaterialPropertiesTable(materialprops::LXe());
 
   BuildDetector();
   BuildLXe();

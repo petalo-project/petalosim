@@ -9,7 +9,7 @@
 #include "SiPMquadFBK.h"
 #include "ToFSD.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 
 #include "nexus/SensorSD.h"
 #include "nexus/Visibilities.h"
@@ -64,7 +64,7 @@ void SiPMquadFBK::Construct()
     new G4Box("SiPMquadFBK", sipm_x / 2., sipm_y / 2., sipm_z / 2);
 
   G4Material* epoxy = materials::Epoxy();
-  epoxy->SetMaterialPropertiesTable(petopticalprops::EpoxyFixedRefr(refr_index_));
+  epoxy->SetMaterialPropertiesTable(petmaterialprops::EpoxyFixedRefr(refr_index_));
 
   G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMquadFBK");

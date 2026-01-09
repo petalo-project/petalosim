@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "PetPlainDice.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 
 #include "nexus/Visibilities.h"
 
@@ -118,8 +118,8 @@ void PetPlainDice::Construct()
   db_opsur->SetSigmaAlpha(0.1);
 
   // G4cout << refl_ << G4endl;
-  // db_opsur->SetMaterialPropertiesTable(petopticalprops::PTFE_with_TPB());
-  db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(refl_));
+  // db_opsur->SetMaterialPropertiesTable(petmaterialprops::PTFE_with_TPB());
+  db_opsur->SetMaterialPropertiesTable(petmaterialprops::ReflectantSurface(refl_));
 
   new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
@@ -129,7 +129,7 @@ void PetPlainDice::Construct()
       new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
     G4Material* TPB = PetMaterialsList::TPB();
-    TPB->SetMaterialPropertiesTable(petopticalprops::TPB_LXe());
+    TPB->SetMaterialPropertiesTable(petmaterialprops::TPB_LXe());
 
     G4LogicalVolume* coating_logic =
       new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");

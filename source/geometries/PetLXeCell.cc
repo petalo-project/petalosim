@@ -10,12 +10,12 @@
 #include "PetMaterialsList.h"
 #include "SiPMpetVUV.h"
 #include "PetPlainDice.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "PetIonizationSD.h"
 
 #include "nexus/BoxPointSamplerLegacy.h"
 #include "nexus/Visibilities.h"
-#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -121,13 +121,13 @@ void PetLXeCell::Construct()
   if (phys_)
   {
     G4cout << "LXe used with optical properties" << G4endl;
-    lXe_->SetMaterialPropertiesTable(opticalprops::LXe());
-    //lXe_->SetMaterialPropertiesTable(petopticalprops::LXe_window());
+    lXe_->SetMaterialPropertiesTable(materialprops::LXe());
+    //lXe_->SetMaterialPropertiesTable(petmaterialprops::LXe_window());
   }
   else
   {
     G4cout << "LXe used with constant refraction index = 1.7" << G4endl;
-    lXe_->SetMaterialPropertiesTable(petopticalprops::LXe_nconst());
+    lXe_->SetMaterialPropertiesTable(petmaterialprops::LXe_nconst());
   }
 
   //    BuildDetector();

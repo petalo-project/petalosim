@@ -15,7 +15,7 @@
 #include "TileHamamatsuBlue.h"
 #include "TileFBK.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "TeflonBlockHamamatsu.h"
 #include "PetaloUtils.h"
 #include "PetIonizationSD.h"
@@ -116,7 +116,7 @@ void PETitPyrexMix::Construct()
 void PETitPyrexMix::BuildBox()
 {
   G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(petopticalprops::LXe(pressure_));
+  LXe->SetMaterialPropertiesTable(petmaterialprops::LXe(pressure_));
 
   // Set the ACTIVE volume as an ionization sensitive det
   PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
@@ -157,12 +157,12 @@ void PETitPyrexMix::BuildBox()
     dist_entry_panel_ground_ + entry_panel_y_size_/2.;
   G4double entry_panel_zpos =
     box_->GetHatZSize()/2. + dist_ihat_entry_panel_ + panel_thickness_/2.;
-  
+
 
   new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, -entry_panel_zpos),
                     entry_panel_logic, "ENTRY_PANEL", active_logic_,
                     false, 1, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, entry_panel_zpos),
                     entry_panel_logic, "ENTRY_PANEL", active_logic_,
                     false, 2, false);
@@ -173,10 +173,10 @@ void PETitPyrexMix::BuildBox()
   G4Box* h_l_panel_solid =
     new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2.,
               h_l_panel_z_size_/2.);
-  
+
   G4LogicalVolume* h_l_panel_logic =
     new G4LogicalVolume(h_l_panel_solid, pyrex, "LAT_PANEL");
-  
+
   G4double h_l_panel_ypos_bot =
     -box_->GetBoxSize()/2. + box_->GetBoxThickness() +
     h_l_panel_y_pos_ + panel_thickness_/2.;
@@ -184,23 +184,23 @@ void PETitPyrexMix::BuildBox()
     dist_lat_panels_;
   G4double h_l_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
     dist_entry_panel_h_panel_ + h_l_panel_z_size_/2.;
-  
+
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_bot, -h_l_panel_zpos),
                     h_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 1, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_bot, h_l_panel_zpos),
                     h_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 2, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_top, -h_l_panel_zpos),
                     h_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 3, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(0., h_l_panel_ypos_top, h_l_panel_zpos),
                     h_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 4, false);
-  
+
   // Vertical lateral panels
   G4Box* v_l_panel_solid =
     new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2.,
@@ -208,28 +208,28 @@ void PETitPyrexMix::BuildBox()
 
   G4LogicalVolume* v_l_panel_logic =
     new G4LogicalVolume(v_l_panel_solid, pyrex, "LAT_PANEL");
-  
+
   G4double v_l_panel_xpos = dist_lat_panels_/2. + panel_thickness_/2.;
   G4double v_l_panel_ypos = h_l_panel_ypos_bot + dist_lat_panels_/2. +
     panel_thickness_/2.;
   G4double v_l_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
     dist_entry_panel_v_panel_ + v_l_panel_z_size_/2.;
-  
+
   new G4PVPlacement(0, G4ThreeVector(-v_l_panel_xpos, v_l_panel_ypos,
                                      -v_l_panel_zpos),
                     v_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 1, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(-v_l_panel_xpos, v_l_panel_ypos,
                                      v_l_panel_zpos),
                     v_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 2, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(v_l_panel_xpos, v_l_panel_ypos,
                                      -v_l_panel_zpos),
                     v_l_panel_logic, "LAT_PANEL", active_logic_,
                     false, 3, false);
-  
+
   new G4PVPlacement(0, G4ThreeVector(v_l_panel_xpos, v_l_panel_ypos,
                                      v_l_panel_zpos),
                     v_l_panel_logic, "LAT_PANEL", active_logic_,
@@ -241,11 +241,11 @@ void PETitPyrexMix::BuildBox()
   panel_opsur->SetModel(unified);
   panel_opsur->SetFinish(ground);
   panel_opsur->SetSigmaAlpha(0.1);
-  panel_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(reflectivity_));
+  panel_opsur->SetMaterialPropertiesTable(petmaterialprops::ReflectantSurface(reflectivity_));
   new G4LogicalSkinSurface("OP_PANEL", entry_panel_logic, panel_opsur);
   new G4LogicalSkinSurface("OP_PANEL_H", h_l_panel_logic, panel_opsur);
   new G4LogicalSkinSurface("OP_PANEL_V", v_l_panel_logic, panel_opsur);
-  
+
   if (visibility_){
     G4VisAttributes panel_col = nexus::Red();
     entry_panel_logic->SetVisAttributes(panel_col);

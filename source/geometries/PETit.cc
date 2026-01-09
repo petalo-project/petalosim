@@ -10,7 +10,7 @@
 #include "PETitBox.h"
 #include "TileHamamatsuVUV.h"
 #include "PetMaterialsList.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "TeflonBlockHamamatsu.h"
 #include "PetaloUtils.h"
 #include "PetIonizationSD.h"
@@ -95,7 +95,7 @@ void PETit::Construct()
 void PETit::BuildBox()
 {
   G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(petopticalprops::LXe(pressure_));
+  LXe->SetMaterialPropertiesTable(petmaterialprops::LXe(pressure_));
 
   // Set the ACTIVE volume as an ionization sensitive det
   PetIonizationSD* ionisd = new PetIonizationSD("/PETALO/ACTIVE");
@@ -139,7 +139,7 @@ void PETit::BuildBox()
   // Optical surface for teflon
   G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface("TEFLON_OPSURF", unified, ground, dielectric_metal);
-  teflon_optSurf->SetMaterialPropertiesTable(petopticalprops::PTFE());
+  teflon_optSurf->SetMaterialPropertiesTable(petmaterialprops::PTFE());
   new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_block_logic, teflon_optSurf);
 
   if (visibility_) {

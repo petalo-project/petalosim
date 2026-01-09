@@ -10,13 +10,13 @@
 #include "FullRingTiles.h"
 #include "SiPMpetFBK.h"
 #include "Tile.h"
-#include "PetOpticalMaterialProperties.h"
+#include "PetMaterialProperties.h"
 #include "PetIonizationSD.h"
 
 #include "nexus/CylinderPointSamplerLegacy.h"
 #include "nexus/Visibilities.h"
 #include "nexus/FactoryBase.h"
-#include "nexus/OpticalMaterialProperties.h"
+#include "nexus/MaterialProperties.h"
 #include "nexus/MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
@@ -135,7 +135,7 @@ void FullRingTiles::BuildCryostat()
                  external_radius_ + ext_offset + kapton_thickn_,
                  (lat_dimension_cell_ + 2. * kapton_thickn_) / 2., 0, twopi);
   G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-  LXe->SetMaterialPropertiesTable(opticalprops::LXe());
+  LXe->SetMaterialPropertiesTable(materialprops::LXe());
   LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
@@ -195,7 +195,7 @@ void FullRingTiles::BuildCryostat()
   db_opsur->SetModel(unified);
   db_opsur->SetFinish(ground);
   db_opsur->SetSigmaAlpha(0.1);
-  db_opsur->SetMaterialPropertiesTable(petopticalprops::ReflectantSurface(0.));
+  db_opsur->SetMaterialPropertiesTable(petmaterialprops::ReflectantSurface(0.));
   new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
   new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
   new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
